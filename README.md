@@ -12,7 +12,7 @@ Easy to start building command-line tool with [codegangsta/cli](https://github.c
 You just specify application name and its subcommands:
 
 ```bash
-$ cli-init todo -s add delete list
+$ cli-init todo -s add,delete,list
 ```
 
 This will generate three files.
