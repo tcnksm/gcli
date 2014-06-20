@@ -1,0 +1,40 @@
+package main
+
+import (
+    "os"
+	"github.com/codegangsta/cli"
+	"log"
+)
+
+var Commands = []cli.Command{
+	{{range .SubCommands}}{{.DefineName}},
+    {{end}}
+}
+
+{{range .SubCommands}}
+var {{.DefineName}} = cli.Command{
+	Name:  "{{.Name}}",
+	Usage: "",
+	Description: `
+`,
+	Action: {{.FunctionName}},
+}
+{{end}}
+
+func debug(v ...interface{}) {
+	if os.Getenv("DEBUG") != "" {
+		log.Println(v...)
+	}
+}
+
+func assert(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+{{range .SubCommands}}
+func {{.FunctionName}}(c *cli.Context) {
+}
+{{end}}
+
