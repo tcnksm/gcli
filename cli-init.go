@@ -12,10 +12,16 @@ import (
 
 var versionTemplate = template.Must(template.ParseFiles("templates/version.tmpl"))
 var mainTemplate = template.Must(template.ParseFiles("templates/main.tmpl"))
+var commandsTemplate = template.Must(template.ParseFiles("templates/commands.tmpl"))
 
-type BasicInfo struct {
+type Application struct {
 	Name, Author, Email string
 	HasSubCommand       bool
+	SubCommands         []SubCommand
+}
+
+type SubCommand struct {
+	Name, DefineName, FunctionName string
 }
 
 func debug(v ...interface{}) {
@@ -39,16 +45,32 @@ func writeVersion(wr io.Writer) {
 	assert(err)
 }
 
-func writeMain(wr io.Writer) {
-	basicInfo := BasicInfo{
-		Name:          "test",
-		Author:        "taichi",
-		Email:         "test@gmail.com",
-		HasSubCommand: false,
+func writeMain(application Application, wr io.Writer) {
+	err := mainTemplate.Execute(wr, application)
+	assert(err)
+}
+
+func writeCommands(application Application, wr io.Writer) {
+	err := commandsTemplate.Execute(wr, application)
+	assert(err)
+}
+
+func defineSubCommands(inputSubCommands []string) []SubCommand {
+	var subCommands []SubCommand
+	for _, name := range inputSubCommands {
+		subCommand := SubCommand{
+			Name:         name,
+			DefineName:   "command" + ToUpperFirst(name),
+			FunctionName: "do" + ToUpperFirst(name),
+		}
+		subCommands = append(subCommands, subCommand)
 	}
 
-	err := mainTemplate.Execute(wr, basicInfo)
-	assert(err)
+	return subCommands
+}
+
+func ToUpperFirst(str string) string {
+	return strings.ToUpper(str[0:1]) + str[1:]
 }
 
 func main() {
@@ -85,23 +107,47 @@ func main() {
 		debug("Run as DEBUG mode")
 	}
 
-	subCommands := strings.Split(*flSubCommands, ",")
-	debug("subCommands:", subCommands)
+	inputSubCommands := strings.Split(*flSubCommands, ",")
+	debug("inputSubCommands:", inputSubCommands)
+
+	hasSubCommand := false
+	if inputSubCommands[0] != "" {
+		hasSubCommand = true
+	}
+	debug("hasSubCommand:", hasSubCommand)
+
+	application := Application{
+		Name:          appName,
+		Author:        GitConfig("user.name"),
+		Email:         GitConfig("user.email"),
+		HasSubCommand: hasSubCommand,
+		SubCommands:   defineSubCommands(inputSubCommands),
+	}
 
 	os.Mkdir(appName, 0766)
 
+	// Create version.go
 	versionFile, err := os.Create(strings.Join([]string{appName, "version.go"}, "/"))
 	assert(err)
 	defer versionFile.Close()
 	writeVersion(versionFile)
 
+	// Create <appName>.go
 	mainFile, err := os.Create(strings.Join([]string{appName, appName + ".go"}, "/"))
 	assert(err)
 	defer mainFile.Close()
-	writeMain(mainFile)
+	writeMain(application, mainFile)
 
-	commandsFile, err := os.Create(strings.Join([]string{appName, "commands.go"}, "/"))
+	if hasSubCommand {
+		// Create commands.go
+		commandsFile, err := os.Create(strings.Join([]string{appName, "commands.go"}, "/"))
+		assert(err)
+		defer commandsFile.Close()
+		writeCommands(application, commandsFile)
+	}
+
+	err = GoFmt(appName)
 	assert(err)
-	defer commandsFile.Close()
-	writeVersion(commandsFile)
+
+	os.Exit(0)
 }
