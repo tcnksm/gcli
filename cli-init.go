@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	flag "github.com/dotcloud/docker/pkg/mflag"
-	"io"
 	"log"
 	"os"
 	"strings"
@@ -14,6 +13,16 @@ var versionTemplate = template.Must(template.ParseFiles("templates/version.tmpl"
 var mainTemplate = template.Must(template.ParseFiles("templates/main.tmpl"))
 var commandsTemplate = template.Must(template.ParseFiles("templates/commands.tmpl"))
 
+var versionGo = GoSource{
+	Name:     "version.go",
+	Template: *versionTemplate,
+}
+
+var commandsGo = GoSource{
+	Name:     "commands.go",
+	Template: *commandsTemplate,
+}
+
 type Application struct {
 	Name, Author, Email string
 	HasSubCommand       bool
@@ -22,6 +31,46 @@ type Application struct {
 
 type SubCommand struct {
 	Name, DefineName, FunctionName string
+}
+
+func defineApplication(appName string, inputSubCommands []string) Application {
+
+	hasSubCommand := false
+	if inputSubCommands[0] != "" {
+		hasSubCommand = true
+	}
+
+	return Application{
+		Name:          appName,
+		Author:        GitConfig("user.name"),
+		Email:         GitConfig("user.email"),
+		HasSubCommand: hasSubCommand,
+		SubCommands:   defineSubCommands(inputSubCommands),
+	}
+}
+
+func defineSubCommands(inputSubCommands []string) []SubCommand {
+
+	var subCommands []SubCommand
+
+	if inputSubCommands[0] == "" {
+		return subCommands
+	}
+
+	for _, name := range inputSubCommands {
+		subCommand := SubCommand{
+			Name:         name,
+			DefineName:   "command" + ToUpperFirst(name),
+			FunctionName: "do" + ToUpperFirst(name),
+		}
+		subCommands = append(subCommands, subCommand)
+	}
+
+	return subCommands
+}
+
+func ToUpperFirst(str string) string {
+	return strings.ToUpper(str[0:1]) + str[1:]
 }
 
 func debug(v ...interface{}) {
@@ -38,39 +87,6 @@ func assert(err error) {
 
 func showVersion() {
 	fmt.Fprintf(os.Stderr, "cli-init v%s\n", Version)
-}
-
-func writeVersion(wr io.Writer) {
-	err := versionTemplate.Execute(wr, nil)
-	assert(err)
-}
-
-func writeMain(application Application, wr io.Writer) {
-	err := mainTemplate.Execute(wr, application)
-	assert(err)
-}
-
-func writeCommands(application Application, wr io.Writer) {
-	err := commandsTemplate.Execute(wr, application)
-	assert(err)
-}
-
-func defineSubCommands(inputSubCommands []string) []SubCommand {
-	var subCommands []SubCommand
-	for _, name := range inputSubCommands {
-		subCommand := SubCommand{
-			Name:         name,
-			DefineName:   "command" + ToUpperFirst(name),
-			FunctionName: "do" + ToUpperFirst(name),
-		}
-		subCommands = append(subCommands, subCommand)
-	}
-
-	return subCommands
-}
-
-func ToUpperFirst(str string) string {
-	return strings.ToUpper(str[0:1]) + str[1:]
 }
 
 func main() {
@@ -110,40 +126,40 @@ func main() {
 	inputSubCommands := strings.Split(*flSubCommands, ",")
 	debug("inputSubCommands:", inputSubCommands)
 
-	hasSubCommand := false
-	if inputSubCommands[0] != "" {
-		hasSubCommand = true
+	if _, err := os.Stat(appName); err == nil {
+		fmt.Fprintf(os.Stderr, "%s is already exists, overwrite it? [Y/n]: ", appName)
+		var ans string
+		_, err := fmt.Scanf("%s", &ans)
+		assert(err)
+
+		if ans == "Y" {
+			err = os.RemoveAll(appName)
+			assert(err)
+		} else {
+			os.Exit(0)
+		}
 	}
-	debug("hasSubCommand:", hasSubCommand)
 
-	application := Application{
-		Name:          appName,
-		Author:        GitConfig("user.name"),
-		Email:         GitConfig("user.email"),
-		HasSubCommand: hasSubCommand,
-		SubCommands:   defineSubCommands(inputSubCommands),
-	}
-
-	os.Mkdir(appName, 0766)
-
-	// Create version.go
-	versionFile, err := os.Create(strings.Join([]string{appName, "version.go"}, "/"))
+	err := os.Mkdir(appName, 0766)
 	assert(err)
-	defer versionFile.Close()
-	writeVersion(versionFile)
+
+	application := defineApplication(appName, inputSubCommands)
+
+	// Create verion.go
+	err = versionGo.generate(appName, application)
+	assert(err)
 
 	// Create <appName>.go
-	mainFile, err := os.Create(strings.Join([]string{appName, appName + ".go"}, "/"))
+	mainGo := GoSource{
+		Name:     appName + ".go",
+		Template: *mainTemplate,
+	}
+	mainGo.generate(appName, application)
 	assert(err)
-	defer mainFile.Close()
-	writeMain(application, mainFile)
 
-	if hasSubCommand {
-		// Create commands.go
-		commandsFile, err := os.Create(strings.Join([]string{appName, "commands.go"}, "/"))
-		assert(err)
-		defer commandsFile.Close()
-		writeCommands(application, commandsFile)
+	// Create commands.go
+	if application.HasSubCommand {
+		commandsGo.generate(appName, application)
 	}
 
 	err = GoFmt(appName)
