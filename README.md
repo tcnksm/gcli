@@ -1,144 +1,53 @@
 cli-init
 ====
 
-Easy to start building command-line tool with [codegangsta/cli](https://github.com/codegangsta/cli).
+The easy way to start building Golang command-line application.
+
 
 ## Synopsis
 
-`cli-init` generates ...
+`cli-init` is the easy way to start building Golang command-line application with [codegangsta/cli](https://github.com/codegangsta/cli). All you need to do is to set application name and its subcommand. You can forcus on core function of application.  
 
 ## Usage
 
-You just specify application name and its subcommands:
+You just need to set its application name. 
 
 ```bash
-$ cli-init todo -s add,delete,list
+$ cli-init [options] [application]
 ```
 
-This will generate three files.
+## Example
+
+If you want to start to building `todo` application which has subcommands `add`, `list`, `delete`:
 
 ```bash
-.
-|-- todo/
-    |-- todo.go
-    |-- commands.go
-    |-- version.go
+$ cli-init -s add,list,delete todo
 ```
+
+You can see sample, [tcnksm/sample-cli-init](https://github.com/tcnksm/sample-cli-init).
 
 ## Artifacts
 
-### version.go
+`cli-init` generates belows:
 
-`version.go` defines its version.
+- `<application>.go` - defines main function. It includes its application name, usage, author name and so on. 
+- `commands.go` - defines sub-commands. It includes subcomand name, usage, functions. 
+- `version.go` - defines application version. default value is `0.1.0`
+- `README.md`
+- `CHANGELOG.md`
 
-```go
-package main
+See more details [codegangsta/cli](https://github.com/codegangsta/cli)
 
-const Version string = "0.1.0"
+## Installation
+
+To install `cli-init`, use `go get` and `make install`. We tag versions so feel free to checkout that tag and compile.
+
+```bash
+$ go get github.com/tcnksm/cli-init
+$ make install 
 ```
 
-### todo.go
+## Author
 
-`todo.go` defines main function.
+[tcnksm](https://github.com/tcnksm)
 
-```go
-package main
-
-import (
-	"github.com/codegangsta/cli"
-	"os"
-)
-
-var mainFlags = []cli.Flag{
-	cli.BoolFlag{"debug", "Run as DEBUG mode"},
-}
-
-func main() {
-	app := cli.NewApp()
-	app.Name = "todo"
-	app.Version = Version
-	app.Usage = ""
-	app.Author = ""
-	app.Email = ""
-	app.Flags = mainFlags
-	app.Commands = Commands
-
-	app.Before = func(c *cli.Context) error {
-
-		if c.GlobalBool("debug") {
-			os.Setenv("DEBUG", "1")
-		}
-
-		return nil
-	}
-
-	app.Run(os.Args)
-}
-```
-
-### commands.go
-
-`commands.go` defines sub-commands.
-
-```go
-package main
-
-import (
-	"github.com/codegangsta/cli"
-	"log"
-)
-
-
-var Commands = []cli.Command{
-	commandAdd,
-	commandList,
-	commandDelete,
-}
-
-var commandAdd = cli.Command{
-	Name:  "add",
-	Usage: "",
-	Description: `
-`,
-	Action: doAdd,
-}
-
-var commandList = cli.Command{
-	Name:  "list",
-	Usage: ""
-	Description: `
-`,
-	Action: doList,
-}
-
-var commandDelete = cli.Command{
-	Name:  "delete",
-	Usage: "",
-	Description: `
-`,
-	Action: doDelete,
-}
-
-
-func debug(v ...interface{}) {
-	if os.Getenv("DEBUG") != "" {
-		log.Println(v...)
-	}
-}
-
-
-func assert(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func doAdd(c *cli.Context) {
-}
-
-func doList(c *cli.Context) {
-}
-
-func doDelete(c *cli.Context) {
-}
-```
