@@ -6,12 +6,12 @@ import (
 	"text/template"
 )
 
-type GoSource struct {
+type Source struct {
 	Name     string
 	Template template.Template
 }
 
-func (f GoSource) generate(appName string, definition Application) error {
+func (f Source) generate(appName string, definition Application) error {
 	wr, err := os.Create(strings.Join([]string{appName, f.Name}, "/"))
 	if err != nil {
 		return err
