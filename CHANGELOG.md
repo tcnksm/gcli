@@ -1,3 +1,3 @@
-## 0.1.0
+## 0.1.0 (June 22, 2014)
 
-- Not Release yet
+- Initial release
