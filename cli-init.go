@@ -13,6 +13,7 @@ var versionTemplate = template.Must(ParseAsset("version", "templates/version.tmp
 var mainTemplate = template.Must(ParseAsset("main", "templates/main.tmpl"))
 var commandsTemplate = template.Must(ParseAsset("main", "templates/commands.tmpl"))
 var readmeTemplate = template.Must(ParseAsset("readme", "templates/README.tmpl"))
+var changelogTemplate = template.Must(ParseAsset("changelog", "templates/CHANGELOG.tmpl"))
 
 var versionGo = Source{
 	Name:     "version.go",
@@ -27,6 +28,11 @@ var commandsGo = Source{
 var readmeMd = Source{
 	Name:     "README.md",
 	Template: *readmeTemplate,
+}
+
+var changelogMd = Source{
+	Name:     "CHANGELOG.md",
+	Template: *changelogTemplate,
 }
 
 type Application struct {
@@ -173,6 +179,10 @@ func main() {
 
 	// Create README.md
 	err = readmeMd.generate(appName, application)
+	assert(err)
+
+	// Create CHANGELOG.md
+	err = changelogMd.generate(appName, application)
 	assert(err)
 
 	// Create verion.go
