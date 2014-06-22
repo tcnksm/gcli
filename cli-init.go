@@ -9,9 +9,9 @@ import (
 	"text/template"
 )
 
-var versionTemplate = template.Must(template.ParseFiles("templates/version.tmpl"))
-var mainTemplate = template.Must(template.ParseFiles("templates/main.tmpl"))
-var commandsTemplate = template.Must(template.ParseFiles("templates/commands.tmpl"))
+var versionTemplate = template.Must(ParseAsset("version", "templates/version.tmpl"))
+var mainTemplate = template.Must(ParseAsset("main", "templates/main.tmpl"))
+var commandsTemplate = template.Must(ParseAsset("main", "templates/commands.tmpl"))
 
 var versionGo = GoSource{
 	Name:     "version.go",
@@ -31,6 +31,15 @@ type Application struct {
 
 type SubCommand struct {
 	Name, DefineName, FunctionName string
+}
+
+func ParseAsset(name string, path string) (*template.Template, error) {
+	src, err := Asset(path)
+	if err != nil {
+		return nil, err
+	}
+
+	return template.New(name).Parse(string(src))
 }
 
 func defineApplication(appName string, inputSubCommands []string) Application {
