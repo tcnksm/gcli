@@ -89,23 +89,24 @@ func showVersion() {
 	fmt.Fprintf(os.Stderr, "cli-init v%s\n", Version)
 }
 
+func showHelp() {
+	fmt.Fprintf(os.Stderr, helpText)
+}
+
 func main() {
 
 	var (
-		flVersion = flag.Bool([]string{"v", "-version"}, false, "Print version information and quit")
-		flHelp    = flag.Bool([]string{"h", "-help"}, false, "Print this message")
-	)
-
-	flagSub := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-	var (
-		flDebug       = flagSub.Bool([]string{"-debug"}, false, "Run as DEBUG mode")
-		flSubCommands = flagSub.String([]string{"s", "-subcommands"}, "", "Sub commands")
+		flVersion     = flag.Bool([]string{"v", "-version"}, false, "Print version information and quit")
+		flHelp        = flag.Bool([]string{"h", "-help"}, false, "Print this message and quit")
+		flDebug       = flag.Bool([]string{"-debug"}, false, "Run as DEBUG mode")
+		flSubCommands = flag.String([]string{"s", "-subcommands"}, "", "Conma-seplated list of sub-commands to build")
+		flForce       = flag.Bool([]string{"f", "-force"}, false, "Overwrite application without prompting")
 	)
 
 	flag.Parse()
 
 	if *flHelp {
-		flag.Usage()
+		showHelp()
 		os.Exit(0)
 	}
 
@@ -114,10 +115,6 @@ func main() {
 		os.Exit(0)
 	}
 
-	appName := flag.Arg(0)
-	debug("appName:", appName)
-
-	flagSub.Parse(os.Args[2:])
 	if *flDebug {
 		os.Setenv("DEBUG", "1")
 		debug("Run as DEBUG mode")
@@ -125,6 +122,19 @@ func main() {
 
 	inputSubCommands := strings.Split(*flSubCommands, ",")
 	debug("inputSubCommands:", inputSubCommands)
+
+	appName := flag.Arg(0)
+	debug("appName:", appName)
+
+	if appName == "" {
+		fmt.Fprintf(os.Stderr, "Application name must not be blank\n")
+		os.Exit(1)
+	}
+
+	if _, err := os.Stat(appName); err == nil && *flForce {
+		err = os.RemoveAll(appName)
+		assert(err)
+	}
 
 	if _, err := os.Stat(appName); err == nil {
 		fmt.Fprintf(os.Stderr, "%s is already exists, overwrite it? [Y/n]: ", appName)
@@ -140,6 +150,7 @@ func main() {
 		}
 	}
 
+	// Create directory
 	err := os.Mkdir(appName, 0766)
 	assert(err)
 
@@ -167,3 +178,21 @@ func main() {
 
 	os.Exit(0)
 }
+
+const helpText = `Usage: cli-init [options] [application]
+
+cli-init is the easy way to start building command-line app.
+
+Options:
+
+  -s="", --subcommands=""    Comma-separated list of sub-commands to build
+  -f, --force                Overwrite application without prompting 
+  -h, --help                 Print this message and quit
+  -v, --version              Print version information and quit
+  --debug=false              Run as DEBUG mode
+
+Example:
+
+  $ cli-init todo
+  $ cli-init -s add,list,delete todo
+`
