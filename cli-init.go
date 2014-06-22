@@ -12,15 +12,21 @@ import (
 var versionTemplate = template.Must(ParseAsset("version", "templates/version.tmpl"))
 var mainTemplate = template.Must(ParseAsset("main", "templates/main.tmpl"))
 var commandsTemplate = template.Must(ParseAsset("main", "templates/commands.tmpl"))
+var readmeTemplate = template.Must(ParseAsset("readme", "templates/README.tmpl"))
 
-var versionGo = GoSource{
+var versionGo = Source{
 	Name:     "version.go",
 	Template: *versionTemplate,
 }
 
-var commandsGo = GoSource{
+var commandsGo = Source{
 	Name:     "commands.go",
 	Template: *commandsTemplate,
+}
+
+var readmeMd = Source{
+	Name:     "README.md",
+	Template: *readmeTemplate,
 }
 
 type Application struct {
@@ -165,12 +171,16 @@ func main() {
 
 	application := defineApplication(appName, inputSubCommands)
 
+	// Create README.md
+	err = readmeMd.generate(appName, application)
+	assert(err)
+
 	// Create verion.go
 	err = versionGo.generate(appName, application)
 	assert(err)
 
 	// Create <appName>.go
-	mainGo := GoSource{
+	mainGo := Source{
 		Name:     appName + ".go",
 		Template: *mainTemplate,
 	}
