@@ -48,6 +48,7 @@ To install, use `go get` and `make install`. We tag versions so feel free to che
 
 ```bash
 $ go get -d github.com/tcnksm/cli-init
+$ cd $GOPATH/src/github.com/tcnksm/cli-init
 $ make install 
 ```
 
