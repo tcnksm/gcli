@@ -6,7 +6,7 @@ The easy way to start building Golang command-line application.
 
 ## Synopsis
 
-`cli-init` is the easy way to start building Golang command-line application with [codegangsta/cli](https://github.com/codegangsta/cli). All you need to do is to set application name and its subcommand. You can forcus on core function of application.
+`cli-init` is the easy way to start building Golang command-line application with [codegangsta/cli](https://github.com/codegangsta/cli). All you need to do is to set application name and its subcommand. You can focus on core functionality of application.
 
 ## Demo
 
@@ -55,4 +55,3 @@ $ make install
 ## Author
 
 [tcnksm](https://github.com/tcnksm)
-
