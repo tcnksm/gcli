@@ -6,7 +6,7 @@ The easy way to start building Golang command-line application.
 
 ## Synopsis
 
-`cli-init` is the easy way to start building Golang command-line application with [codegangsta/cli](https://github.com/codegangsta/cli). All you need to do is to set application name and its subcommand. You can focus on core functionality of application.
+`cli-init` is the easy way to start building Golang command-line application with [codegangsta/cli](https://github.com/codegangsta/cli). All you need to do is to set application name and its subcommand. `cli-init` generates its templates (scaffold) which you need to write when using codegangsta/cli. You can focus on core functionality of application.
 
 ## Demo
 
@@ -20,19 +20,15 @@ You just need to set its application name:
 $ cli-init [options] [application]
 ```
 
-## Example
-
-If you want to start to building `todo` application which has subcommands `add`, `list`, `delete`:
+You can set subcommands with `-s` option:
 
 ```bash
-$ cli-init -s add,list,delete todo
+$ cli-init -s subcommand1,subcommand2,subcommand3 [application]
 ```
-
-You can see sample, [tcnksm/sample-cli-init](https://github.com/tcnksm/sample-cli-init).
 
 ## Artifacts
 
-`cli-init` generates belows:
+`cli-init` generates templates (scaffold) which you need to write when using [codegangsta/cli](https://github.com/codegangsta/cli):
 
 - **main.go** - defines main function. It includes application name, version, usage, author name and so on. 
 - **commands.go** - defines sub-commands. It includes subcommand name, usage, function and so on. 
@@ -41,6 +37,16 @@ You can see sample, [tcnksm/sample-cli-init](https://github.com/tcnksm/sample-cl
 - **CHANGELOG.md** - shows version release date and its updates.
 
 See more details [codegangsta/cli](https://github.com/codegangsta/cli).
+
+## Example
+
+If you want to start to building `todo` application which has subcommands `add`, `list`, `delete`:
+
+```bash
+$ cli-init -s add,list,delete todo
+```
+
+You can see sample of artifacts in [tcnksm/sample-cli-init](https://github.com/tcnksm/sample-cli-init).
 
 ## Installation
 
