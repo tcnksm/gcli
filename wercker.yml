@@ -6,7 +6,11 @@ build:
           code: |            
             go version
             go get github.com/jteeuwen/go-bindata/...
-            go get -d -t ./...
+            go get -d -t ./...            
+      - script:
+          name: go-bindata
+          code: |
+            go-bindata -debug -o templates.go templates            
       - script:
           name: go test
           code: |
