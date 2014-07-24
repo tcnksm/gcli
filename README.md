@@ -58,6 +58,15 @@ $ cd $GOPATH/src/github.com/tcnksm/cli-init
 $ make install 
 ```
 
+## Contribution
+
+1. Fork
+1. Create a feature branch off of master
+1. Rebase your local changes against the master branch
+1. Run test suite with the `go test ./...` command and confirm that it passes
+1. Run `gofmt -s`
+1. Send pull request
+
 ## Author
 
 [tcnksm](https://github.com/tcnksm)
