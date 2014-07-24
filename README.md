@@ -1,4 +1,4 @@
-cli-init
+cli-init [![wercker status](https://app.wercker.com/status/02a11b970efef81fa7bbe5381fd9f926/s "wercker status")](https://app.wercker.com/project/bykey/02a11b970efef81fa7bbe5381fd9f926)
 ====
 
 The easy way to start building Golang command-line application.
