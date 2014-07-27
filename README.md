@@ -3,8 +3,7 @@ cli-init [![wercker status](https://app.wercker.com/status/02a11b970efef81fa7bbe
 
 The easy way to start building Golang command-line application.
 
-
-## Synopsis
+## Description
 
 `cli-init` is the easy way to start building Golang command-line application with [codegangsta/cli](https://github.com/codegangsta/cli). All you need to do is to set application name and its subcommand. `cli-init` generates its templates (scaffold) which you need to write when using codegangsta/cli. You can focus on core functionality of application.
 
