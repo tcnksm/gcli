@@ -1,4 +1,4 @@
-cli-init [![wercker status](https://app.wercker.com/status/02a11b970efef81fa7bbe5381fd9f926/s "wercker status")](https://app.wercker.com/project/bykey/02a11b970efef81fa7bbe5381fd9f926)
+cli-init [![Build Status](https://drone.io/github.com/tcnksm/cli-init/status.png)](https://drone.io/github.com/tcnksm/cli-init/latest) [![Coverage Status](https://coveralls.io/repos/tcnksm/cli-init/badge.png)](https://coveralls.io/r/tcnksm/cli-init) [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/tcnksm/cli-init/blob/master/LICENCE)
 ====
 
 The easy way to start building Golang command-line application.
@@ -66,10 +66,6 @@ $ make install
 1. Run test suite with the `go test ./...` command and confirm that it passes
 1. Run `gofmt -s`
 1. Create new Pull Request
-
-## Licence
-
-[MIT](https://github.com/tcnksm/cli-init/blob/master/LICENCE)
 
 ## Author
 
