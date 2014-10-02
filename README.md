@@ -45,7 +45,7 @@ If you want to start to building `todo` application which has subcommands `add`,
 $ cli-init -s add,list,delete todo
 ```
 
-You can see sample of artifacts in [tcnksm/sample-cli-init](https://github.com/tcnksm/sample-cli-init).
+You can see sample of artifacts in [tcnksm-sample/cli-init](https://github.com/tcnksm-sample/cli-init).
 
 ## Installation
 
