@@ -65,7 +65,7 @@ $ make install
 1. Rebase your local changes against the master branch
 1. Run test suite with the `go test ./...` command and confirm that it passes
 1. Run `gofmt -s`
-1. Create new Pull Request
+1. Create a new Pull Request
 
 ## Author
 
