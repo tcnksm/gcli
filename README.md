@@ -1,5 +1,11 @@
-cli-init [![Build Status](https://drone.io/github.com/tcnksm/cli-init/status.png)](https://drone.io/github.com/tcnksm/cli-init/latest) [![Coverage Status](https://coveralls.io/repos/tcnksm/cli-init/badge.png)](https://coveralls.io/r/tcnksm/cli-init) [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://github.com/tcnksm/cli-init/blob/master/LICENCE)
+cli-init 
 ====
+
+[![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)][license]
+[![Go Documentation](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)][godocs]
+
+[license]: https://github.com/tcnksm/cli-init/blob/master/LICENSE
+[godocs]: http://godoc.org/github.com/tcnksm/cli-init
 
 The easy way to start building Golang command-line application.
 
@@ -9,7 +15,7 @@ The easy way to start building Golang command-line application.
 
 ## Demo
 
-![](http://deeeet.com/writing/images/post/cli-init.gif)
+![](http://deeeet.com/images/post/cli-init.gif)
 
 ## Usage
 
@@ -69,4 +75,4 @@ $ make install
 
 ## Author
 
-[tcnksm](https://github.com/tcnksm)
+[Taichi Nakashima](https://github.com/tcnksm)
