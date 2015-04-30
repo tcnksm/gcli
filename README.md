@@ -15,7 +15,7 @@ The easy way to start building Golang command-line application.
 
 ## Demo
 
-![](http://deeeet.com/images/post/cli-init.gif)
+![](http://deeeet.com/images/cli-init.gif)
 
 ## Usage
 
