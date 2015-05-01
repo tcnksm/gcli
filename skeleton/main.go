@@ -29,10 +29,47 @@ func (s *Skeleton) Generate() error {
 	}
 
 	path = filepath.Join(s.Path, "CHANGELOG.md")
-	wr, _ := os.Create(path)
+	wr, err := os.Create(path)
+	if err != nil {
+		return err
+	}
 	defer wr.Close()
 
 	if err := tempalte.Execute(wr, s.Executable); err != nil {
+		return err
+	}
+
+	path = "resource/tmpl/common/README.md.tmpl"
+	tempalte, err = NewTemplate(path)
+	if err != nil {
+		return err
+	}
+
+	path = filepath.Join(s.Path, "README.md")
+	wr, err = os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer wr.Close()
+
+	if err = tempalte.Execute(wr, s.Executable); err != nil {
+		return err
+	}
+
+	path = "resource/tmpl/common/version.go.tmpl"
+	tempalte, err = NewTemplate(path)
+	if err != nil {
+		return err
+	}
+
+	path = filepath.Join(s.Path, "version.go")
+	wr, err = os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer wr.Close()
+
+	if err = tempalte.Execute(wr, s.Executable); err != nil {
 		return err
 	}
 
