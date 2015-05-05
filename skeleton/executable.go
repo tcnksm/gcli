@@ -22,9 +22,3 @@ type Executable struct {
 	// Framework is cli package
 	Framework int
 }
-
-const (
-	Framework_codegangsta_cli = 100 + iota
-	Framework_mitchellh_cli
-	Framework_flag
-)
