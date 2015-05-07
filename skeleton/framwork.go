@@ -28,11 +28,13 @@ func FrameworkTemplates(framework int) []string {
 		return []string{
 			"resource/tmpl/flag/main.go.tmpl",
 			"resource/tmpl/flag/cli.go.tmpl",
+			"resource/tmpl/flag/cli_test.go.tmpl",
 		}
 	case Framework_tcnksm_flag:
 		return []string{
 			"resource/tmpl/tcnksm_mflag/main.go.tmpl",
 			"resource/tmpl/tcnksm_mflag/cli.go.tmpl",
+			"resource/tmpl/tcnksm_mflag/cli_test.go.tmpl",
 		}
 	default:
 		panic("invalid framework is provided.")

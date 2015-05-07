@@ -3,14 +3,17 @@ package skeleton
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 )
 
 type Skeleton struct {
-	// Path is where skeleton is generated
+	// Path is where skeleton is generated.
 	Path string
 
-	// Executable
+	// If WithTest is true, also generate test code.
+	WithTest bool
+
 	Executable *Executable
 }
 
@@ -43,12 +46,18 @@ func (s *Skeleton) processTemplates(tmpls []string) (<-chan bool, <-chan error) 
 	// Channels to tell process state.
 	doneCh, errCh := make(chan bool), make(chan error)
 
-	// Block until all template execution is done.
 	var wg sync.WaitGroup
 
 	go func() {
 		for _, path := range tmpls {
+
+			// Filter test code
+			if !s.WithTest && strings.Contains(path, "_test.go.tmpl") {
+				continue
+			}
+
 			wg.Add(1)
+
 			go func(path string) {
 				defer wg.Done()
 
@@ -75,7 +84,9 @@ func (s *Skeleton) processTemplates(tmpls []string) (<-chan bool, <-chan error) 
 			}(path)
 		}
 
+		// Wait until all templating is done
 		wg.Wait()
+
 		doneCh <- true
 	}()
 
