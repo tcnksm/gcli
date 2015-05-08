@@ -36,9 +36,9 @@ var changelogMd = Source{
 }
 
 type Application struct {
-	Name, Author, Email string
-	HasSubCommand       bool
-	SubCommands         []SubCommand
+	Name, Author, Email, Username string
+	HasSubCommand                 bool
+	SubCommands                   []SubCommand
 }
 
 type SubCommand struct {
@@ -54,17 +54,24 @@ func ParseAsset(name string, path string) (*template.Template, error) {
 	return template.New(name).Parse(string(src))
 }
 
-func defineApplication(appName string, inputSubCommands []string) Application {
+func defineApplication(appName string, inputSubCommands []string, username string) Application {
 
 	hasSubCommand := false
 	if inputSubCommands[0] != "" {
 		hasSubCommand = true
 	}
 
+	gitUsername := GitConfig("user.name")
+
+	if username == "" {
+		username = gitUsername
+	}
+
 	return Application{
 		Name:          appName,
-		Author:        GitConfig("user.name"),
+		Author:        gitUsername,
 		Email:         GitConfig("user.email"),
+		Username:      username,
 		HasSubCommand: hasSubCommand,
 		SubCommands:   defineSubCommands(inputSubCommands),
 	}
@@ -122,6 +129,7 @@ func main() {
 		flDebug       = flag.Bool([]string{"-debug"}, false, "Run as DEBUG mode")
 		flSubCommands = flag.String([]string{"s", "-subcommands"}, "", "Conma-seplated list of sub-commands to build")
 		flForce       = flag.Bool([]string{"f", "-force"}, false, "Overwrite application without prompting")
+		flUsername    = flag.String([]string{"u", "-username"}, "", "GitHub username")
 	)
 
 	flag.Parse()
@@ -175,7 +183,7 @@ func main() {
 	err := os.Mkdir(appName, 0766)
 	assert(err)
 
-	application := defineApplication(appName, inputSubCommands)
+	application := defineApplication(appName, inputSubCommands, *flUsername)
 
 	// Create README.md
 	err = readmeMd.generate(appName, application)
@@ -215,6 +223,7 @@ cli-init is the easy way to start building command-line app.
 Options:
 
   -s="", --subcommands=""    Comma-separated list of sub-commands to build
+  -u="", --username=""       GitHub username
   -f, --force                Overwrite application without prompting 
   -h, --help                 Print this message and quit
   -v, --version              Print version information and quit
