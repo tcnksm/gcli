@@ -1,7 +1,6 @@
 package skeleton
 
 import (
-	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -11,99 +10,143 @@ type Skeleton struct {
 	// Path is where skeleton is generated.
 	Path string
 
+	// Framework represent which cli package is used.
+	// Framework ID is defined on framework_tempalte.go
+	Framework int
+
 	// If WithTest is true, also generate test code.
 	WithTest bool
 
 	Executable *Executable
 }
 
-// Create generate codes. Create directory and generate code with tempalte file
-func (s *Skeleton) Generate() error {
+// Generate generates code files from tempalte files.
+func (s *Skeleton) Generate() <-chan error {
 
-	if err := s.prepareDir(); err != nil {
-		return err
-	}
-
-	tmplList := CommonTemplates()
-	tmplList = append(tmplList, FrameworkTemplates(s.Executable.Framework)...)
-	doneCh, errCh := s.processTemplates(tmplList)
-LOOP:
-	for {
-		select {
-		case <-doneCh:
-			break LOOP
-		case err := <-errCh:
-			// if at least one error is happend, terminate tempating
-			return err
-		}
-	}
-	return nil
-}
-
-// processTemplates run template execution of all templates in parallel.
-func (s *Skeleton) processTemplates(tmpls []string) (<-chan bool, <-chan error) {
-
-	// Channels to tell process state.
-	doneCh, errCh := make(chan bool), make(chan error)
-
-	var wg sync.WaitGroup
+	// Create error channel to return
+	errCh := make(chan error)
 
 	go func() {
-		for _, path := range tmpls {
 
-			// Filter test code
-			if !s.WithTest && strings.Contains(path, "_test.go.tmpl") {
+		// Start generating base files
+		errBaseCh := s.generateBaseFiles()
+
+		// Start generating command files
+		errCmndCh := s.generateCommandFiles()
+
+		// Start generating user defined files
+		errCstmCh := s.generateCustomFiles()
+
+		// Merge all error channels until all channel is closed
+		for err := range merge(errBaseCh, errCmndCh, errCstmCh) {
+			errCh <- err
+		}
+
+		// Close channel after everything is Done.
+		close(errCh)
+	}()
+
+	return errCh
+}
+
+func (s *Skeleton) generateBaseFiles() <-chan error {
+
+	errCh := make(chan error)
+
+	go func() {
+		var wg sync.WaitGroup
+		baseTmpls := CommonTemplates
+		baseTmpls = append(baseTmpls, FrameworkTemplates(s.Framework)...)
+		for _, tmpl := range baseTmpls {
+
+			if !s.WithTest && strings.HasPrefix(tmpl.Path, "_test.go.tmpl") {
 				continue
 			}
 
 			wg.Add(1)
-
-			go func(path string) {
+			go func(tmpl Template) {
 				defer wg.Done()
-
-				tmpl := Must(NewTemplate(path))
-
-				tempalte, err := NewTemplate(tmpl.Path)
-				if err != nil {
+				tmpl.OutputPathTmpl = filepath.Join(s.Path, tmpl.OutputPathTmpl)
+				if err := tmpl.Exec(s.Executable); err != nil {
 					errCh <- err
-					return
 				}
-
-				outPath := filepath.Join(s.Path, tmpl.Output)
-				wr, err := os.Create(outPath)
-				if err != nil {
-					errCh <- err
-					return
-				}
-				defer wr.Close()
-
-				if err := tempalte.Execute(wr, s.Executable); err != nil {
-					errCh <- err
-					return
-				}
-			}(path)
+			}(tmpl)
 		}
 
-		// Wait until all templating is done
+		// Wait until all task is done.
 		wg.Wait()
 
-		doneCh <- true
+		close(errCh)
 	}()
 
-	return doneCh, errCh
+	return errCh
 }
 
-// PrepareDir creates default directories.
-func (s *Skeleton) prepareDir() error {
-	path := filepath.Join(s.Path, "command")
+func (s *Skeleton) generateCommandFiles() <-chan error {
+	errCh := make(chan error)
 
-	if s.Executable.Framework == Framework_flag {
-		path = filepath.Join(s.Path)
+	go func() {
+		var wg sync.WaitGroup
+		cmdTmpl, cmdTestTmpl := CommandTemplates(s.Framework)
+
+		for _, cmd := range s.Executable.Commands {
+			wg.Add(1)
+			go func(tmpl Template, cmd Command) {
+				defer wg.Done()
+				tmpl.OutputPathTmpl = filepath.Join(s.Path, tmpl.OutputPathTmpl)
+				if err := tmpl.Exec(cmd); err != nil {
+					errCh <- err
+				}
+			}(cmdTmpl, cmd)
+
+			if !s.WithTest {
+				continue
+			}
+
+			wg.Add(1)
+			go func(tmpl Template, cmd Command) {
+				defer wg.Done()
+				tmpl.OutputPathTmpl = filepath.Join(s.Path, tmpl.OutputPathTmpl)
+				if err := tmpl.Exec(cmd); err != nil {
+					errCh <- err
+				}
+			}(cmdTestTmpl, cmd)
+
+		}
+
+		// Wait until all task is done.
+		wg.Wait()
+		close(errCh)
+	}()
+
+	return errCh
+}
+
+func (s *Skeleton) generateCustomFiles() <-chan error {
+	errCh := make(chan error)
+	defer close(errCh)
+	return errCh
+}
+
+// merge merges error channels and sends them to union channel
+func merge(cs ...<-chan error) <-chan error {
+	var wg sync.WaitGroup
+	out := make(chan error)
+
+	wg.Add(len(cs))
+	for _, c := range cs {
+		go func(errCh <-chan error) {
+			defer wg.Done()
+			for err := range errCh {
+				out <- err
+			}
+		}(c)
 	}
 
-	if s.Executable.Framework == Framework_tcnksm_flag {
-		path = filepath.Join(s.Path)
-	}
+	go func() {
+		wg.Wait()
+		close(out)
+	}()
 
-	return os.MkdirAll(path, 0766)
+	return out
 }

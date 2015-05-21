@@ -18,7 +18,4 @@ type Executable struct {
 
 	// Description is description of the executable
 	Description string
-
-	// Framework is cli package
-	Framework int
 }
