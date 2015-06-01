@@ -29,19 +29,6 @@ type Flag struct {
 	Description string
 }
 
-// Validate validates user input.
-func (f *Flag) Validate() error {
-	if len(f.LongName) == 0 {
-		return fmt.Errorf("LongName must be set")
-	}
-
-	if len(f.TypeString) == 0 {
-		return fmt.Errorf("TypeString must be set")
-	}
-
-	return nil
-}
-
 // Fix fixed user input for templating.
 func (f *Flag) Fix() error {
 
@@ -50,7 +37,7 @@ func (f *Flag) Fix() error {
 		return err
 	}
 
-	// Name must be title case of LongName
+	// Name must be title case
 	f.Name = strings.Title(f.LongName)
 
 	// ShortName is first character of LongName
@@ -73,7 +60,7 @@ func (f *Flag) fixTypeString() error {
 		f.TypeString = "String"
 		f.Default = "\"\""
 	default:
-		return fmt.Errorf("unexpected type string: %s", f.TypeString)
+		return fmt.Errorf("unexpected type is provided: %s", f.TypeString)
 	}
 	return nil
 }
