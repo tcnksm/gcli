@@ -1,14 +1,7 @@
 package skeleton
 
-const (
-	// CLI with commands
-	Framework_codegangsta_cli = 100 + iota
-	Framework_mitchellh_cli
-
-	// CLI with flag
-	Framework_flag = 1000 + iota
-	Framework_tcnksm_mflag
-)
+// This file defines template file path and its output name
+// which is related to cli framework.
 
 var (
 	CommonTemplates = []Template{
@@ -20,6 +13,10 @@ var (
 // FrameworkTempaltes returns framewrok Template based on framework ID.
 func FrameworkTemplates(framework int) []Template {
 	switch framework {
+	case Framework_go_cmd:
+		return []Template{
+			{"resource/tmpl/go_cmd/main.go.tmpl", "main.go"},
+		}
 	case Framework_codegangsta_cli:
 		return []Template{
 			{"resource/tmpl/codegangsta_cli/main.go.tmpl", "main.go"},
@@ -58,6 +55,8 @@ func FrameworkTemplates(framework int) []Template {
 // The second return value is command test Tempalte.
 func CommandTemplates(framework int) (Template, Template) {
 	switch framework {
+	case Framework_go_cmd:
+		return Template{"resource/tmpl/go_cmd/command.go.tmpl", "{{ .Name }}.go"}, Template{"", ""}
 	case Framework_codegangsta_cli:
 		return Template{"resource/tmpl/codegangsta_cli/command.go.tmpl", "command/{{ .Name }}.go"},
 			Template{"resource/tmpl/codegangsta_cli/command_test.go.tmpl", "command/{{ .Name }}_test.go"}

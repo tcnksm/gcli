@@ -34,7 +34,8 @@ func (s *Skeleton) Generate() <-chan error {
 		// Start generating command files
 		errCmndCh := s.generateCommandFiles()
 
-		// Start generating user defined files
+		// Start generating custom files
+		// which is generated from user defined templates
 		errCstmCh := s.generateCustomFiles()
 
 		// Merge all error channels until all channel is closed

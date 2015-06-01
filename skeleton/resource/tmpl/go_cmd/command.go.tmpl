@@ -1,0 +1,20 @@
+package main
+
+var cmd{{ title .Name }} = &Command{
+	Run:       run{{ title .Name }},
+	UsageLine: "{{ .Name }} ",
+	Short:     "{{ .Synopsis }}",
+	Long: `
+{{ .Help }}
+	`,
+}
+
+func init(){
+    // Set your flag here like below.
+	// cmd{{ title .Name }}.Flag.BoolVar(&flagA, "a", false, "")
+}
+
+// run{{ title .Name }} executes {{ .Name }} command and return exit code. 
+func run{{ title .Name }}(args []string) int {
+	return 0
+}
