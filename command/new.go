@@ -1,19 +1,26 @@
 package command
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
+	"io"
+	"os"
 	"strings"
 
 	"github.com/tcnksm/cli-init/skeleton"
+	"github.com/tcnksm/go-gitconfig"
 )
 
 const (
-	// defaultTypeString is default flag type
-	defaultTypeString = "string"
-
 	// defaultFrameworkString is default cli framework name
 	defaultFrameworkString = "codegangsta_cli"
+
+	// defaultVersion is default appliaction version
+	defaultVersion = "0.1.0"
+
+	// defaultVersion is default application description
+	defaultDescription = ""
 )
 
 // NewCommand is a Command that generates a new cli project
@@ -23,15 +30,39 @@ type NewCommand struct {
 
 func (c *NewCommand) Run(args []string) int {
 
-	var frameworkStr string
 	var commands []skeleton.Command
 	var flags []skeleton.Flag
+	var frameworkStr string
+	var owner string
+	var skipTest bool
 
 	uflag := flag.NewFlagSet("new", flag.ContinueOnError)
+	uflag.Usage = func() { c.Ui.Error(c.Help()) }
+
 	uflag.Var((*CommandFlag)(&commands), "command", "command")
+	uflag.Var((*CommandFlag)(&commands), "c", "command (short)")
+
 	uflag.Var((*FlagFlag)(&flags), "flag", "flag")
+	uflag.Var((*FlagFlag)(&flags), "f", "flag (short)")
 
 	uflag.StringVar(&frameworkStr, "framework", defaultFrameworkString, "framework")
+	uflag.StringVar(&frameworkStr, "F", defaultFrameworkString, "framework (short)")
+
+	uflag.StringVar(&owner, "owner", "", "owner")
+	uflag.StringVar(&owner, "o", "", "owner (short)")
+
+	uflag.BoolVar(&skipTest, "skip-test", false, "skip-test")
+	uflag.BoolVar(&skipTest, "T", false, "skip-test (short)")
+
+	errR, errW := io.Pipe()
+	errScanner := bufio.NewScanner(errR)
+	uflag.SetOutput(errW)
+
+	go func() {
+		for errScanner.Scan() {
+			c.Ui.Error(errScanner.Text())
+		}
+	}()
 
 	if err := uflag.Parse(args); err != nil {
 		return 1
@@ -46,24 +77,50 @@ func (c *NewCommand) Run(args []string) int {
 
 	name := parsedArgs[0]
 
+	// TODO, should be configurable
+	// or chagne direcotry to GOPATH/github.com/owner/output
+	// Some gcli template assume command is executed
+	// from GOPATH/github.com/owner
+	output := name
+	if _, err := os.Stat(output); !os.IsNotExist(err) {
+		msg := fmt.Sprintf("Cannot create directory %s: file exists", output)
+		c.Ui.Error(msg)
+		return 1
+	}
+
 	framework, err := skeleton.Framework(frameworkStr)
 	if err != nil {
 		return 1
 	}
 
+	// Use .gitconfig value.
+	if owner == "" {
+		owner, err = gitconfig.GithubUser()
+		if err != nil {
+			owner, err = gitconfig.Username()
+			if err != nil {
+				msg := "Cannot retrieve owner name\n" +
+					"Owener name is retrieved from `~/.gitcofig` file.\n" +
+					"Please set one via -owner option or `~/.gitconfig` file."
+				c.Ui.Error(msg)
+				return 1
+			}
+		}
+	}
+
 	executable := &skeleton.Executable{
 		Name:        name,
-		Owner:       "tcnksm",
+		Owner:       owner,
 		Commands:    commands,
 		Flags:       flags,
-		Version:     "0.1.0",
-		Description: "todo is CLI todo manager",
+		Version:     defaultVersion,
+		Description: defaultDescription,
 	}
 
 	skeleton := &skeleton.Skeleton{
-		Path:       name,
+		Path:       output,
 		Framework:  framework,
-		WithTest:   true,
+		SkipTest:   skipTest,
 		Executable: executable,
 	}
 
@@ -76,8 +133,8 @@ func (c *NewCommand) Run(args []string) int {
 		c.Ui.Error(err.Error())
 	}
 
-	// Return non zero var when more than one
-	// error is happed while executing skeleton.Generat().
+	// Return non zero var when at least one
+	// error was happened while executing skeleton.Generate().
 	// Run all templating and show all error.
 	if gotErr {
 		c.Ui.Error(fmt.Sprintf("Failed to generate: %s", name))
@@ -86,80 +143,6 @@ func (c *NewCommand) Run(args []string) int {
 
 	c.Ui.Info(fmt.Sprintf("====> Successfuly generated: %s", name))
 	return 0
-}
-
-// FlagFlag implements the flag.Value interface and allows multiple
-// calls to the same variable to append a list. It parses string and set them
-// as skeleton.Flag.
-type FlagFlag []skeleton.Flag
-
-func (f *FlagFlag) String() string {
-	return ""
-}
-
-func (f *FlagFlag) Set(v string) error {
-
-	parsed := strings.Split(v, ":")
-	if len(parsed) > 3 {
-		return fmt.Errorf("flag must be specified by NAME:TYPE:DESCRIPTION format")
-	}
-
-	name := parsed[0]
-	typeString := defaultTypeString
-	desc := ""
-
-	if len(parsed) > 1 {
-		typeString = parsed[1]
-	}
-
-	if len(parsed) > 2 {
-		desc = parsed[2]
-	}
-
-	flag := skeleton.Flag{
-		LongName:    name,
-		TypeString:  typeString,
-		Description: desc,
-	}
-
-	// Fix inputs string for using main processing
-	if err := flag.Fix(); err != nil {
-		return err
-	}
-
-	*f = append(*f, flag)
-	return nil
-}
-
-// CommandFlag implements the flag.Value interface and allows multiple
-// calls to the same variable to append a list. It parses string and set them
-// as skeleton.Command.
-type CommandFlag []skeleton.Command
-
-func (c *CommandFlag) String() string {
-	return ""
-}
-
-func (c *CommandFlag) Set(v string) error {
-	parsed := strings.Split(v, ":")
-	if len(parsed) > 2 {
-		return fmt.Errorf("command flag must be specified by NAME:SYNOPSIS format")
-	}
-
-	name := parsed[0]
-
-	// synopsis is optional
-	synopsis := ""
-	if len(parsed) == 2 {
-		synopsis = parsed[1]
-	}
-
-	*c = append(*c, skeleton.Command{
-		Name:     name,
-		Synopsis: synopsis,
-	})
-
-	return nil
 }
 
 func (c *NewCommand) Synopsis() string {
@@ -177,33 +160,41 @@ Usage: gcli new [option] NAME
 
 Options:
 
-  -command=name               Command name which you want to add to executable.
+  -command=name, -c           Command name which you want to add.
                               This is valid only when cli pacakge support commands.
                               This can be specified multiple times. Synopsis can be
                               set after ":". Namely, you can specify command by 
-                              -command=NAME:SYNOPSYS. Only NAME is required. 
+                              -command=NAME:SYNOPSYS. Only NAME is required.
+                              You can set multiple variables at same time with ","
+                              separator.
 
-  -flag=name                  Global flag option name which you want to add to executable.
+  -flag=name, -f              Global flag option name which you want to add.
                               This can be specified multiple times. By default, flag type
                               is string and its description is empty. You can set them,
                               with ":" separator. Namaly, you can specify flag by
                               -flag=NAME:TYPE:DESCIRPTION. Order must be flow  this and
                               TYPE must be string, bool or int. Only NAME is required.
+                              You can set multiple variables at same time with ","
+                              separator.
 
-   -framework=name            Cli framework name. By default, gcli use codegangsta/cli
+   -framework=name, -F        Cli framework name. By default, gcli use "codegangsta/cli"
                               To check cli framework you can use, run 'gcli list'.
+                              If you set invalid framework, it will be failed.
 
-   -owner=name                Command owner (author) name. This value is used import path name.
-                              By default, owner name is extracted from gitconfig variable.
-                              This is optional.
+   -owner=name, -o            Command owner (author) name. This value is also used for
+                              import path name. By default, owner name is extracted from
+                              ~/.gitconfig variable.
+
+   -skip-test, -T             Skip generating *_test.go file. By default, gcli generates
+                              test file If you specify this flag, gcli will not generate
+                              test files.
 
 Examples:
 
    This example shows creating todo command application skeleton
-   which has 'add' and 'delete' command by mitchellh/cli package.
+   which has 'add' and 'delete' command by using mitchellh/cli package.
 
    $ gcli new -command=add:"Add new task" -commnad=delete:"delete task" todo
-
 `
 	return strings.TrimSpace(helpText)
 }
