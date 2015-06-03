@@ -15,7 +15,7 @@ type Skeleton struct {
 	Framework int
 
 	// If WithTest is true, also generate test code.
-	WithTest bool
+	SkipTest bool
 
 	Executable *Executable
 }
@@ -60,7 +60,7 @@ func (s *Skeleton) generateBaseFiles() <-chan error {
 		baseTmpls = append(baseTmpls, FrameworkTemplates(s.Framework)...)
 		for _, tmpl := range baseTmpls {
 
-			if !s.WithTest && strings.HasPrefix(tmpl.Path, "_test.go.tmpl") {
+			if s.SkipTest && strings.HasPrefix(tmpl.Path, "_test.go.tmpl") {
 				continue
 			}
 
@@ -100,7 +100,7 @@ func (s *Skeleton) generateCommandFiles() <-chan error {
 				}
 			}(cmdTmpl, cmd)
 
-			if !s.WithTest {
+			if s.SkipTest {
 				continue
 			}
 

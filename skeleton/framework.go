@@ -8,9 +8,8 @@ const (
 	Framework_codegangsta_cli
 	Framework_mitchellh_cli
 
-	// CLI with flag
+	// CLI only with flag
 	Framework_flag = 1000 + iota
-	Framework_tcnksm_mflag
 )
 
 // Framework returns framework ID (unique variable in gcli)

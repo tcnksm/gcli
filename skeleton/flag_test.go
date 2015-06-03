@@ -2,59 +2,6 @@ package skeleton
 
 import "testing"
 
-func TestValidate(t *testing.T) {
-	tests := []struct {
-		in      *Flag
-		success bool
-	}{
-		{
-			in: &Flag{
-				LongName:    "debug",
-				TypeString:  "bool",
-				Description: "Run as a DEBUG mode",
-			},
-
-			success: true,
-		},
-
-		{
-			in: &Flag{
-				LongName:   "debug",
-				TypeString: "bool",
-			},
-			success: true,
-		},
-
-		{
-			in: &Flag{
-				LongName: "debug",
-			},
-			success: false,
-		},
-
-		{
-			in:      &Flag{},
-			success: false,
-		},
-	}
-
-	for i, tt := range tests {
-
-		err := tt.in.Validate()
-		if err != nil && !tt.success {
-			continue
-		}
-
-		if err == nil && !tt.success {
-			t.Fatalf("#%d expect Validate to fail", i)
-		}
-
-		if err != nil {
-			t.Fatalf("#%d expect Fix not to fail but %q", i, err.Error())
-		}
-	}
-}
-
 func TestFix(t *testing.T) {
 	tests := []struct {
 		in      *Flag
