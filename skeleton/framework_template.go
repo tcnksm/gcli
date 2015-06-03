@@ -15,35 +15,28 @@ func FrameworkTemplates(framework int) []Template {
 	switch framework {
 	case Framework_go_cmd:
 		return []Template{
-			{"resource/tmpl/go_cmd/main.go.tmpl", "main.go"},
+			{"resource/tmpl/command/go_cmd/main.go.tmpl", "main.go"},
 		}
 	case Framework_codegangsta_cli:
 		return []Template{
-			{"resource/tmpl/codegangsta_cli/main.go.tmpl", "main.go"},
-			{"resource/tmpl/codegangsta_cli/version.go.tmpl", "version.go"},
-			{"resource/tmpl/codegangsta_cli/commands.go.tmpl", "commands.go"},
+			{"resource/tmpl/command/codegangsta_cli/main.go.tmpl", "main.go"},
+			{"resource/tmpl/command/codegangsta_cli/version.go.tmpl", "version.go"},
+			{"resource/tmpl/command/codegangsta_cli/commands.go.tmpl", "commands.go"},
 		}
 	case Framework_mitchellh_cli:
 		return []Template{
-			{"resource/tmpl/mitchellh_cli/main.go.tmpl", "main.go"},
-			{"resource/tmpl/mitchellh_cli/version.go.tmpl", "version.go"},
-			{"resource/tmpl/mitchellh_cli/cli.go.tmpl", "cli.go"},
-			{"resource/tmpl/mitchellh_cli/commands.go.tmpl", "commands.go"},
-			{"resource/tmpl/mitchellh_cli/command/meta.go.tmpl", "command/meta.go"},
+			{"resource/tmpl/command/mitchellh_cli/main.go.tmpl", "main.go"},
+			{"resource/tmpl/command/mitchellh_cli/version.go.tmpl", "version.go"},
+			{"resource/tmpl/command/mitchellh_cli/cli.go.tmpl", "cli.go"},
+			{"resource/tmpl/command/mitchellh_cli/commands.go.tmpl", "commands.go"},
+			{"resource/tmpl/command/mitchellh_cli/command/meta.go.tmpl", "command/meta.go"},
 		}
 	case Framework_flag:
 		return []Template{
-			{"resource/tmpl/flag/main.go.tmpl", "main.go"},
-			{"resource/tmpl/flag/version.go.tmpl", "version.go"},
-			{"resource/tmpl/flag/cli.go.tmpl", "cli.go"},
-			{"resource/tmpl/flag/cli_test.go.tmpl", "cli_test.go"},
-		}
-	case Framework_tcnksm_mflag:
-		return []Template{
-			{"resource/tmpl/tcnksm_mflag/main.go.tmpl", "main.go"},
-			{"resource/tmpl/tcnksm_mflag/version.go.tmpl", "version.go"},
-			{"resource/tmpl/tcnksm_mflag/cli.go.tmpl", "cli.go"},
-			{"resource/tmpl/tcnksm_mflag/cli_test.go.tmpl", "cli_test.go"},
+			{"resource/tmpl/flag/flag/main.go.tmpl", "main.go"},
+			{"resource/tmpl/flag/flag/version.go.tmpl", "version.go"},
+			{"resource/tmpl/flag/flag/cli.go.tmpl", "cli.go"},
+			{"resource/tmpl/flag/flag/cli_test.go.tmpl", "cli_test.go"},
 		}
 	default:
 		return []Template{}
@@ -56,13 +49,13 @@ func FrameworkTemplates(framework int) []Template {
 func CommandTemplates(framework int) (Template, Template) {
 	switch framework {
 	case Framework_go_cmd:
-		return Template{"resource/tmpl/go_cmd/command.go.tmpl", "{{ .Name }}.go"}, Template{"", ""}
+		return Template{"resource/tmpl/command/go_cmd/command.go.tmpl", "{{ .Name }}.go"}, Template{"", ""}
 	case Framework_codegangsta_cli:
-		return Template{"resource/tmpl/codegangsta_cli/command.go.tmpl", "command/{{ .Name }}.go"},
-			Template{"resource/tmpl/codegangsta_cli/command_test.go.tmpl", "command/{{ .Name }}_test.go"}
+		return Template{"resource/tmpl/command/codegangsta_cli/command.go.tmpl", "command/{{ .Name }}.go"},
+			Template{"resource/tmpl/command/codegangsta_cli/command_test.go.tmpl", "command/{{ .Name }}_test.go"}
 	case Framework_mitchellh_cli:
-		return Template{"resource/tmpl/mitchellh_cli/command/command.go.tmpl", "command/{{ .Name }}.go"},
-			Template{"resource/tmpl/mitchellh_cli/command/command_test.go.tmpl", "command/{{ .Name }}_test.go"}
+		return Template{"resource/tmpl/command/mitchellh_cli/command/command.go.tmpl", "command/{{ .Name }}.go"},
+			Template{"resource/tmpl/command/mitchellh_cli/command/command_test.go.tmpl", "command/{{ .Name }}_test.go"}
 	default:
 		return Template{}, Template{}
 	}
