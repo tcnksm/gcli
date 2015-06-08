@@ -1,3 +1,2 @@
 *.test
-templates.go
-cli-init
+bin/
