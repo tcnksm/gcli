@@ -7,6 +7,13 @@ deps:
 test: deps
 	go test -v ./...
 
+build: deps
+	cd skeleton; go-bindata -pkg="skeleton" resource/...
+	go build -o bin/gcli
+
 install: deps
-	go-bindata $(DEBUG_FLAG) -o templates.go templates
+	cd skeleton; go-bindata -pkg="skeleton" resource/...
 	go install
+
+tests: build
+	cd tests; go test -v ./...
