@@ -51,8 +51,8 @@ func CommandTemplates(framework int) (Template, Template) {
 	case Framework_go_cmd:
 		return Template{"resource/tmpl/command/go_cmd/command.go.tmpl", "{{ .Name }}.go"}, Template{"", ""}
 	case Framework_codegangsta_cli:
-		return Template{"resource/tmpl/command/codegangsta_cli/command.go.tmpl", "command/{{ .Name }}.go"},
-			Template{"resource/tmpl/command/codegangsta_cli/command_test.go.tmpl", "command/{{ .Name }}_test.go"}
+		return Template{"resource/tmpl/command/codegangsta_cli/command/command.go.tmpl", "command/{{ .Name }}.go"},
+			Template{"resource/tmpl/command/codegangsta_cli/command/command_test.go.tmpl", "command/{{ .Name }}_test.go"}
 	case Framework_mitchellh_cli:
 		return Template{"resource/tmpl/command/mitchellh_cli/command/command.go.tmpl", "command/{{ .Name }}.go"},
 			Template{"resource/tmpl/command/mitchellh_cli/command/command_test.go.tmpl", "command/{{ .Name }}_test.go"}

@@ -1,10 +1,15 @@
 package command
 
+import (
+    "strings"
+)
+
 type {{ title .Name }}Command struct {
 	Meta
 }
 
 func (c *{{ title .Name }}Command) Run(args []string) int {
+    // Write your code here
 	return 0
 }
 
@@ -13,5 +18,8 @@ func (c *{{ title .Name }}Command) Synopsis() string {
 }
 
 func (c *{{ title .Name }}Command) Help() string {
-	return "{{ .Help }}"
+	helpText := `
+{{ .Help }}
+`
+	return strings.TrimSpace(helpText)
 }
