@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 	"text/template"
+
+	"github.com/tcnksm/cli-init/helper"
 )
 
 type Template struct {
@@ -23,6 +25,7 @@ type Template struct {
 // Then, it creates directory if not exsit from output path.
 // Thne, it opens output file.
 // Finally, it evaluates tempalte contents and generate it to output file.
+// If output file is gocode, run go fmt.
 //
 // It returns an error if any.
 func (t *Template) Exec(data interface{}) error {
@@ -37,6 +40,7 @@ func (t *Template) Exec(data interface{}) error {
 		return err
 	}
 
+	// Create directry if necessary
 	dir, _ := filepath.Split(outputPath)
 	if dir != "" {
 		if err := mkdir(dir); err != nil {
@@ -51,6 +55,10 @@ func (t *Template) Exec(data interface{}) error {
 
 	if err := execute(string(contents), wr, data); err != nil {
 		return err
+	}
+
+	if strings.HasSuffix(outputPath, ".go") {
+		helper.GoFmt(outputPath, nil)
 	}
 
 	return nil

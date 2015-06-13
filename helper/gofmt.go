@@ -1,4 +1,4 @@
-package main
+package helper
 
 import (
 	"bytes"
@@ -9,11 +9,10 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
-	"path/filepath"
-	"strings"
 )
 
-func processFile(filename string, in io.Reader, out io.Writer, stdin bool) error {
+func GoFmt(filename string, in io.Reader) error {
+
 	if in == nil {
 		f, err := os.Open(filename)
 		if err != nil {
@@ -49,40 +48,6 @@ func processFile(filename string, in io.Reader, out io.Writer, stdin bool) error
 		if err != nil {
 			return err
 		}
-	}
-	return nil
-}
-
-func isGofile(f os.FileInfo) bool {
-	name := f.Name()
-	return !f.IsDir() && !strings.HasPrefix(name, ".") && strings.HasSuffix(name, ".go")
-}
-
-func visitFile(path string, f os.FileInfo, err error) error {
-
-	if err == nil && isGofile(f) {
-		err = processFile(path, nil, os.Stdout, false)
-	}
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func walkDir(path string) {
-	filepath.Walk(path, visitFile)
-}
-
-func GoFmt(path string) error {
-	dir, err := os.Stat(path)
-	if err != nil {
-		return err
-	}
-
-	if dir.IsDir() {
-		walkDir(path)
 	}
 	return nil
 }

@@ -144,7 +144,7 @@ func resourceTmplCommandCodegangsta_cliCommandsGoTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "resource/tmpl/command/codegangsta_cli/commands.go.tmpl", size: 555, mode: os.FileMode(420), modTime: time.Unix(1434022120, 0)}
+	info := bindataFileInfo{name: "resource/tmpl/command/codegangsta_cli/commands.go.tmpl", size: 555, mode: os.FileMode(420), modTime: time.Unix(1434209943, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
@@ -344,7 +344,7 @@ func resourceTmplCommandMitchellh_cliCommandsGoTmpl() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "resource/tmpl/command/mitchellh_cli/commands.go.tmpl", size: 371, mode: os.FileMode(420), modTime: time.Unix(1434020898, 0)}
+	info := bindataFileInfo{name: "resource/tmpl/command/mitchellh_cli/commands.go.tmpl", size: 371, mode: os.FileMode(420), modTime: time.Unix(1434209861, 0)}
 	a := &asset{bytes: bytes, info:  info}
 	return a, nil
 }
