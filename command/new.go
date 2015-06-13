@@ -70,7 +70,7 @@ func (c *NewCommand) Run(args []string) int {
 
 	parsedArgs := uflag.Args()
 	if len(parsedArgs) != 1 {
-		msg := fmt.Sprintf("invalid arguments")
+		msg := fmt.Sprintf("invalid arguments: %s", strings.Join(parsedArgs, " "))
 		c.Ui.Error(msg)
 		return 1
 	}
