@@ -14,7 +14,7 @@ var Commands = []cli.Command{
     {{ range .Commands }}
 	{
 		Name:        "{{ .Name }}",
-		Usage:       "{{ .Synopsis }}"
+		Usage:       "{{ .Synopsis }}",
 		Action:      command.Cmd{{ title .Name }},
 		Flags:       []cli.Flag{},
 	},
