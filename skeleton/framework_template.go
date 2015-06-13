@@ -49,7 +49,8 @@ func FrameworkTemplates(framework int) []Template {
 func CommandTemplates(framework int) (Template, Template) {
 	switch framework {
 	case Framework_go_cmd:
-		return Template{"resource/tmpl/command/go_cmd/command.go.tmpl", "{{ .Name }}.go"}, Template{"", ""}
+		return Template{"resource/tmpl/command/go_cmd/command.go.tmpl", "{{ .Name }}.go"},
+			Template{"resource/tmpl/command/go_cmd/command_test.go.tmpl", "{{ .Name }}_test.go"}
 	case Framework_codegangsta_cli:
 		return Template{"resource/tmpl/command/codegangsta_cli/command/command.go.tmpl", "command/{{ .Name }}.go"},
 			Template{"resource/tmpl/command/codegangsta_cli/command/command_test.go.tmpl", "command/{{ .Name }}_test.go"}

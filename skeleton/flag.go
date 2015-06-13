@@ -37,11 +37,14 @@ func (f *Flag) Fix() error {
 		return err
 	}
 
-	// Name must be title case
-	f.Name = strings.Title(f.LongName)
+	f.LongName = strings.ToLower(f.LongName)
+
+	// Name is same as LongName by default
+	f.Name = f.LongName
 
 	// ShortName is first character of LongName
-	f.ShortName = strings.ToLower(string(f.LongName[0]))
+	// TODO, when same first character is provided.
+	f.ShortName = string(f.LongName[0])
 
 	return nil
 }
