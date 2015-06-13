@@ -15,7 +15,7 @@ func TestFix(t *testing.T) {
 				Description: "Run as DEBUG mode",
 			},
 			exp: &Flag{
-				Name:        "Debug",
+				Name:        "debug",
 				ShortName:   "d",
 				LongName:    "debug",
 				TypeString:  "Bool",
@@ -32,7 +32,7 @@ func TestFix(t *testing.T) {
 				Description: "",
 			},
 			exp: &Flag{
-				Name:        "Token",
+				Name:        "token",
 				ShortName:   "t",
 				LongName:    "token",
 				TypeString:  "String",

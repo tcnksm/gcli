@@ -31,7 +31,7 @@ func TestNewCommand(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	args := []string{"-F", "mitchellh_cli", "todo"}
+	args := []string{"-F", "mitchellh_cli", "-owner", "deeeet", "todo"}
 	if code := c.Run(args); code != 0 {
 		t.Fatalf("bad status code: %d\n\n%s", code, ui.ErrorWriter.String())
 	}

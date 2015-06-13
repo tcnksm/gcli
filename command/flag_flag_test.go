@@ -27,7 +27,7 @@ func TestFlagFlag_Set(t *testing.T) {
 			success: true,
 			expect: []skeleton.Flag{
 				{
-					Name:        "Debug",
+					Name:        "debug",
 					LongName:    "debug",
 					ShortName:   "d",
 					TypeString:  "String",
@@ -40,9 +40,9 @@ func TestFlagFlag_Set(t *testing.T) {
 			arg:     `debug,help,test`,
 			success: true,
 			expect: []skeleton.Flag{
-				{Name: "Debug", LongName: "debug", ShortName: "d", TypeString: "String", Default: "\"\""},
-				{Name: "Help", LongName: "help", ShortName: "h", TypeString: "String", Default: "\"\""},
-				{Name: "Test", LongName: "test", ShortName: "t", TypeString: "String", Default: "\"\""},
+				{Name: "debug", LongName: "debug", ShortName: "d", TypeString: "String", Default: "\"\""},
+				{Name: "help", LongName: "help", ShortName: "h", TypeString: "String", Default: "\"\""},
+				{Name: "test", LongName: "test", ShortName: "t", TypeString: "String", Default: "\"\""},
 			},
 		},
 	}
