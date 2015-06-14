@@ -10,7 +10,7 @@ cli-init
 The easy way to start building Command-line application by Golang.
 
 `cli-init` generates the codes and its directory structure you need to start building CLI tool right out of the box.
-All you need is to provide name, commands and [framework]() you want to use. 
+All you need is to provide name, commands and [framework](#support-frameworks) you want to use. 
 
 ## Usage
 
@@ -76,7 +76,7 @@ $ git checkout v0.1.0
 1. Create a feature branch
 1. Commit your changes
 1. Rebase your local changes against the master branch
-1. Run test suite with the `go test ./...` command and confirm that it passes
+1. Run test suite with the `make test` command and confirm that it passes
 1. Run `gofmt -s`
 1. Create a new Pull Request
 
