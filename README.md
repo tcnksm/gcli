@@ -21,6 +21,12 @@ $ cli-init new [options] NAME
 ```
 It generates new cli skeleton project. At least, you must provide executable name.
 
+See more usage,
+
+```bash
+$ cli-init help
+```
+
 ## Example
 
 If you want to create `todo` CLI application which has `add`, `list` and `delete` command with
