@@ -1,4 +1,4 @@
-cli-init 
+cli-init
 ====
 
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)][license]
@@ -7,51 +7,52 @@ cli-init
 [license]: https://github.com/tcnksm/cli-init/blob/master/LICENSE
 [godocs]: http://godoc.org/github.com/tcnksm/cli-init
 
-The easy way to start building Golang command-line application.
+The easy way to start building Command-line application by Golang.
 
-## Description
-
-`cli-init` is the easy way to start building Golang command-line application with [codegangsta/cli](https://github.com/codegangsta/cli). All you need to do is to set application name and its subcommand. `cli-init` generates its templates (scaffold) which you need to write when using codegangsta/cli. You can focus on core functionality of application.
-
-## Demo
-
-![](http://deeeet.com/images/cli-init.gif)
+`cli-init` generates the codes and its directory structure you need to start building CLI tool right out of the box.
+All you need is to provide name, commands and [framework]() you want to use. 
 
 ## Usage
 
-You just need to set its application name:
+To start new command line tool,
 
 ```bash
-$ cli-init [options] [application]
+$ cli-init new [options] NAME
 ```
-
-You can set subcommands with `-s` option:
-
-```bash
-$ cli-init -s subcommand1,subcommand2,subcommand3 [application]
-```
-
-## Artifacts
-
-`cli-init` generates templates (scaffold) which you need to write when using [codegangsta/cli](https://github.com/codegangsta/cli):
-
-- **main.go** - defines main function. It includes application name, version, usage, author name and so on. 
-- **commands.go** - defines sub-commands. It includes subcommand name, usage, function and so on. 
-- **version.go** - defines application version. default value is `0.1.0`
-- **README.md** - insctructs application name, synopsis, usage and installation and so on. 
-- **CHANGELOG.md** - shows version release date and its updates.
-
-See more details [codegangsta/cli](https://github.com/codegangsta/cli).
+It generates new cli skeleton project. At least, you must provide executable name.
 
 ## Example
 
-If you want to start to building `todo` application which has subcommands `add`, `list`, `delete`:
+If you want to create `todo` CLI application which has `add`, `list` and `delete` command with
+[mitchellh/cli](https://github.com/mitchellh/cli) framework,
 
 ```bash
-$ cli-init -s add,list,delete todo
+$ cd $GOPATH/src/github.com/YOUR_NAME
+$ cli-init new -F mitchellh_cli -c add -c list -c delete todo
 ```
 
-You can see sample of artifacts in [tcnksm-sample/cli-init](https://github.com/tcnksm-sample/cli-init).
+You can run `go build` todo application from beginning.
+
+## Support frameworks
+
+`cli-init` supports bellow cli frameworks,
+
+- [codegangsta_cli](https://github.com/codegangsta/cli)
+- [mitchellh_cli](https://github.com/mitchellh/cli)
+- [go_cmd]() (Standard `go` command style)
+- [flag](https://golang.org/pkg/flag/)
+
+`cli-init` has tempaltes of these frameworks. Template file includes best practices of each frameworks like
+how to separate file or how to set directory structure and so on.
+
+In future, we will also suppport other CLI frameworks like below (Need help),
+
+- [spf13/cobra](https://github.com/spf13/cobra)
+- [docopt.go](https://github.com/docopt/docopt.go)
+- [motemen/cli](https://github.com/motemen/cli)
+- [mow.cli](https://github.com/jawher/mow.cli)
+- [ogier/pflag](https://github.com/ogier/pflag)
+- [go-flags](https://github.com/jessevdk/go-flags)
 
 ## Installation
 
@@ -61,6 +62,12 @@ To install, use `go get` and `make install`. We tag versions so feel free to che
 $ go get -d github.com/tcnksm/cli-init
 $ cd $GOPATH/src/github.com/tcnksm/cli-init
 $ make install 
+```
+
+`cli-init` was re-written from scratch. If you prefer old version of `cli-init`, checkout,
+
+```bash
+$ git checkout v0.1.0
 ```
 
 ## Contribution
