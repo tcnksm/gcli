@@ -1,0 +1,18 @@
+package main
+
+import (
+	"github.com/mitchellh/cli"
+	"github.com/{{ .Owner }}/{{ .Name }}/command"
+)
+
+func Commands(meta *command.Meta) map[string]cli.CommandFactory {
+	return map[string]cli.CommandFactory{
+		{{ range .Commands }}
+		"{{ .Name }}": func() (cli.Command, error) {
+			return &command.{{ title .Name }}Command{
+				Meta: *meta,
+			}, nil
+		},
+		{{ end }}
+	}
+}
