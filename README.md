@@ -7,7 +7,7 @@ cli-init
 [license]: https://github.com/tcnksm/cli-init/blob/master/LICENSE
 [godocs]: http://godoc.org/github.com/tcnksm/cli-init
 
-The easy way to start building Command-line application by Golang.
+The easy way to build command-line application by Golang.
 
 `cli-init` generates the codes and its directory structure you need to start building CLI tool right out of the box.
 All you need is to provide name, commands and [framework](#support-frameworks) you want to use. 
@@ -55,7 +55,7 @@ In future, we will also suppport other CLI frameworks like below (Need help),
 
 - [spf13/cobra](https://github.com/spf13/cobra)
 - [docopt.go](https://github.com/docopt/docopt.go)
-- [motemen/cli](https://github.com/motemen/cli)
+- [motemen/go-cli](https://github.com/motemen/go-cli)
 - [mow.cli](https://github.com/jawher/mow.cli)
 - [ogier/pflag](https://github.com/ogier/pflag)
 - [go-flags](https://github.com/jessevdk/go-flags)
