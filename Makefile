@@ -18,3 +18,5 @@ test: build
 tests: build
 	cd tests; go test -v ./...
 
+test-docker:
+	./test-docker.sh

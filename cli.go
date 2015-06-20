@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/mitchellh/cli"
-	"github.com/tcnksm/cli-init/command"
+	"github.com/tcnksm/gcli/command"
 )
 
 func Run(args []string) int {

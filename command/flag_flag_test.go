@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/tcnksm/cli-init/skeleton"
+	"github.com/tcnksm/gcli/skeleton"
 )
 
 func TestFlagFlag_implements(t *testing.T) {

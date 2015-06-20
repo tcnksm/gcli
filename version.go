@@ -1,6 +1,6 @@
 package main
 
-const Name = "cli-init"
+const Name = "gcli"
 const Version string = "v0.2.0"
 
 // GitCommit describes latest commit hash.
