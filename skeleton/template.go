@@ -8,7 +8,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/tcnksm/cli-init/helper"
+	"github.com/tcnksm/gcli/helper"
 )
 
 type Template struct {

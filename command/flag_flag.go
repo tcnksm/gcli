@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/tcnksm/cli-init/skeleton"
+	"github.com/tcnksm/gcli/skeleton"
 )
 
 const (

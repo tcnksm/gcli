@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/mitchellh/cli"
-	"github.com/tcnksm/cli-init/command"
+	"github.com/tcnksm/gcli/command"
 )
 
 func Commands(meta *command.Meta) map[string]cli.CommandFactory {
