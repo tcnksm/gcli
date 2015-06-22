@@ -8,6 +8,8 @@ import (
 	"github.com/tcnksm/gcli/command"
 )
 
+// Run execute RunCustom() with color and output to Stdout/Stderr.
+// It returns exit code.
 func Run(args []string) int {
 
 	// Meta-option for executables.
@@ -26,6 +28,7 @@ func Run(args []string) int {
 	return RunCustom(args, Commands(meta))
 }
 
+// RunCustom execute mitchellh/cli and return its exit code.
 func RunCustom(args []string, commands map[string]cli.CommandFactory) int {
 
 	cli := &cli.CLI{
