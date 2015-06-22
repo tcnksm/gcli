@@ -32,20 +32,6 @@ var CommonTemplates = []Template{
 // Frameworks is collection of Framework.
 var Frameworks = []*Framework{
 	{
-		Name: "go_cmd",
-		URL:  "",
-		Description: `
-`,
-		BaseTemplates: []Template{
-			{"resource/tmpl/go_cmd/main.go.tmpl", "main.go"},
-		},
-		CommandTemplates: []Template{
-			{"resource/tmpl/go_cmd/command.go.tmpl", "{{ .Name }}.go"},
-			{"resource/tmpl/go_cmd/command_test.go.tmpl", "{{ .Name }}_test.go"},
-		},
-	},
-
-	{
 		Name:     "mitchellh_cli",
 		AltNames: []string{"mitchellh"},
 		URL:      "https://github.com/mitchellh/cli",
@@ -80,6 +66,20 @@ The goal is to enable developers to write fast and distributable command line ap
 		CommandTemplates: []Template{
 			{"resource/tmpl/codegangsta_cli/command/command.go.tmpl", "command/{{ .Name }}.go"},
 			{"resource/tmpl/codegangsta_cli/command/command_test.go.tmpl", "command/{{ .Name }}_test.go"},
+		},
+	},
+
+	{
+		Name: "go_cmd",
+		URL:  "https://github.com/golang/go/tree/master/src/cmd/go",
+		Description: `
+`,
+		BaseTemplates: []Template{
+			{"resource/tmpl/go_cmd/main.go.tmpl", "main.go"},
+		},
+		CommandTemplates: []Template{
+			{"resource/tmpl/go_cmd/command.go.tmpl", "{{ .Name }}.go"},
+			{"resource/tmpl/go_cmd/command_test.go.tmpl", "{{ .Name }}_test.go"},
 		},
 	},
 
