@@ -11,6 +11,8 @@ import (
 	"os"
 )
 
+// GoFmt runs `gofmt` to io.Reader and save it as file
+// If something wrong it returns error.
 func GoFmt(filename string, in io.Reader) error {
 
 	if in == nil {
