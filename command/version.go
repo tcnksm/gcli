@@ -3,6 +3,7 @@ package command
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/tcnksm/go-latest"
@@ -54,16 +55,20 @@ func (c *VersionCommand) Help() string {
 
 func CheckLatest(version string) <-chan *latest.CheckResponse {
 	// Check version is latest or not
+	fix := latest.DeleteFrontV()
 	github := &latest.GithubTag{
 		Owner:             "tcnksm",
 		Repository:        "gcli",
-		FixVersionStrFunc: latest.DeleteFrontV(),
+		FixVersionStrFunc: fix,
 	}
 
 	resCh := make(chan *latest.CheckResponse)
 	go func() {
 		// Ignore error because it not critical for main fucntion
-		res, _ := latest.Check(github, version)
+		res, err := latest.Check(github, fix(version))
+		if err != nil {
+			log.Println(err)
+		}
 		resCh <- res
 	}()
 
