@@ -10,13 +10,21 @@ if [ -n "${FMT_RES}" ]; then
     exit 255
 fi
 
-go vet ./...
+go list -f '{{.Dir}}' ./... | xargs go tool vet
 if [ $? -ne 0 ]; then
     echo -e "go vet failed"
     exit 255
 fi
 
-LINT_RES=$(golint ./... | grep -v "bindata.go")
+# TODO, better way to exclude some lint warning.
+LINT_RES=$(golint ./... | \
+                  grep -v "bindata.go" | \
+                  grep -v "type name will be used as command.CommandFlag by other packages" | \
+                  grep -v "Framework_go_cmd" | \
+                  grep -v "Framework_codegangsta_cli" | \
+                  grep -v "Framework_mitchellh_cli" | \
+                  grep -v "Framework_flag" \
+        )
 if [ -n "${LINT_RES}" ]; then
      echo -e "golint failed: \n${LINT_RES}"
      exit 255
