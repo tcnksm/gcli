@@ -10,7 +10,7 @@ var (
 	}
 )
 
-// FrameworkTempaltes returns framewrok Template based on framework ID.
+// FrameworkTempaltes returns framework Template based on framework ID.
 func FrameworkTemplates(framework int) []Template {
 	switch framework {
 	case Framework_go_cmd:

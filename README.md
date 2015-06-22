@@ -46,10 +46,10 @@ You can run `go build` todo application from beginning.
 - [go_cmd]() (Standard `go` command style)
 - [flag](https://golang.org/pkg/flag/)
 
-`gcli` has tempaltes of these frameworks. Template file includes best practices of each frameworks like
+`gcli` has templates of these frameworks. Template file includes best practices of each frameworks like
 how to separate file or how to set directory structure and so on.
 
-In future, we will also suppport other CLI frameworks like below (Need help),
+In future, we will also support other CLI frameworks like below (Need help),
 
 - [spf13/cobra](https://github.com/spf13/cobra)
 - [docopt.go](https://github.com/docopt/docopt.go)

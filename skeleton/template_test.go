@@ -33,7 +33,7 @@ func TestProcessPathTmpl(t *testing.T) {
 	for i, tt := range tests {
 		output, err := processPathTmpl(tt.Tmpl, tt.data)
 		if tt.success && err != nil {
-			t.Fatalf("#%d expects error not to be ocurred", i)
+			t.Fatalf("#%d expects error not to be occurred", i)
 		}
 
 		if output != tt.expect {
