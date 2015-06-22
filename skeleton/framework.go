@@ -3,12 +3,10 @@ package skeleton
 import "fmt"
 
 const (
-	// CLI with commands
 	Framework_go_cmd = 100 + iota
 	Framework_codegangsta_cli
 	Framework_mitchellh_cli
 
-	// CLI only with flag
 	Framework_flag = 1000 + iota
 )
 

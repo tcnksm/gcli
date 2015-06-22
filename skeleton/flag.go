@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// Flag stores flag meta informations
 type Flag struct {
 	// Name is flag name, this is used for flag variable name in generated code.
 	// Name is equal to titled LongName.

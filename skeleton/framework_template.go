@@ -4,13 +4,14 @@ package skeleton
 // which is related to cli framework.
 
 var (
+	// CommonTemplates is collection of templates which are used all frameworks
 	CommonTemplates = []Template{
 		{"resource/tmpl/common/CHANGELOG.md.tmpl", "CHANGELOG.md"},
 		{"resource/tmpl/common/README.md.tmpl", "README.md"},
 	}
 )
 
-// FrameworkTempaltes returns framework Template based on framework ID.
+// FrameworkTemplates returns framework Template based on framework ID.
 func FrameworkTemplates(framework int) []Template {
 	switch framework {
 	case Framework_go_cmd:
@@ -43,7 +44,7 @@ func FrameworkTemplates(framework int) []Template {
 	}
 }
 
-// CommandTempaltes returns command Tempalte based on framework ID.
+// CommandTemplates returns command Tempalte based on framework ID.
 // The first return value is command Tempalte.
 // The second return value is command test Tempalte.
 func CommandTemplates(framework int) (Template, Template) {

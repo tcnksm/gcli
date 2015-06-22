@@ -17,10 +17,13 @@ const (
 // as skeleton.Flag.
 type FlagFlag []skeleton.Flag
 
+// String
 func (f *FlagFlag) String() string {
 	return ""
 }
 
+// Set parses input string and appends it on FlagdFlag.
+// Input format must be NAME:TYPE:SYNOPSIS format.
 func (f *FlagFlag) Set(v string) error {
 	flgStrs := strings.Split(v, ",")
 

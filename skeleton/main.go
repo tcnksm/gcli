@@ -6,6 +6,7 @@ import (
 	"sync"
 )
 
+// Skeleton stores meta data of skeleton
 type Skeleton struct {
 	// Path is where skeleton is generated.
 	Path string
