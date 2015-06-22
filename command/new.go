@@ -71,7 +71,7 @@ func (c *NewCommand) Run(args []string) int {
 
 	parsedArgs := uflag.Args()
 	if len(parsedArgs) != 1 {
-		msg := fmt.Sprintf("invalid arguments: %s", strings.Join(parsedArgs, " "))
+		msg := fmt.Sprintf("Invalid arguments: %s", strings.Join(parsedArgs, " "))
 		c.UI.Error(msg)
 		return 1
 	}
@@ -89,8 +89,9 @@ func (c *NewCommand) Run(args []string) int {
 		return 1
 	}
 
-	framework, err := skeleton.Framework(frameworkStr)
+	framework, err := skeleton.FrameworkByName(frameworkStr)
 	if err != nil {
+		c.UI.Error(fmt.Sprintf("Failed to generate %q: %s", name, err.Error()))
 		return 1
 	}
 
@@ -100,8 +101,8 @@ func (c *NewCommand) Run(args []string) int {
 		if err != nil {
 			owner, err = gitconfig.Username()
 			if err != nil {
-				msg := "Cannot retrieve owner name\n" +
-					"Owener name is retrieved from `~/.gitcofig` file.\n" +
+				msg := "Cannot find owner name\n" +
+					"By default, owener name is retrieved from `~/.gitcofig` file.\n" +
 					"Please set one via -owner option or `~/.gitconfig` file."
 				c.UI.Error(msg)
 				return 1
@@ -138,7 +139,7 @@ func (c *NewCommand) Run(args []string) int {
 	// error was happened while executing skeleton.Generate().
 	// Run all templating and show all error.
 	if gotErr {
-		c.UI.Error(fmt.Sprintf("Failed to generate: %s", name))
+		c.UI.Error(fmt.Sprintf("Failed to generate %q", name))
 		return 1
 	}
 
