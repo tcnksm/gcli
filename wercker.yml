@@ -1,0 +1,8 @@
+box: google/golang:1.4
+build:
+  steps:
+    - setup-go-workspace
+    - script:
+        name: Run test        
+        code: |
+          make test
