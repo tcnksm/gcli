@@ -1,5 +1,6 @@
 package skeleton
 
+// Executable store executable meta information
 type Executable struct {
 	// Name is executable name
 	Name string

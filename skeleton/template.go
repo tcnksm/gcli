@@ -11,6 +11,7 @@ import (
 	"github.com/tcnksm/gcli/helper"
 )
 
+// Template stores meta data of template
 type Template struct {
 	// Path is the path to this template.
 	Path string
