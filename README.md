@@ -66,8 +66,13 @@ You can run `go build` todo application from beginning.
 Flag pattern is the pattern which executable has only flag options (e.g., `grep`)
 
 ```bash
-$ grep         —i -C 4   "some string" /tmp
- <executable> <options> <arguments>
+$ grep —i -C 4 "some string" /tmp   
+    │     │              │           
+    │     │               `--------- Arguments 
+    │     │                          
+    │      `------------------------ Option flags   
+    │                                
+     `------------------------------ Executable  
 ```
 
 To generate this pattern, `gcli` supports,
@@ -79,8 +84,17 @@ To generate this pattern, `gcli` supports,
 Command pattern is the pattern which executable has command for change its behavior (e.g., `git`)
 
 ```bash
-$  git          --no-pager       push      -v               origin master
-  <executable> <global options> <command> <command option> <arguments>
+$ git --no-pager push -v origin mastter     
+   │       │      │    │      │           
+   │       │      │    │       `------- Arguments 
+   │       │      │    │              
+   │       │      │     `-------------- Command flags 
+   │       │      │                   
+   │       │       `------------------- Command
+   │       │                          
+   │        `-------------------------- Global flags
+   │                                  
+    `---------------------------------- Executable
 ```
 
 To generate this pattern, `gcli` supports,
