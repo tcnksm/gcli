@@ -34,6 +34,27 @@ $ cd $GOPATH/src/github.com/YOUR_NAME
 $ gcli new -F mitchellh_cli -c add -c list -c delete todo
 ```
 
+It generates below files,
+
+```bash
+$ tree todo/
+todo
+├── CHANGELOG.md
+├── README.md
+├── cli.go
+├── command
+│   ├── add.go
+│   ├── add_test.go
+│   ├── delete.go
+│   ├── delete_test.go
+│   ├── list.go
+│   ├── list_test.go
+│   └── meta.go
+├── commands.go
+├── main.go
+└── version.go
+```
+
 You can run `go build` todo application from beginning.
 
 ## Support frameworks
