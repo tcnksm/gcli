@@ -15,12 +15,17 @@ gcli
 
 ## Usage
 
-To start new command line tool,
+To start new command line tool, run below. It generates new cli skeleton project. At least, you must provide executable name.
 
 ```bash
 $ gcli new [options] NAME
 ```
-It generates new cli skeleton project. At least, you must provide executable name.
+
+To see available frameworks,
+
+```bash
+$ gcli list
+```
 
 See more usage,
 
