@@ -11,13 +11,10 @@ type Skeleton struct {
 	// Path is where skeleton is generated.
 	Path string
 
-	// Framework represent which cli package is used.
-	// Framework ID is defined on framework_tempalte.go
-	Framework int
-
 	// If WithTest is true, also generate test code.
 	SkipTest bool
 
+	Framework  *Framework
 	Executable *Executable
 }
 
@@ -58,7 +55,7 @@ func (s *Skeleton) generateBaseFiles() <-chan error {
 	go func() {
 		var wg sync.WaitGroup
 		baseTmpls := CommonTemplates
-		baseTmpls = append(baseTmpls, FrameworkTemplates(s.Framework)...)
+		baseTmpls = append(baseTmpls, s.Framework.BaseTemplates...)
 		for _, tmpl := range baseTmpls {
 
 			if s.SkipTest && strings.HasPrefix(tmpl.Path, "_test.go.tmpl") {
@@ -89,31 +86,22 @@ func (s *Skeleton) generateCommandFiles() <-chan error {
 
 	go func() {
 		var wg sync.WaitGroup
-		cmdTmpl, cmdTestTmpl := CommandTemplates(s.Framework)
 
 		for _, cmd := range s.Executable.Commands {
 			wg.Add(1)
-			go func(tmpl Template, cmd Command) {
+			go func(cmd Command) {
 				defer wg.Done()
-				tmpl.OutputPathTmpl = filepath.Join(s.Path, tmpl.OutputPathTmpl)
-				if err := tmpl.Exec(cmd); err != nil {
-					errCh <- err
+				for _, tmpl := range s.Framework.CommandTemplates {
+					if s.SkipTest && strings.HasPrefix(tmpl.Path, "_test.go.tmpl") {
+						continue
+					}
+
+					tmpl.OutputPathTmpl = filepath.Join(s.Path, tmpl.OutputPathTmpl)
+					if err := tmpl.Exec(cmd); err != nil {
+						errCh <- err
+					}
 				}
-			}(cmdTmpl, cmd)
-
-			if s.SkipTest {
-				continue
-			}
-
-			wg.Add(1)
-			go func(tmpl Template, cmd Command) {
-				defer wg.Done()
-				tmpl.OutputPathTmpl = filepath.Join(s.Path, tmpl.OutputPathTmpl)
-				if err := tmpl.Exec(cmd); err != nil {
-					errCh <- err
-				}
-			}(cmdTestTmpl, cmd)
-
+			}(cmd)
 		}
 
 		// Wait until all task is done.
