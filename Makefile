@@ -1,6 +1,8 @@
 DEBUG_FLAG = $(if $(DEBUG),-debug)
 
 deps:
+	go get -v golang.org/x/tools/cmd/vet	
+	go get -v github.com/golang/lint/golint
 	go get -v github.com/jteeuwen/go-bindata/...
 	go get -v -d -t ./...
 
@@ -13,6 +15,8 @@ install: deps
 	go install
 
 test: build
+	golint ./...
+	go vet ./...
 	go test ./...
 
 tests: build
