@@ -16,14 +16,10 @@ if [ $? -ne 0 ]; then
     exit 255
 fi
 
-# LINT_RES=$(golint ./...)
-# if [ -n "${LINT_RES}" ]; then
-#     echo -e "golint failed: \n${LINT_RES}"
-#     exit 255
-# fi
+LINT_RES=$(golint ./...)
+if [ -n "${LINT_RES}" ]; then
+     echo -e "golint failed: \n${LINT_RES}"
+     exit 255
+fi
 
 go test -v ./...
-
-
-
-
