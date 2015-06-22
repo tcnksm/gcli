@@ -28,6 +28,7 @@ type NewCommand struct {
 	Meta
 }
 
+// Run generates a new cli project. It returns exit code
 func (c *NewCommand) Run(args []string) int {
 
 	var commands []skeleton.Command
@@ -37,7 +38,7 @@ func (c *NewCommand) Run(args []string) int {
 	var skipTest bool
 
 	uflag := flag.NewFlagSet("new", flag.ContinueOnError)
-	uflag.Usage = func() { c.Ui.Error(c.Help()) }
+	uflag.Usage = func() { c.UI.Error(c.Help()) }
 
 	uflag.Var((*CommandFlag)(&commands), "command", "command")
 	uflag.Var((*CommandFlag)(&commands), "c", "command (short)")
@@ -60,7 +61,7 @@ func (c *NewCommand) Run(args []string) int {
 
 	go func() {
 		for errScanner.Scan() {
-			c.Ui.Error(errScanner.Text())
+			c.UI.Error(errScanner.Text())
 		}
 	}()
 
@@ -71,7 +72,7 @@ func (c *NewCommand) Run(args []string) int {
 	parsedArgs := uflag.Args()
 	if len(parsedArgs) != 1 {
 		msg := fmt.Sprintf("invalid arguments: %s", strings.Join(parsedArgs, " "))
-		c.Ui.Error(msg)
+		c.UI.Error(msg)
 		return 1
 	}
 
@@ -84,7 +85,7 @@ func (c *NewCommand) Run(args []string) int {
 	output := name
 	if _, err := os.Stat(output); !os.IsNotExist(err) {
 		msg := fmt.Sprintf("Cannot create directory %s: file exists", output)
-		c.Ui.Error(msg)
+		c.UI.Error(msg)
 		return 1
 	}
 
@@ -102,7 +103,7 @@ func (c *NewCommand) Run(args []string) int {
 				msg := "Cannot retrieve owner name\n" +
 					"Owener name is retrieved from `~/.gitcofig` file.\n" +
 					"Please set one via -owner option or `~/.gitconfig` file."
-				c.Ui.Error(msg)
+				c.UI.Error(msg)
 				return 1
 			}
 		}
@@ -130,25 +131,29 @@ func (c *NewCommand) Run(args []string) int {
 	gotErr := false
 	for err := range errCh {
 		gotErr = true
-		c.Ui.Error(err.Error())
+		c.UI.Error(err.Error())
 	}
 
 	// Return non zero var when at least one
 	// error was happened while executing skeleton.Generate().
 	// Run all templating and show all error.
 	if gotErr {
-		c.Ui.Error(fmt.Sprintf("Failed to generate: %s", name))
+		c.UI.Error(fmt.Sprintf("Failed to generate: %s", name))
 		return 1
 	}
 
-	c.Ui.Info(fmt.Sprintf("====> Successfuly generated: %s", name))
+	c.UI.Info(fmt.Sprintf("====> Successfuly generated: %s", name))
 	return 0
 }
 
+// Synopsis is a one-line, short synopsis of the command.
 func (c *NewCommand) Synopsis() string {
 	return "Generate new cli project"
 }
 
+// Help is a long-form help text that includes the command-line
+// usage, a brief few sentences explaining the function of the command,
+// and the complete list of flags the command accepts.
 func (c *NewCommand) Help() string {
 	helpText := `
 Usage: gcli new [option] NAME

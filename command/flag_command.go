@@ -12,10 +12,13 @@ import (
 // as skeleton.Command.
 type CommandFlag []skeleton.Command
 
+// String
 func (c *CommandFlag) String() string {
 	return ""
 }
 
+// Set parses input string and appends it on CommandFlags.
+// Input format must be NAME[:SYNOPSIS] format.x
 func (c *CommandFlag) Set(v string) error {
 	cmdStrs := strings.Split(v, ",")
 	for _, cmdStrs := range cmdStrs {
