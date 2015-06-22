@@ -1,6 +1,6 @@
 # ROADMAP
 
-This is road map of `gcli`
+This is road map of `gcli`, what I'm doing for next release and planing for future relase. If you have feature request, please open issues or send pull request. 
 
 ## 0.2.1
 
