@@ -42,7 +42,7 @@ You can run `go build` todo application from beginning.
 
 ### Flag pattern
 
-Flag pattern is the pattern which executable has only flag options (e.g., grep)
+Flag pattern is the pattern which executable has only flag options (e.g., `grep`)
 
 ```bash
 $ grep         —i -C 4   "some string" /tmp
@@ -66,7 +66,7 @@ To generate this pattern, `gcli` supports,
 
 - [codegangsta_cli](https://github.com/codegangsta/cli)
 - [mitchellh_cli](https://github.com/mitchellh/cli)
-- [go_cmd](https://github.com/golang/go/blob/master/src/cmd/go/main.go#L30#L51) (No 3rd party pacakge, `go` command style)
+- [go_cmd](https://github.com/golang/go/blob/master/src/cmd/go/main.go#L30#L51) (No 3rd party framework, `go` command style)
 
 ## Installation
 
