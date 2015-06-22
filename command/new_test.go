@@ -17,7 +17,7 @@ func TestNewCommand(t *testing.T) {
 	ui := new(cli.MockUi)
 	c := &NewCommand{
 		Meta: Meta{
-			Ui: ui,
+			UI: ui,
 		},
 	}
 
@@ -43,7 +43,7 @@ func TestNewCommand_directoryExist(t *testing.T) {
 	ui := new(cli.MockUi)
 	c := &NewCommand{
 		Meta: Meta{
-			Ui: ui,
+			UI: ui,
 		},
 	}
 
