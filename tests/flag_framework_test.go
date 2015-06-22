@@ -32,13 +32,13 @@ func TestNew_flag_frameworks(t *testing.T) {
 
 	for _, tt := range tests {
 
-		artifactBin := fmt.Sprintf("%s_todo", tt.framework)
+		artifactBin := fmt.Sprintf("%s_grep", tt.framework)
 		args := []string{
 			"new",
 			"-framework", tt.framework,
 			"-owner", owner,
-			"-flag=debug:bool:'Run as a debug mode'",
-			"-flag=name:string:'Set name for execution'",
+			"-flag=i:Bool:'Perform case insensitive matching'",
+			"-flag=C:Int:'Print num lines of leading and trailing context'",
 			artifactBin,
 		}
 
