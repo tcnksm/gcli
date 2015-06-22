@@ -2,7 +2,7 @@ package skeleton
 
 import "time"
 
-// dateFunc returns formated date. Format follows
+// dateFunc returns formatted date. Format follows
 // https://github.com/olivierlacan/keep-a-changelog format
 func dateFunc() func() string {
 	return func() string {

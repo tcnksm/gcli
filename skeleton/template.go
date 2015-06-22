@@ -22,9 +22,9 @@ type Template struct {
 // Exec evaluate this template and write it to provided file.
 // At First, it reads template content.
 // Then, it generates output file path from output path template and its data.
-// Then, it creates directory if not exsit from output path.
-// Thne, it opens output file.
-// Finally, it evaluates tempalte contents and generate it to output file.
+// Then, it creates directory if not exist from output path.
+// Then, it opens output file.
+// Finally, it evaluates template contents and generate it to output file.
 // If output file is gocode, run go fmt.
 //
 // It returns an error if any.
@@ -40,7 +40,7 @@ func (t *Template) Exec(data interface{}) error {
 		return err
 	}
 
-	// Create directry if necessary
+	// Create directory if necessary
 	dir, _ := filepath.Split(outputPath)
 	if dir != "" {
 		if err := mkdir(dir); err != nil {

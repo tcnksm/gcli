@@ -10,7 +10,7 @@ type Executable struct {
 	// Commands are commands of the executable
 	Commands []Command
 
-	// Flags are flags of the exexutable
+	// Flags are flags of the executable
 	Flags []Flag
 
 	// Version is initial version

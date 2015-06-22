@@ -13,7 +13,7 @@ const (
 )
 
 // Framework returns framework ID (unique variable in gcli)
-// from name string. If not match any framework, it retuns error.
+// from name string. If not match any framework, it returns error.
 func Framework(name string) (int, error) {
 	switch name {
 	case "go_cmd":
