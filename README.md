@@ -7,8 +7,7 @@ gcli
 [license]: https://github.com/tcnksm/gcli/blob/master/LICENSE
 [godocs]: http://godoc.org/github.com/tcnksm/gcli
 
-`gcli` (formerly `cli-init`) generates the codes and its directory structure you need to start building CLI tool right out of the box.
-All you need is to provide name, commands and [framework](#support-frameworks) you want to use. 
+`gcli` (formerly `cli-init`) generates the codes and its directory structure you need to start building CLI tool by Golang right out of the box. All you need is to provide name, command names and [framework](#support-frameworks) you want to use. 
 
 ## Usage
 
@@ -39,24 +38,35 @@ You can run `go build` todo application from beginning.
 
 ## Support frameworks
 
-`gcli` supports bellow cli frameworks,
+`gcli` generates two types of CLI (you can choose). Flag pattern & Command pattern.
+
+### Flag pattern
+
+Flag pattern is the pattern which executable has only flag options (e.g., grep)
+
+```bash
+$ grep         —i -C 4   "some string" /tmp
+ <executable> <options> <arguments>
+```
+
+To generate this pattern, `gcli` supports,
+
+- [flag](https://golang.org/pkg/flag/)
+
+### Command pattern
+
+Command pattern is the pattern which executable has command for change its behavior (e.g., `git`)
+
+```bash
+$  git          --no-pager       push      -v               origin master
+  <executable> <global options> <command> <command option> <arguments>
+```
+
+To generate this pattern, `gcli` supports,
 
 - [codegangsta_cli](https://github.com/codegangsta/cli)
 - [mitchellh_cli](https://github.com/mitchellh/cli)
-- [go_cmd]() (Standard `go` command style)
-- [flag](https://golang.org/pkg/flag/)
-
-`gcli` has templates of these frameworks. Template file includes best practices of each frameworks like
-how to separate file or how to set directory structure and so on.
-
-In future, we will also support other CLI frameworks like below (Need help),
-
-- [spf13/cobra](https://github.com/spf13/cobra)
-- [docopt.go](https://github.com/docopt/docopt.go)
-- [motemen/go-cli](https://github.com/motemen/go-cli)
-- [mow.cli](https://github.com/jawher/mow.cli)
-- [ogier/pflag](https://github.com/ogier/pflag)
-- [go-flags](https://github.com/jessevdk/go-flags)
+- [go_cmd](https://github.com/golang/go/blob/master/src/cmd/go/main.go#L30#L51) (No 3rd party pacakge, `go` command style)
 
 ## Installation
 
