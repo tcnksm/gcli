@@ -15,5 +15,10 @@ This is road map of `gcli`, what I'm doing for next release and planing for futu
 
 ## 0.3.0
 
-- `detect` command to detect framework of exsited project.
-- `add` command to add new command to existed project.
+- `detect` command to detect framework of exsited project
+- `add` command to add new command to existed project
+
+## Ideas
+
+- Generate `man` page 
+- Read `man` page and generate command skeleton 
