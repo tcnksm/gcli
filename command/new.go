@@ -31,11 +31,14 @@ type NewCommand struct {
 // Run generates a new cli project. It returns exit code
 func (c *NewCommand) Run(args []string) int {
 
-	var commands []skeleton.Command
-	var flags []skeleton.Flag
-	var frameworkStr string
-	var owner string
-	var skipTest bool
+	var (
+		commands     []skeleton.Command
+		flags        []skeleton.Flag
+		frameworkStr string
+		owner        string
+		skipTest     bool
+		verbose      bool
+	)
 
 	uflag := flag.NewFlagSet("new", flag.ContinueOnError)
 	uflag.Usage = func() { c.UI.Error(c.Help()) }
@@ -54,6 +57,9 @@ func (c *NewCommand) Run(args []string) int {
 
 	uflag.BoolVar(&skipTest, "skip-test", false, "skip-test")
 	uflag.BoolVar(&skipTest, "T", false, "skip-test (short)")
+
+	uflag.BoolVar(&verbose, "verbose", false, "verbose")
+	uflag.BoolVar(&verbose, "V", false, "verbose (short)")
 
 	errR, errW := io.Pipe()
 	errScanner := bufio.NewScanner(errR)
@@ -110,6 +116,25 @@ func (c *NewCommand) Run(args []string) int {
 		}
 	}
 
+	// outCh receives info output from skeleton.Generate
+	// and show it in UI output
+	outCh := make(chan string)
+	go func() {
+		for out := range outCh {
+			c.UI.Output("  " + out)
+		}
+	}()
+
+	// errCh receives error from skeleton.Generate
+	// and show it in UI error output
+	gotErr := false
+	err2Ch := make(chan error)
+	go func() {
+		for err := range err2Ch {
+			c.UI.Error("  " + err.Error())
+		}
+	}()
+
 	executable := &skeleton.Executable{
 		Name:        name,
 		Owner:       owner,
@@ -124,16 +149,15 @@ func (c *NewCommand) Run(args []string) int {
 		Framework:  framework,
 		SkipTest:   skipTest,
 		Executable: executable,
+		OutCh:      outCh,
+		ErrCh:      err2Ch,
+		Verbose:    verbose,
+		LogWriter:  os.Stdout,
 	}
 
 	// Create project directory
-	errCh := skeleton.Generate()
-
-	gotErr := false
-	for err := range errCh {
-		gotErr = true
-		c.UI.Error(err.Error())
-	}
+	doneCh := skeleton.Generate()
+	<-doneCh
 
 	// Return non zero var when at least one
 	// error was happened while executing skeleton.Generate().
