@@ -110,3 +110,21 @@ func goBuild(output string) error {
 
 	return nil
 }
+
+// goVet runs go vet on current directory. If failed, returns error.
+func goVet(output string) error {
+	var stdout, stderr bytes.Buffer
+	cmd := exec.Command("go", "vet", "./...")
+	cmd.Stderr = &stderr
+	cmd.Stdout = &stdout
+
+	if err := cmd.Start(); err != nil {
+		return fmt.Errorf("failed to start: %s\n\n %s", err, stderr.String())
+	}
+
+	if err := cmd.Wait(); err != nil {
+		return fmt.Errorf("failed to execute: %s\n\n %s", err, stderr.String())
+	}
+
+	return nil
+}
