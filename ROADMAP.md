@@ -5,10 +5,10 @@ This is road map of `gcli`, what I'm doing for next release and planing for futu
 ## 0.2.1
 
 - `godoc`
-- More verbose outputs in `skeleton` package
 - More document for flag
 - Global option for command pattern
 - `go vet`, `golint` tests for artifacts
+- **Done**: More verbose outputs in `skeleton` package
 - **Done**: `list` command
 - **Done**: `go vet`, `golint`, `gofmt` test for `gcli`
 - **Done**: `wercker.yml` to run test on Wercker

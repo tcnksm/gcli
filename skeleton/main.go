@@ -1,6 +1,8 @@
 package skeleton
 
 import (
+	"fmt"
+	"io"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -16,49 +18,66 @@ type Skeleton struct {
 
 	Framework  *Framework
 	Executable *Executable
+
+	// OutCh is channel for info output
+	OutCh chan string
+
+	// ErrCh is channel for error output
+	ErrCh chan error
+
+	// Verbose enables logging output below INFO
+	Verbose bool
+
+	// LogWriter
+	LogWriter io.Writer
 }
 
 // Generate generates code files from tempalte files.
-func (s *Skeleton) Generate() <-chan error {
+func (s *Skeleton) Generate() <-chan struct{} {
 
-	// Create error channel to return
-	errCh := make(chan error)
+	s.Debugf("Start generating")
+
+	// doneCh is used to tell task it done to parent function
+	doneCh := make(chan struct{})
 
 	go func() {
 
 		// Start generating base files
-		errBaseCh := s.generateBaseFiles()
+		doneBaseCh := s.generateBaseFiles()
 
 		// Start generating command files
-		errCmndCh := s.generateCommandFiles()
+		doneCmdCh := s.generateCommandFiles()
 
 		// Start generating custom files
 		// which is generated from user defined templates
-		errCstmCh := s.generateCustomFiles()
+		// s.generateCustomFiles()
 
-		// Merge all error channels until all channel is closed
-		for err := range merge(errBaseCh, errCmndCh, errCstmCh) {
-			errCh <- err
-		}
+		<-doneBaseCh
+		<-doneCmdCh
 
-		// Close channel after everything is Done.
-		close(errCh)
+		doneCh <- struct{}{}
 	}()
 
-	return errCh
+	return doneCh
 }
 
-func (s *Skeleton) generateBaseFiles() <-chan error {
+func (s *Skeleton) generateBaseFiles() <-chan struct{} {
 
-	errCh := make(chan error)
+	s.Debugf("Start generating base files")
+
+	// doneCh is used to tell task it done
+	doneCh := make(chan struct{})
 
 	go func() {
+
 		var wg sync.WaitGroup
 		baseTmpls := CommonTemplates
 		baseTmpls = append(baseTmpls, s.Framework.BaseTemplates...)
 		for _, tmpl := range baseTmpls {
 
-			if s.SkipTest && strings.HasPrefix(tmpl.Path, "_test.go.tmpl") {
+			s.Debugf("Use tempalte file: %s, output path tempalte string: %s", tmpl.Path, tmpl.OutputPathTmpl)
+			if s.SkipTest && strings.HasSuffix(tmpl.Path, "_test.go.tmpl") {
+				s.Debugf("Skip test tempalte file: %s", filepath.Base(tmpl.Path))
 				continue
 			}
 
@@ -66,23 +85,30 @@ func (s *Skeleton) generateBaseFiles() <-chan error {
 			go func(tmpl Template) {
 				defer wg.Done()
 				tmpl.OutputPathTmpl = filepath.Join(s.Path, tmpl.OutputPathTmpl)
-				if err := tmpl.Exec(s.Executable); err != nil {
-					errCh <- err
+				outputPath, err := tmpl.Exec(s.Executable)
+				if err != nil {
+					s.ErrCh <- err
 				}
+				s.OutCh <- fmt.Sprintf("Create %s", outputPath)
 			}(tmpl)
 		}
 
-		// Wait until all task is done.
+		// Wait until all task is done
 		wg.Wait()
 
-		close(errCh)
+		// Tell doneCh about finishing generating
+		doneCh <- struct{}{}
 	}()
 
-	return errCh
+	return doneCh
 }
 
-func (s *Skeleton) generateCommandFiles() <-chan error {
-	errCh := make(chan error)
+func (s *Skeleton) generateCommandFiles() <-chan struct{} {
+
+	s.Debugf("Start generating command files")
+
+	// doneCh is used to tell task it done
+	doneCh := make(chan struct{})
 
 	go func() {
 		var wg sync.WaitGroup
@@ -92,31 +118,39 @@ func (s *Skeleton) generateCommandFiles() <-chan error {
 			go func(cmd Command) {
 				defer wg.Done()
 				for _, tmpl := range s.Framework.CommandTemplates {
-					if s.SkipTest && strings.HasPrefix(tmpl.Path, "_test.go.tmpl") {
+
+					s.Debugf("Use tempalte file: %s, output path tempalte string: %s", tmpl.Path, tmpl.OutputPathTmpl)
+					if s.SkipTest && strings.HasSuffix(tmpl.Path, "_test.go.tmpl") {
+						s.Debugf("Skip test tempalte file: %s", tmpl.Path)
 						continue
 					}
 
 					tmpl.OutputPathTmpl = filepath.Join(s.Path, tmpl.OutputPathTmpl)
-					if err := tmpl.Exec(cmd); err != nil {
-						errCh <- err
+					outputPath, err := tmpl.Exec(cmd)
+					if err != nil {
+						s.ErrCh <- err
 					}
+					s.OutCh <- fmt.Sprintf("Create %s", outputPath)
 				}
 			}(cmd)
 		}
 
 		// Wait until all task is done.
 		wg.Wait()
-		close(errCh)
+
+		doneCh <- struct{}{}
 	}()
 
-	return errCh
+	return doneCh
 }
 
-func (s *Skeleton) generateCustomFiles() <-chan error {
-	errCh := make(chan error)
-	defer close(errCh)
-	return errCh
-}
+// func (s *Skeleton) generateCustomFiles() <-chan struct{} {
+// 	doneCh := make(chan struct{})
+// 	defer func() {
+// 		doneCh <- struct{}{}
+// 	}()
+// 	return doneCh
+// }
 
 // merge merges error channels and sends them to union channel
 func merge(cs ...<-chan error) <-chan error {
