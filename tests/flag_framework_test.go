@@ -60,6 +60,10 @@ func TestNew_flag_frameworks(t *testing.T) {
 			t.Fatalf("[%s] Failed to run go get %s: %s", tt.framework, artifactBin, err)
 		}
 
+		if err := goVet(artifactBin); err != nil {
+			t.Fatalf("[%s] Failed to run go vet %s: %s", tt.framework, artifactBin, err)
+		}
+
 		if err := goBuild(artifactBin); err != nil {
 			t.Fatalf("[%s] Failed to run go build %s: %s", tt.framework, artifactBin, err)
 		}
