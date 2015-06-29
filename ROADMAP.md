@@ -17,6 +17,7 @@ This is road map of `gcli`, what I'm doing for next release and planing for futu
 ## 0.2.2
 
 - `-gb` option
+- Support [jessevdk/go-flags](https://github.com/jessevdk/go-flags)
 
 ## 0.3.0
 
