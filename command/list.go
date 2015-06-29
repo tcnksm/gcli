@@ -29,6 +29,9 @@ func (c *ListCommand) Run(args []string) int {
 	header := []string{"Name", "Command", "URL"}
 	table.SetHeader(header)
 	for _, f := range skeleton.Frameworks {
+		if f.Hide {
+			continue
+		}
 		var cmd string
 		if len(f.CommandTemplates) > 0 {
 			cmd = "*"

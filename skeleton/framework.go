@@ -21,6 +21,10 @@ type Framework struct {
 
 	// CommandTemplate
 	CommandTemplates []Template
+
+	// If Hide is true, `list` command doesn't show
+	// this framework
+	Hide bool
 }
 
 // CommonTemplates is collection of templates which are used all frameworks.
@@ -81,6 +85,18 @@ The goal is to enable developers to write fast and distributable command line ap
 			{"resource/tmpl/go_cmd/command.go.tmpl", "{{ .Name }}.go"},
 			{"resource/tmpl/go_cmd/command_test.go.tmpl", "{{ .Name }}_test.go"},
 		},
+	},
+
+	{
+		Name: "bash",
+		URL:  "",
+		Description: `
+`,
+		BaseTemplates: []Template{
+			{"resource/tmpl/bash/main.sh.tmpl", "{{ .Name }}.sh"},
+		},
+		CommandTemplates: []Template{},
+		Hide:             true,
 	},
 
 	{
