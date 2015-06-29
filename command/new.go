@@ -23,6 +23,12 @@ const (
 	defaultDescription = ""
 )
 
+// ExitCodes
+const (
+	ExitCodeOK     int = 0
+	ExitCodeFailed int = 1
+)
+
 // NewCommand is a Command that generates a new cli project
 type NewCommand struct {
 	Meta
@@ -116,25 +122,7 @@ func (c *NewCommand) Run(args []string) int {
 		}
 	}
 
-	// outCh receives info output from skeleton.Generate
-	// and show it in UI output
-	outCh := make(chan string)
-	go func() {
-		for out := range outCh {
-			c.UI.Output("  " + out)
-		}
-	}()
-
-	// errCh receives error from skeleton.Generate
-	// and show it in UI error output
-	gotErr := false
-	err2Ch := make(chan error)
-	go func() {
-		for err := range err2Ch {
-			c.UI.Error("  " + err.Error())
-		}
-	}()
-
+	// Define Executable
 	executable := &skeleton.Executable{
 		Name:        name,
 		Owner:       owner,
@@ -144,31 +132,37 @@ func (c *NewCommand) Run(args []string) int {
 		Description: defaultDescription,
 	}
 
+	// Channels to receive artifact path (result) and error
+	artifactCh, errCh := make(chan string), make(chan error)
+
+	// Define Skeleton
 	skeleton := &skeleton.Skeleton{
 		Path:       output,
 		Framework:  framework,
 		SkipTest:   skipTest,
 		Executable: executable,
-		OutCh:      outCh,
-		ErrCh:      err2Ch,
+		ArtifactCh: artifactCh,
+		ErrCh:      errCh,
 		Verbose:    verbose,
 		LogWriter:  os.Stdout,
 	}
 
 	// Create project directory
 	doneCh := skeleton.Generate()
-	<-doneCh
 
-	// Return non zero var when at least one
-	// error was happened while executing skeleton.Generate().
-	// Run all templating and show all error.
-	if gotErr {
-		c.UI.Error(fmt.Sprintf("Failed to generate %q", name))
-		return 1
+	for {
+		select {
+		case artifact := <-artifactCh:
+			c.UI.Output(fmt.Sprintf("  Created %s", artifact))
+		case err := <-errCh:
+			c.UI.Error("Failed to generate %s: " + err.Error())
+			// Should cleanup
+			return ExitCodeFailed
+		case <-doneCh:
+			c.UI.Info(fmt.Sprintf("====> Successfuly generated %s", name))
+			return ExitCodeOK
+		}
 	}
-
-	c.UI.Info(fmt.Sprintf("====> Successfuly generated: %s", name))
-	return 0
 }
 
 // Synopsis is a one-line, short synopsis of the command.
