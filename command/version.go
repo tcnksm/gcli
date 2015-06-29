@@ -3,7 +3,6 @@ package command
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/tcnksm/go-latest"
@@ -73,10 +72,7 @@ func CheckLatest(version string) <-chan *latest.CheckResponse {
 	resCh := make(chan *latest.CheckResponse)
 	go func() {
 		// Ignore error because it not critical for main fucntion
-		res, err := latest.Check(github, fix(version))
-		if err != nil {
-			log.Println(err)
-		}
+		res, _ := latest.Check(github, fix(version))
 		resCh <- res
 	}()
 
