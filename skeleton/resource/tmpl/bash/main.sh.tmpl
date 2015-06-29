@@ -1,0 +1,101 @@
+#!/bin/bash
+#
+# {{ .Name }}
+#
+# Copyright (c) {{ date }} {{.Owner}}
+#
+
+readonly PROGNAME=$(basename $0)
+readonly COMMAND=$1
+
+usage() {
+  cat <<EOF
+Name:
+  ${PROGNAME}
+
+Usage:
+  ${PROGNAME} command [arguments...]
+
+Commands:
+  {{range .Commands}}{{.Name}}          {{ .Synopsis }}
+  {{end}}help          show help
+  version          print ${PROGNAME} version
+
+EOF
+}
+
+version() {
+    echo "${PROGNAME} version {{ .Version }}"
+}
+
+log() {
+    echo "$(date "+%Y/%m/%m %H:%M:%S") $@"
+}
+
+debug() {
+    is_not_empty $DEBUG && log $@
+}
+
+info() {
+    echo -e "\033[34m$@\033[m" # blue
+}
+
+warn() {
+    echo -e "\033[33m$@\033[m" # yellow
+}
+
+error() {
+    echo -e "\033[31m$@\033[m" # red
+}
+
+is_empty() {
+    local var=$1
+
+    [[ -z $var ]]
+}
+
+is_not_empty() {
+    local var=$1
+
+    [[ -n $var ]]
+}
+
+is_file() {
+    local file=$1
+
+    [[ -f $file ]]
+}
+
+is_dir() {
+    local dir=$1
+
+    [[ -d $dir ]]
+}
+
+{{range .Commands}}
+{{ .Name }}() {
+  debug $FUNCNAME $@
+}
+{{end}}
+
+case "${COMMAND}" in
+
+    {{range .Commands}}{{ .Name }})
+        {{.Name}}
+        ;;
+    {{end}}    
+    version|v|-v|--version)
+        version
+        ;;
+
+    help|usage|h|-h|--help)
+        usage
+        ;;
+
+    *)
+        error "[Error] Invalid command '${COMMAND}'"
+        echo "Run '${PROGNAME} help' for usage."
+        exit 1
+esac
+
+exit 0
