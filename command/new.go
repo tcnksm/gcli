@@ -155,7 +155,7 @@ func (c *NewCommand) Run(args []string) int {
 		case artifact := <-artifactCh:
 			c.UI.Output(fmt.Sprintf("  Created %s", artifact))
 		case err := <-errCh:
-			c.UI.Error("Failed to generate %s: " + err.Error())
+			c.UI.Error(fmt.Sprintf("Failed to generate %s: %s", output, err.Error()))
 
 			// If some file are created before error happend
 			// Should be cleanuped
