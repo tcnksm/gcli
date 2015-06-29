@@ -28,3 +28,4 @@ This is road map of `gcli`, what I'm doing for next release and planing for futu
 
 - Generate `man` page 
 - Read `man` page and generate command skeleton 
+- Interact mode `new -interact` ?
