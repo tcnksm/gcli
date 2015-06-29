@@ -156,7 +156,13 @@ func (c *NewCommand) Run(args []string) int {
 			c.UI.Output(fmt.Sprintf("  Created %s", artifact))
 		case err := <-errCh:
 			c.UI.Error("Failed to generate %s: " + err.Error())
-			// Should cleanup
+
+			// If some file are created before error happend
+			// Should be cleanuped
+			if _, err := os.Stat(output); !os.IsNotExist(err) {
+				c.UI.Output(fmt.Sprintf("Cleanup %s", output))
+				os.RemoveAll(output)
+			}
 			return ExitCodeFailed
 		case <-doneCh:
 			c.UI.Info(fmt.Sprintf("====> Successfuly generated %s", name))
