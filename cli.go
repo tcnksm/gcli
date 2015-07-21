@@ -31,6 +31,16 @@ func Run(args []string) int {
 // RunCustom execute mitchellh/cli and return its exit code.
 func RunCustom(args []string, commands map[string]cli.CommandFactory) int {
 
+	for _, arg := range args {
+		if arg == "-v" || arg == "-version" || arg == "--version" {
+			newArgs := make([]string, len(args)+1)
+			newArgs[0] = "version"
+			copy(newArgs[1:], args)
+			args = newArgs
+			break
+		}
+	}
+
 	cli := &cli.CLI{
 		Args:       args[1:],
 		Commands:   commands,

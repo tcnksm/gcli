@@ -2,3 +2,8 @@ package main
 
 const Name string = "{{ .Name }}"
 const Version string = "{{ .Version }}"
+
+// GitCommit describes latest commit hash.
+// This value is extracted by git command when building.
+// To set this from outside, use go build -ldflags "-X main.GitCommit \"$(COMMIT)\""
+var GitCommit string

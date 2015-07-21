@@ -1,3 +1,4 @@
+COMMIT = $$(git describe --always)
 DEBUG_FLAG = $(if $(DEBUG),-debug)
 
 deps:
@@ -8,11 +9,11 @@ deps:
 
 build: deps
 	cd skeleton; go-bindata -pkg="skeleton" resource/...
-	go build -o bin/gcli
+	go build -ldflags "-X main.GitCommit \"$(COMMIT)\"" -o bin/gcli
 
 install: deps
 	cd skeleton; go-bindata -pkg="skeleton" resource/...
-	go install
+	go install -ldflags "-X main.GitCommit \"$(COMMIT)\""
 
 test: build
 	./test.sh

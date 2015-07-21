@@ -105,7 +105,8 @@ func execute(content string, wr io.Writer, data interface{}) error {
 
 func funcMap() template.FuncMap {
 	return template.FuncMap{
-		"date":  dateFunc(),
-		"title": strings.Title,
+		"date":    dateFunc(),
+		"title":   strings.Title,
+		"toUpper": strings.ToUpper,
 	}
 }
