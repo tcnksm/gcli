@@ -7,12 +7,19 @@ import (
 
 func Commands(meta *command.Meta) map[string]cli.CommandFactory {
 	return map[string]cli.CommandFactory{
-		{{ range .Commands }}
-		"{{ .Name }}": func() (cli.Command, error) {
+		{{ range .Commands }}"{{ .Name }}": func() (cli.Command, error) {
 			return &command.{{ title .Name }}Command{
 				Meta: *meta,
 			}, nil
 		},
 		{{ end }}
+        "version": func() (cli.Command, error) {
+			return &command.VersionCommand{
+				Meta:     *meta,
+				Version:  Version,
+                Revision: GitCommit,
+                Name: Name,
+			}, nil
+		},
 	}
 }

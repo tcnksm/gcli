@@ -48,6 +48,7 @@ cli is the library that powers the CLI for Packer, Serf, and Consul.
 			{"resource/tmpl/mitchellh_cli/cli.go.tmpl", "cli.go"},
 			{"resource/tmpl/mitchellh_cli/commands.go.tmpl", "commands.go"},
 			{"resource/tmpl/mitchellh_cli/command/meta.go.tmpl", "command/meta.go"},
+			{"resource/tmpl/mitchellh_cli/command/version.go.tmpl", "command/version.go"},
 		},
 		CommandTemplates: []Template{
 			{"resource/tmpl/mitchellh_cli/command/command.go.tmpl", "command/{{ .Name }}.go"},
