@@ -45,6 +45,8 @@ func TestNew_command_frameworks(t *testing.T) {
 			"new",
 			"-framework", tt.framework,
 			"-owner", owner,
+			"-flag=verbose:bool:'Run verbose mode'",
+			"-flag=username:string:'Username'",
 			"-command=add:'Add new task'",
 			"-command=list:'List tasks'",
 			"-command=delete:'Delete specified task'",
