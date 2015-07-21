@@ -1,3 +1,28 @@
+## 0.2.1 (2015-07-21)
+
+### Added
+
+- `wercker.yml` to run test on Wercker ([#14](https://github.com/tcnksm/gcli/pull/14))
+- `list` command ([#16](https://github.com/tcnksm/gcli/pull/16))
+- `go vet` tests for artifacts ([#18](https://github.com/tcnksm/gcli/pull/18))
+- Generate bash script (experiment) ([#20](https://github.com/tcnksm/gcli/pull/20))
+- Usge `flag.Var` ([#21](https://github.com/tcnksm/gcli/pull/21))
+- Global option for command pattern ([#22](https://github.com/tcnksm/gcli/pull/22))
+- `go vet`, `golint`, `gofmt` test for `gcli`
+- More verbose outputs in skeleton package
+
+### Deprecated
+
+- Nothing
+
+### Removed
+
+- Nothing
+
+### Fixed
+
+- Nothing
+
 ## 0.2.0 (2015-06-21)
 
 - Rewrote eveythig from scratch (See https://github.com/tcnksm/gcli/pull/9) to add more features. 
