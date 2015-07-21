@@ -51,7 +51,7 @@ $ grep —i -C 4 "some string" /tmp
      `------------------------------ Executable  
 ```
 
-To generate above CLI app by `gcli` with [flag](https://golang.org/pkg/flag/) fraemwork,
+To generate above CLI application with [flag](https://golang.org/pkg/flag/) fraemwork,
  
 ```bash
 $ cd $GOPATH/src/github.com/YOUR_NAME
@@ -83,7 +83,7 @@ $ todo add 'Buy a milk'
     `---------------------- Executable
 ```
 
-To generate above CLI app by `gcli` withcommand with [mitchellh/cli](https://github.com/mitchellh/cli) framework,
+To generate above CLI application with [mitchellh/cli](https://github.com/mitchellh/cli) framework,
 
 ```bash
 $ cd $GOPATH/src/github.com/YOUR_NAME
