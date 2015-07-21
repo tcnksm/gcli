@@ -30,7 +30,7 @@ func (cli *CLI) Run(args []string) int {
 	flags := flag.NewFlagSet(Name, flag.ContinueOnError)
     flags.SetOutput(cli.errStream)
 
-    {{ range .Flags }}flags.{{ title .TypeString}}Var(&{{ .Name }}, "{{ .LongName }}", {{ .Default }}, "")
+    {{ range .Flags }}flags.{{ title .TypeString}}Var(&{{ .Name }}, "{{ .LongName }}", {{ .Default }}, "{{ .Description }}")
     {{ end }}
 	flVersion := flags.Bool("version", false, "Print version information and quit.")
 
