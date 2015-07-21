@@ -21,14 +21,17 @@ type CLI struct {
 
 // Run invokes the CLI with the given arguments.
 func (cli *CLI) Run(args []string) int {
-
+    var (
+		{{ range .Flags }}{{ .Name }} {{ .TypeString }}
+        {{ end }}
+    )
+    
 	// Define option flag parse
 	flags := flag.NewFlagSet(Name, flag.ContinueOnError)
     flags.SetOutput(cli.errStream)
 
-    {{ range .Flags }}
-	fl{{ title .Name }} := flags.{{.TypeString}}("{{.LongName}}", {{ .Default }}, "{{ .Description }}")
-	{{ end }}
+    {{ range .Flags }}flags.{{ title .TypeString}}Var(&{{ .Name }}, "{{ .LongName }}", {{ .Default }}, "")
+    {{ end }}
 	flVersion := flags.Bool("version", false, "Print version information and quit.")
 
 	// Parse commandline flag
@@ -43,7 +46,7 @@ func (cli *CLI) Run(args []string) int {
 	}
 
 	{{ range .Flags }}
-	_ = fl{{ title .Name }}
+	_ = {{ .Name }}
 	{{ end }}
 
 	return ExitCodeOK
