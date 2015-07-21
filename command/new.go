@@ -165,7 +165,7 @@ func (c *NewCommand) Run(args []string) int {
 			}
 			return ExitCodeFailed
 		case <-doneCh:
-			c.UI.Info(fmt.Sprintf("====> Successfuly generated %s", name))
+			c.UI.Info(fmt.Sprintf("====> Successfully generated %s", name))
 			return ExitCodeOK
 		}
 	}
