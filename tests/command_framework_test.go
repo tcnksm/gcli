@@ -56,7 +56,7 @@ func TestNew_command_frameworks(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		expect := "Successfuly generated"
+		expect := "Successfully generated"
 		if !strings.Contains(output, expect) {
 			t.Fatalf("[%s] expect %q to contain %q", tt.framework, output, expect)
 		}
