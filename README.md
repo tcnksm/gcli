@@ -11,7 +11,7 @@ gcli
 [license]: https://github.com/tcnksm/gcli/blob/master/LICENSE
 [godocs]: http://godoc.org/github.com/tcnksm/gcli
 
-`gcli` (formerly `cli-init`) generates the codes and its directory structure you need to start building CLI tool by Golang right out of the box. All you need is to provide name, command names and [framework](#support-frameworks) you want to use. 
+`gcli` (formerly `cli-init`) generates the codes and its directory structure you need to start building CLI tool by Golang right out of the box. You can use your favorite [framework](#support-frameworks). 
 
 ## Usage
 
