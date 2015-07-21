@@ -2,17 +2,6 @@
 
 This is road map of `gcli`, what I'm doing for next release and planing for future relase. If you have feature request, please open issues or send pull request. 
 
-## 0.2.1
-
-- **Done**: Global option for command pattern
-- **Done**: Usge `flag.Var`
-- **Done**: Generate bash script
-- **Done**: More verbose outputs in `skeleton` package
-- **Done** `go vet` tests for artifacts
-- **Done**: `list` command
-- **Done**: `go vet`, `golint`, `gofmt` test for `gcli`
-- **Done**: `wercker.yml` to run test on Wercker
-
 ## 0.2.2
 
 - `-gb` option
