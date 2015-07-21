@@ -18,7 +18,7 @@ func TestFix(t *testing.T) {
 				Name:        "debug",
 				ShortName:   "d",
 				LongName:    "debug",
-				TypeString:  "Bool",
+				TypeString:  TypeStringBool,
 				Default:     false,
 				Description: "Run as DEBUG mode",
 			},
@@ -35,7 +35,7 @@ func TestFix(t *testing.T) {
 				Name:        "token",
 				ShortName:   "t",
 				LongName:    "token",
-				TypeString:  "String",
+				TypeString:  TypeStringString,
 				Default:     "\"\"",
 				Description: "",
 			},
@@ -75,63 +75,63 @@ func TestFixTypeString(t *testing.T) {
 		{
 			in:            &Flag{TypeString: "int"},
 			success:       true,
-			expTypeString: "Int",
+			expTypeString: TypeStringInt,
 			expDefault:    0,
 		},
 
 		{
 			in:            &Flag{TypeString: "Int"},
 			success:       true,
-			expTypeString: "Int",
+			expTypeString: TypeStringInt,
 			expDefault:    0,
 		},
 
 		{
 			in:            &Flag{TypeString: "i"},
 			success:       true,
-			expTypeString: "Int",
+			expTypeString: TypeStringInt,
 			expDefault:    0,
 		},
 
 		{
 			in:            &Flag{TypeString: "string"},
 			success:       true,
-			expTypeString: "String",
+			expTypeString: TypeStringString,
 			expDefault:    "\"\"",
 		},
 
 		{
 			in:            &Flag{TypeString: "s"},
 			success:       true,
-			expTypeString: "String",
+			expTypeString: TypeStringString,
 			expDefault:    "\"\"",
 		},
 
 		{
 			in:            &Flag{TypeString: "str"},
 			success:       true,
-			expTypeString: "String",
+			expTypeString: TypeStringString,
 			expDefault:    "\"\"",
 		},
 
 		{
 			in:            &Flag{TypeString: "bool"},
 			success:       true,
-			expTypeString: "Bool",
+			expTypeString: TypeStringBool,
 			expDefault:    false,
 		},
 
 		{
 			in:            &Flag{TypeString: "b"},
 			success:       true,
-			expTypeString: "Bool",
+			expTypeString: TypeStringBool,
 			expDefault:    false,
 		},
 
 		{
 			in:            &Flag{TypeString: "enexpected_type"},
 			success:       false,
-			expTypeString: "Bool",
+			expTypeString: TypeStringBool,
 			expDefault:    false,
 		},
 	}

@@ -5,6 +5,13 @@ import (
 	"strings"
 )
 
+// TypeString represents type as string
+const (
+	TypeStringInt    = "int"
+	TypeStringBool   = "bool"
+	TypeStringString = "string"
+)
+
 // Flag stores flag meta informations
 type Flag struct {
 	// Name is flag name, this is used for flag variable name in generated code.
@@ -55,13 +62,13 @@ func (f *Flag) Fix() error {
 func (f *Flag) fixTypeString() error {
 	switch strings.ToLower(f.TypeString) {
 	case "bool", "b":
-		f.TypeString = "Bool"
+		f.TypeString = TypeStringBool
 		f.Default = false
 	case "int", "i":
-		f.TypeString = "Int"
+		f.TypeString = TypeStringInt
 		f.Default = 0
 	case "string", "str", "s":
-		f.TypeString = "String"
+		f.TypeString = TypeStringString
 		f.Default = "\"\""
 	default:
 		return fmt.Errorf("unexpected type is provided: %s", f.TypeString)
