@@ -15,7 +15,7 @@ gcli
 
 ## Usage
 
-To start new command line tool, run below. It generates new cli skeleton project. At least, you must provide executable name.
+To start new command line tool, run below. It generates new cli skeleton project. At least, you must provide executable name. You can run `go build` todo application from beginning.
 
 ```bash
 $ gcli new [options] NAME
@@ -33,46 +33,13 @@ See more usage,
 $ gcli help
 ```
 
-## Example
-
-If you want to create `todo` CLI application which has `add`, `list` and `delete` command with
-[mitchellh/cli](https://github.com/mitchellh/cli) framework,
-
-```bash
-$ cd $GOPATH/src/github.com/YOUR_NAME
-$ gcli new -F mitchellh_cli -c add -c list -c delete todo
-```
-
-It generates below files,
-
-```bash
-$ tree todo/
-todo
-├── CHANGELOG.md
-├── README.md
-├── cli.go
-├── command
-│   ├── add.go
-│   ├── add_test.go
-│   ├── delete.go
-│   ├── delete_test.go
-│   ├── list.go
-│   ├── list_test.go
-│   └── meta.go
-├── commands.go
-├── main.go
-└── version.go
-```
-
-You can run `go build` todo application from beginning.
-
 ## Support frameworks
 
-`gcli` generates two types of CLI (you can choose). Flag pattern & Command pattern.
+`gcli` generates two types of CLI. flag pattern or command pattern.
 
 ### Flag pattern
 
-Flag pattern is the pattern which executable has only flag options (e.g., `grep`)
+Flag pattern is the pattern which executable has only flag options like below (e.g., `grep`),
 
 ```bash
 $ grep —i -C 4 "some string" /tmp   
@@ -84,33 +51,64 @@ $ grep —i -C 4 "some string" /tmp
      `------------------------------ Executable  
 ```
 
-To generate this pattern, `gcli` supports,
+To generate above CLI app by `gcli` with [flag](https://golang.org/pkg/flag/) fraemwork,
+ 
+```bash
+$ cd $GOPATH/src/github.com/YOUR_NAME
+$ gcli new -F flag -flag=i:Bool -flag=C:Int grep
+  Created grep/main.go
+  Created grep/CHANGELOG.md
+  Created grep/cli_test.go
+  Created grep/README.md
+  Created grep/version.go
+  Created grep/cli.go
+====> Successfully generated grep
+```
+
+For this flag pattern, `gcli` supports below packages, 
 
 - [flag](https://golang.org/pkg/flag/)
 
 ### Command pattern
 
-Command pattern is the pattern which executable has command for change its behavior (e.g., `git`)
+Command pattern is the pattern which executable has command for change its behavior. For example, `todo` CLI application which has `add` (Add new task), `list` (List all tasks) and `delete`(Delete a task) command. 
 
 ```bash
-$ git --no-pager push -v origin mastter     
-   │       │      │    │      │           
-   │       │      │    │       `------- Arguments 
-   │       │      │    │              
-   │       │      │     `-------------- Command flags 
-   │       │      │                   
-   │       │       `------------------- Command
-   │       │                          
-   │        `-------------------------- Global flags
+$ todo add 'Buy a milk' 
+   │    │      │           
+   │    │       `---------- Arguments 
+   │    │ 
+   │     `----------------- Command 
    │                                  
-    `---------------------------------- Executable
+    `---------------------- Executable
 ```
 
-To generate this pattern, `gcli` supports,
+To generate above CLI app by `gcli` withcommand with [mitchellh/cli](https://github.com/mitchellh/cli) framework,
+
+```bash
+$ cd $GOPATH/src/github.com/YOUR_NAME
+$ gcli new -F mitchellh_cli -c add -c list -c delete todo
+  Created todo/main.go
+  Created todo/command/meta.go
+  Created todo/cli.go
+  Created todo/CHANGELOG.md
+  Created todo/version.go
+  Created todo/commands.go
+  Created todo/command/add.go
+  Created todo/command/list.go
+  Created todo/command/delete.go
+  Created todo/README.md
+  Created todo/command/add_test.go
+  Created todo/command/list_test.go
+  Created todo/command/delete_test.go
+====> Successfully generated todo
+```
+
+For this flag pattern, `gcli` supports below packages, 
 
 - [codegangsta_cli](https://github.com/codegangsta/cli)
 - [mitchellh_cli](https://github.com/mitchellh/cli)
-- [go_cmd](https://github.com/golang/go/blob/master/src/cmd/go/main.go#L30#L51) (No 3rd party framework, `go` command style)
+- [go_cmd](https://github.com/golang/go/blob/master/src/cmd/go/main.go#L30#L51) (without 3rd party framework, same as `go` command)
 
 ## Installation
 
