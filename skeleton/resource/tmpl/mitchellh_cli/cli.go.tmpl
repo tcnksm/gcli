@@ -41,7 +41,7 @@ func RunCustom(args []string, commands map[string]cli.CommandFactory) int {
 	}
 
 	cli := &cli.CLI{
-		Args:       args[1:],
+		Args:       args,
 		Commands:   commands,
 		Version:    Version,
 		HelpFunc:   cli.BasicHelpFunc(Name),
