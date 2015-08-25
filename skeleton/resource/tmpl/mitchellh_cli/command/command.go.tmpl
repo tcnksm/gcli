@@ -10,6 +10,7 @@ type {{ title .Name }}Command struct {
 
 func (c *{{ title .Name }}Command) Run(args []string) int {
     // Write your code here
+    {{ if ne .DebugOutput "" }}print("{{ .DebugOutput }}"){{ end }}
 	return 0
 }
 

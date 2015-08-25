@@ -17,4 +17,8 @@ type Command struct {
 
 	// Help is long help message of the command
 	Help string
+
+	// debugOutput is injected to command function
+	// and generate for debugging purpose
+	DebugOutput string
 }
