@@ -31,9 +31,11 @@ func TestDesignCommand(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := os.Chdir(tmpDir); err != nil {
+	backFunc, err := TmpChdir(tmpDir)
+	if err != nil {
 		t.Fatal(err)
 	}
+	defer backFunc()
 
 	name := "todo"
 	if code := c.Run([]string{name}); code != 0 {
@@ -70,14 +72,16 @@ func TestDesignCommand_fileExist(t *testing.T) {
 	}
 
 	// Create temp directory to output file
-	tmpDir, err := ioutil.TempDir("", "apply-command")
+	tmpDir, err := ioutil.TempDir("", "design-command")
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if err := os.Chdir(tmpDir); err != nil {
+	backFunc, err := TmpChdir(tmpDir)
+	if err != nil {
 		t.Fatal(err)
 	}
+	defer backFunc()
 
 	name := fmt.Sprintf(defaultOutputFmt, "todo")
 	if _, err := os.Create(name); err != nil {
