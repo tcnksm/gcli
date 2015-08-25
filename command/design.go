@@ -97,12 +97,13 @@ func (c *DesignCommand) Run(args []string) int {
 
 	// Define Executable
 	executable := &skeleton.Executable{
-		Name:        name,
-		Owner:       owner,
-		Commands:    commands,
-		Flags:       flags,
-		Version:     skeleton.DefaultVersion,
-		Description: skeleton.DefaultDescription,
+		Name:         name,
+		Owner:        owner,
+		Commands:     commands,
+		Flags:        flags,
+		Version:      skeleton.DefaultVersion,
+		Description:  skeleton.DefaultDescription,
+		FrameworkStr: frameworkStr,
 	}
 
 	if err := toml.NewEncoder(outputFile).Encode(executable); err != nil {
@@ -127,7 +128,7 @@ func (c *DesignCommand) Help() string {
 	helpText := `
 Usage: gcli design [option] NAME
 
-  Generate project design template (as toml file). You can pass that file to 'gcli new'
+  Generate project design template (as toml file). You can pass that file to 'gcli apply'
   command and generate CLI tool based on template file. You can define what command
   and what flag you need on that file.
 
