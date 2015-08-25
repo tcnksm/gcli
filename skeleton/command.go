@@ -1,5 +1,10 @@
 package skeleton
 
+const (
+	DefaultSynopsis = ""
+	DefaultHelp     = ""
+)
+
 // Command store command meta information
 type Command struct {
 	Name string
