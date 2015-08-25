@@ -56,6 +56,18 @@ func chdirSrcPath(owner string) (func(), error) {
 	}, nil
 }
 
+// executeBin execute command and return output
+func executeBin(bin string, args []string) string {
+	var stdout, stderr bytes.Buffer
+	cmd := exec.Command("./"+bin, args...)
+	cmd.Stderr = &stderr
+	cmd.Stdout = &stdout
+
+	// cmd.Wait() returns error
+	_ = cmd.Run()
+	return stdout.String() + stderr.String()
+}
+
 // runGcli runs gcli and return its stdout. If failed, returns error.
 func runGcli(args []string) (string, error) {
 	var stdout, stderr bytes.Buffer
