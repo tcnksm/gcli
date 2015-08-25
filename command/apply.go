@@ -64,22 +64,22 @@ func (c *ApplyCommand) Run(args []string) int {
 		return 1
 	}
 
-	planFile := parsedArgs[0]
+	designFile := parsedArgs[0]
 	c.UI.Info(fmt.Sprintf(
-		"Use plan file %q for generating new cli project", planFile))
+		"Use design template %q for generating new cli project", designFile))
 
 	// Check file is exist or not
-	if _, err := os.Stat(planFile); os.IsNotExist(err) {
+	if _, err := os.Stat(designFile); os.IsNotExist(err) {
 		c.UI.Error(fmt.Sprintf(
-			"Plan file does not exsit"))
+			"Design file does not exsit"))
 		return 1
 	}
 
-	// Decode plan file as skeleton.Executable
+	// Decode design file as skeleton.Executable
 	executable := skeleton.NewExecutable()
-	if _, err := toml.DecodeFile(planFile, executable); err != nil {
+	if _, err := toml.DecodeFile(designFile, executable); err != nil {
 		c.UI.Error(fmt.Sprintf(
-			"Failed to decode plan file %q: %s", planFile, err))
+			"Failed to decode design file %q: %s", designFile, err))
 		return 1
 	}
 
