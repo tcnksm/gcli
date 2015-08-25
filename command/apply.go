@@ -24,6 +24,8 @@ func (c *ApplyCommand) Run(args []string) int {
 		frameworkStr string
 		skipTest     bool
 		verbose      bool
+		owner        string
+		name         string
 	)
 
 	uflag := flag.NewFlagSet("apply", flag.ContinueOnError)
@@ -37,6 +39,10 @@ func (c *ApplyCommand) Run(args []string) int {
 
 	uflag.BoolVar(&verbose, "verbose", false, "verbose")
 	uflag.BoolVar(&verbose, "V", false, "verbose (short)")
+
+	// These flags are supposed only to use in test
+	uflag.StringVar(&owner, "owner", "", "owner (Should only for test)")
+	uflag.StringVar(&name, "name", "", "name (Should only for test)")
 
 	errR, errW := io.Pipe()
 	errScanner := bufio.NewScanner(errR)
@@ -99,6 +105,15 @@ func (c *ApplyCommand) Run(args []string) int {
 	if err != nil {
 		c.UI.Error(fmt.Sprintf("Failed to generate %q: %s", executable.Name, err.Error()))
 		return 1
+	}
+
+	if len(name) != 0 {
+		executable.Name = name
+		output = name
+	}
+
+	if len(owner) != 0 {
+		executable.Owner = owner
 	}
 
 	// Channels to receive artifact path (result) and error
