@@ -12,23 +12,6 @@ import (
 	"github.com/tcnksm/go-gitconfig"
 )
 
-const (
-	// defaultFrameworkString is default cli framework name
-	defaultFrameworkString = "codegangsta_cli"
-
-	// defaultVersion is default appliaction version
-	defaultVersion = "0.1.0"
-
-	// defaultVersion is default application description
-	defaultDescription = ""
-)
-
-// ExitCodes
-const (
-	ExitCodeOK     int = 0
-	ExitCodeFailed int = 1
-)
-
 // NewCommand is a Command that generates a new cli project
 type NewCommand struct {
 	Meta
@@ -128,8 +111,8 @@ func (c *NewCommand) Run(args []string) int {
 		Owner:       owner,
 		Commands:    commands,
 		Flags:       flags,
-		Version:     defaultVersion,
-		Description: defaultDescription,
+		Version:     skeleton.DefaultVersion,
+		Description: skeleton.DefaultDescription,
 	}
 
 	// Channels to receive artifact path (result) and error
