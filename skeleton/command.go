@@ -20,5 +20,5 @@ type Command struct {
 
 	// debugOutput is injected to command function
 	// and generate for debugging purpose
-	DebugOutput string
+	DebugOutput string // `toml:",omitempty"` https://github.com/BurntSushi/toml/pull/90
 }
