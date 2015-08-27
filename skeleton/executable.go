@@ -44,6 +44,51 @@ func NewExecutable() *Executable {
 	}
 }
 
+func (e *Executable) Validate() (errs []error) {
+
+	if e.Name == "" {
+		errs = append(errs, fmt.Errorf("`Name` cannot be blank"))
+	}
+
+	if e.Owner == "" {
+		errs = append(errs, fmt.Errorf("`Owner` cannot be blank"))
+	}
+
+	if len(e.Commands) == 0 && len(e.Flags) == 0 {
+		// can be blank ?
+	}
+
+	if len(e.Commands) > 0 {
+		for _, c := range e.Commands {
+			if c.Name == "" {
+				errs = append(errs, fmt.Errorf("`Command.Name` cannot be blank"))
+			}
+		}
+	}
+
+	if len(e.Flags) > 0 {
+		for _, f := range e.Flags {
+			if f.Name == "" {
+				errs = append(errs, fmt.Errorf("`Command.Name` cannot be blank"))
+			}
+		}
+	}
+
+	if e.Version == "" {
+		// can be blank
+	}
+
+	if e.Description == "" {
+		// can be blank
+	}
+
+	if e.FrameworkStr == "" {
+		// can be blank
+	}
+
+	return errs
+}
+
 // Overwrite overwrites provided value with default value
 func (e *Executable) Overwrite(key string, v interface{}) error {
 	// Check

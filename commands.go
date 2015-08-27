@@ -20,6 +20,12 @@ func Commands(meta *command.Meta) map[string]cli.CommandFactory {
 			}, nil
 		},
 
+		"validate": func() (cli.Command, error) {
+			return &command.ValidateCommand{
+				Meta: *meta,
+			}, nil
+		},
+
 		"apply": func() (cli.Command, error) {
 			return &command.ApplyCommand{
 				Meta: *meta,
