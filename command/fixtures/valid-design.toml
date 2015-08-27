@@ -1,0 +1,10 @@
+Name = "todo"
+Owner = "tcnksm"
+Version = "0.1.0"
+Description = ""
+Framework = "codegangsta_cli"
+
+[[Commands]]
+  Name = "Add"
+  Synopsis = "Add new task"
+  Help = "[Usage] todo [option] add TASK"
