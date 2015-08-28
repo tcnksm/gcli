@@ -26,6 +26,7 @@ type DesignCommand struct {
 func (c *DesignCommand) Run(args []string) int {
 
 	var (
+		output       string
 		commands     []skeleton.Command
 		flags        []skeleton.Flag
 		frameworkStr string
@@ -43,6 +44,9 @@ func (c *DesignCommand) Run(args []string) int {
 	uflag.StringVar(&frameworkStr, "framework", defaultFrameworkString, "framework")
 	uflag.StringVar(&frameworkStr, "F", defaultFrameworkString, "framework (short)")
 
+	uflag.StringVar(&output, "output", "", "output")
+	uflag.StringVar(&output, "o", "", "output (short)")
+
 	errR, errW := io.Pipe()
 	errScanner := bufio.NewScanner(errR)
 	uflag.SetOutput(errW)
@@ -59,14 +63,18 @@ func (c *DesignCommand) Run(args []string) int {
 
 	parsedArgs := uflag.Args()
 	if len(parsedArgs) != 1 {
-		msg := fmt.Sprintf("Invalid arguments: %s", strings.Join(parsedArgs, " "))
+		msg := fmt.Sprintf("Invalid arguments: usage gcli design [option] NAME")
 		c.UI.Error(msg)
 		return 1
 	}
 
 	name := parsedArgs[0]
 
-	output := fmt.Sprintf(defaultOutputFmt, name)
+	// If output file name is not provided use default one
+	if len(output) == 0 {
+		output = fmt.Sprintf(defaultOutputFmt, name)
+	}
+
 	if _, err := os.Stat(output); !os.IsNotExist(err) {
 		msg := fmt.Sprintf("Cannot create design file %s: file exists", output)
 		c.UI.Error(msg)
@@ -154,6 +162,8 @@ Options:
   -framework=name, -F         Cli framework name. By default, gcli use "codegangsta/cli"
                               To check cli framework you can use, run 'gcli list'.
                               If you set invalid framework, it will be failed.
+
+  -output, -o                 Change output file name. By default, gcli use "NAME-design.toml"
 `
 	return strings.TrimSpace(helpText)
 }
