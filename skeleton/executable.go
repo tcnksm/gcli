@@ -6,37 +6,38 @@ import (
 )
 
 const (
-	// DefaultVersion is default appliaction version
+	// DefaultVersion is default appliaction version.
 	DefaultVersion = "0.1.0"
 
-	// defaultVersion is default application description
+	// DefaultDescription is default application description.
 	DefaultDescription = ""
 )
 
-// Executable store executable meta information
+// Executable store executable meta information.
 type Executable struct {
-	// Name is executable name
+	// Name is executable name.
 	Name string
 
-	// Owner is owner of the executable
+	// Owner is owner of the executable.
 	Owner string
 
-	// Commands are commands of the executable
+	// Commands are commands of the executable.
 	Commands []Command
 
-	// Flags are flags of the executable
+	// Flags are flags of the executable.
 	Flags []Flag
 
-	// Version is initial version
+	// Version is initial version.
 	Version string
 
-	// Description is description of the executable
+	// Description is description of the executable.
 	Description string
 
-	// FrameworkStr is framework name to use
+	// FrameworkStr is framework name to use.
 	FrameworkStr string `toml:"Framework"`
 }
 
+// NewExecutable is constructor of Executable struct.
 func NewExecutable() *Executable {
 	return &Executable{
 		Version:     DefaultVersion,
@@ -44,6 +45,8 @@ func NewExecutable() *Executable {
 	}
 }
 
+// Validate validates Executalbe has required field or not.
+// If not returns, errors as slice.
 func (e *Executable) Validate() (errs []error) {
 
 	if e.Name == "" {
@@ -89,7 +92,7 @@ func (e *Executable) Validate() (errs []error) {
 	return errs
 }
 
-// Overwrite overwrites provided value with default value
+// Overwrite overwrites provided value with default value.
 func (e *Executable) Overwrite(key string, v interface{}) error {
 	// Check
 	switch v.(type) {
