@@ -71,9 +71,14 @@ func (e *Executable) Validate() (errs []error) {
 
 	if len(e.Flags) > 0 {
 		for _, f := range e.Flags {
-			if f.Name == "" {
-				errs = append(errs, fmt.Errorf("`Flag.Name` cannot be blank"))
+			if f.LongName == "" {
+				errs = append(errs, fmt.Errorf("`Flag.LongName` cannot be blank"))
 			}
+
+			if f.TypeString == "" {
+				errs = append(errs, fmt.Errorf("`Flag.TypeString` cannot be blank. Select from bool|int|string"))
+			}
+
 		}
 	}
 
