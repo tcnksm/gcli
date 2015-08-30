@@ -1,3 +1,23 @@
+## 0.2.1 (2015-08-31)
+
+### Added
+
+- `design` command to create design template file (`.toml`)
+- `validate` command to check design file has enough fields to generate CLI project
+- `apply` command to generate CLI project from design file
+
+### Deprecated
+
+- Nothing
+
+### Removed
+
+- Nothing
+
+### Fixed
+
+- Nothing
+
 ## 0.2.1 (2015-07-21)
 
 ### Added
