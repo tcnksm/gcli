@@ -119,6 +119,21 @@ func (c *ApplyCommand) Run(args []string) int {
 		return 1
 	}
 
+	// Run fix flag struct. complement empty variable.
+	if len(executable.Flags) > 0 {
+		fixedFlags := []skeleton.Flag{}
+		for _, f := range executable.Flags {
+			if err := f.Fix(); err != nil {
+				c.UI.Error(fmt.Sprintf(
+					"Failed to fix flag struct: %s", err.Error()))
+				return 1
+			}
+			fixedFlags = append(fixedFlags, f)
+		}
+
+		executable.Flags = fixedFlags
+	}
+
 	if len(name) != 0 {
 		executable.Name = name
 		output = name
