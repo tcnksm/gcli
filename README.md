@@ -15,7 +15,7 @@ gcli
 
 ## Usage
 
-To start new command line tool, run the following command. It generates new cli skeleton project. At least, you must provide executable name. You can run `go build` application from beginning.
+To start new command line tool, run the following command. It generates new cli skeleton project. At least, you must provide executable name. You can `go build`  && `go test` it from beginning.
 
 ```bash
 $ gcli new [options] NAME
@@ -150,12 +150,6 @@ To install, use `go get` and `make install`. We tag versions so feel free to che
 $ go get -d github.com/tcnksm/gcli
 $ cd $GOPATH/src/github.com/tcnksm/gcli
 $ make install 
-```
-
-`gcli` was re-written from scratch. If you prefer old version of `gcli`, checkout,
-
-```bash
-$ git checkout v0.1.0
 ```
 
 ## Contribution
