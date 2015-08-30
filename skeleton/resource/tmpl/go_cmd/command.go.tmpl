@@ -16,5 +16,6 @@ func init(){
 
 // run{{ title .Name }} executes {{ .Name }} command and return exit code. 
 func run{{ title .Name }}(args []string) int {
+    {{ if ne .DebugOutput "" }}print("{{ .DebugOutput }}"){{ end }}
 	return 0
 }

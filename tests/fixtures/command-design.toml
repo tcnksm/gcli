@@ -1,0 +1,20 @@
+Name = "todo"
+Owner = "tcnksm"
+Version = "0.1.0"
+Description = "Manage TODO tasks from command line (from design file)"
+
+[[Commands]]
+Name = "add"
+Synopsis = "Add new task"
+Help = "Usage: todo [options] add"
+DebugOutput = "Add new task"
+
+[[Commands]]
+Name = "list"
+Synopsis = "Show all available tasks"
+Help = "Usage: todo [options] list"
+
+[[Commands]]
+Name = "delete"
+Synopsis = "Delete a task"
+Help = "Usage: todo [options] delete"

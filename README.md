@@ -11,11 +11,11 @@ gcli
 [license]: https://github.com/tcnksm/gcli/blob/master/LICENSE
 [godocs]: http://godoc.org/github.com/tcnksm/gcli
 
-`gcli` (formerly `cli-init`) generates the codes and its directory structure you need to start building CLI tool by Golang right out of the box. You can use your favorite [framework](#support-frameworks). 
+`gcli` generates the codes and its directory structure you need to start building CLI tool by Golang right out of the box. You can use your favorite [framework](#support-frameworks). 
 
 ## Usage
 
-To start new command line tool, run below. It generates new cli skeleton project. At least, you must provide executable name. You can run `go build` todo application from beginning.
+To start new command line tool, run the following command. It generates new cli skeleton project. At least, you must provide executable name. You can run `go build` application from beginning.
 
 ```bash
 $ gcli new [options] NAME
@@ -32,6 +32,35 @@ See more usage,
 ```bash
 $ gcli help
 ```
+
+### Generate CLI project from template file
+
+You can generate CLI project from template file (`.toml`). You can define command name, its description, commands.
+
+First, you can create `toml` file via `design` command,
+
+```bash
+$ gcli design <NAME>
+```
+
+Then, edit design file by your favorite `$EDITOR`. You can see sample template file [`sample.toml`](/sample.toml),
+
+```bash
+$ $EDITOR <NAME>-design.toml
+```
+
+You can validate design by `validate` command,
+
+```bash
+$ gcli validate <NAME>-design.toml
+```
+
+To generate CLI project, use `apply` command, 
+
+```bash
+$ gcli apply <NAME>-desigon.toml
+```
+
 
 ## Support frameworks
 

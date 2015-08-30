@@ -1,0 +1,19 @@
+Name = "todo" # Name of executable.
+Owner = "tcnksm" # Command author name, this should be github.com/<Owner>/<Name>.
+Version = "0.1.0" # First version of command.
+Description = "Manage TODO tasks from command line" # Description of application.
+
+[[Commands]]
+  Name = "add" # Name of command. 
+  Synopsis = "Add new task" # A one-line, short synopsis of the command.
+  Help = "[Usage] todo [option] add TASK" # Long-form help text that includes the command-line usage.
+
+[[Commands]]
+  Name = "list"
+  Synopsis = "Show all available tasks"
+  Help = "[Usage] todo [option] list"
+
+[[Commands]]
+  Name = "delete"
+  Synopsis = "Delete a task"
+  Help = "[Usage] todo [option] delete TASK"

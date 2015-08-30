@@ -1,0 +1,7 @@
+Owner = "tcnksm"
+Version = "0.1.0"
+Description = ""
+
+[[Commands]]
+  Synopsis = "Add new task"
+  Help = "Usage: todo [option] add TASK"

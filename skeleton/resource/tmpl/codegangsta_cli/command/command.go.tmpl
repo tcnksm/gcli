@@ -4,4 +4,5 @@ import "github.com/codegangsta/cli"
 
 func Cmd{{ title .Name }}(c *cli.Context) {
 	// Write your code here
+    {{ if ne .DebugOutput "" }}print("{{ .DebugOutput }}"){{ end }}
 }

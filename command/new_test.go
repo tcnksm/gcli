@@ -27,9 +27,11 @@ func TestNewCommand(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := os.Chdir(tmpDir); err != nil {
+	backFunc, err := TmpChdir(tmpDir)
+	if err != nil {
 		t.Fatal(err)
 	}
+	defer backFunc()
 
 	args := []string{"-F", "mitchellh_cli", "-owner", "deeeet", "todo"}
 	if code := c.Run(args); code != 0 {
@@ -53,9 +55,11 @@ func TestNewCommand_directoryExist(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if err := os.Chdir(tmpDir); err != nil {
+	backFunc, err := TmpChdir(tmpDir)
+	if err != nil {
 		t.Fatal(err)
 	}
+	defer backFunc()
 
 	// Create `todo` directory, same name as
 	// application which is generated later step
