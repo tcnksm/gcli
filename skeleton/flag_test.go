@@ -36,7 +36,25 @@ func TestFix(t *testing.T) {
 				ShortName:   "t",
 				LongName:    "token",
 				TypeString:  TypeStringString,
-				Default:     "\"\"",
+				Default:     "",
+				Description: "",
+			},
+			success: true,
+		},
+
+		{
+			in: &Flag{
+				LongName:    "token",
+				TypeString:  "s",
+				Description: "",
+				Default:     "ABCD1124",
+			},
+			exp: &Flag{
+				Name:        "token",
+				ShortName:   "t",
+				LongName:    "token",
+				TypeString:  TypeStringString,
+				Default:     "ABCD1124",
 				Description: "",
 			},
 			success: true,
@@ -97,21 +115,21 @@ func TestFixTypeString(t *testing.T) {
 			in:            &Flag{TypeString: "string"},
 			success:       true,
 			expTypeString: TypeStringString,
-			expDefault:    "\"\"",
+			expDefault:    "",
 		},
 
 		{
 			in:            &Flag{TypeString: "s"},
 			success:       true,
 			expTypeString: TypeStringString,
-			expDefault:    "\"\"",
+			expDefault:    "",
 		},
 
 		{
 			in:            &Flag{TypeString: "str"},
 			success:       true,
 			expTypeString: TypeStringString,
-			expDefault:    "\"\"",
+			expDefault:    "",
 		},
 
 		{

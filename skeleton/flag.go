@@ -63,13 +63,19 @@ func (f *Flag) fixTypeString() error {
 	switch strings.ToLower(f.TypeString) {
 	case "bool", "b":
 		f.TypeString = TypeStringBool
-		f.Default = false
+		if f.Default == nil {
+			f.Default = false
+		}
 	case "int", "i":
 		f.TypeString = TypeStringInt
-		f.Default = 0
+		if f.Default == nil {
+			f.Default = 0
+		}
 	case "string", "str", "s":
 		f.TypeString = TypeStringString
-		f.Default = "\"\""
+		if f.Default == nil {
+			f.Default = ""
+		}
 	default:
 		return fmt.Errorf("unexpected type is provided: %s", f.TypeString)
 	}

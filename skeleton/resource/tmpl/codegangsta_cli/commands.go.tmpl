@@ -12,7 +12,7 @@ var GlobalFlags = []cli.Flag{
     {{ range .Flags }}cli.{{ title .TypeString }}Flag{
 	    EnvVar: "ENV_{{ toUpper .Name }}",
 	    Name:   "{{ .LongName }}",
-	    {{ if eq .TypeString "string" }}Value:  {{ .Default }}, {{ end }}
+	    {{ if eq .TypeString "string" }}Value: "{{ .Default }}", {{ end }}
 	    Usage:  "{{ .Description }}",
     },
     {{ end }}
