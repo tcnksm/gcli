@@ -33,11 +33,11 @@ See more usage,
 $ gcli help
 ```
 
-### Generate CLI project from `.toml` file
+### Generate CLI project from design file
 
 You can generate CLI project from design template file (`.toml`). You can define command name, its description, commands there. 
 
-First, you can create `toml` file with default variable you need to generate CLI project via `design` command,
+First, you can create default `toml` file via `design` command,
 
 ```bash
 $ gcli design <NAME>
