@@ -83,6 +83,18 @@ func (c *ApplyCommand) Run(args []string) int {
 		return 1
 	}
 
+	// validate executable
+
+	if errs := executable.Validate(); len(errs) > 0 {
+		c.UI.Error(fmt.Sprintf(
+			"%q is not valid template file. It has %d errors:", designFile, len(errs)))
+		for _, err := range errs {
+			c.UI.Error(fmt.Sprintf(
+				"  * %s", err.Error()))
+		}
+		return ExitCodeFailed
+	}
+
 	output := executable.Name
 	if _, err := os.Stat(output); !os.IsNotExist(err) {
 		msg := fmt.Sprintf("Cannot create directory %s: file exists", output)
