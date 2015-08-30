@@ -33,7 +33,7 @@ See more usage,
 $ gcli help
 ```
 
-### Generate CLI project from template file
+### Generate CLI project from `.toml` file
 
 You can generate CLI project from template file (`.toml`). You can define command name, its description, commands.
 
