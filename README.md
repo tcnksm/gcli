@@ -64,7 +64,10 @@ $ gcli apply <NAME>-desigon.toml
 
 ## Support frameworks
 
-`gcli` generates two types of CLI. flag pattern or command pattern.
+`gcli` can generate two types of CLI, 
+
+- [Flag pattern](#flag-pattern)
+- [Command pattern](#command-pattern)
 
 ### Flag pattern
 
