@@ -27,6 +27,7 @@ func (c *DesignCommand) Run(args []string) int {
 
 	var (
 		output       string
+		owner        string
 		commands     []skeleton.Command
 		flags        []skeleton.Flag
 		frameworkStr string
@@ -44,8 +45,11 @@ func (c *DesignCommand) Run(args []string) int {
 	uflag.StringVar(&frameworkStr, "framework", defaultFrameworkString, "framework")
 	uflag.StringVar(&frameworkStr, "F", defaultFrameworkString, "framework (short)")
 
+	uflag.StringVar(&owner, "owner", "", "owner")
+	uflag.StringVar(&owner, "o", "", "owner (short)")
+
 	uflag.StringVar(&output, "output", "", "output")
-	uflag.StringVar(&output, "o", "", "output (short)")
+	uflag.StringVar(&output, "O", "", "output (short)")
 
 	errR, errW := io.Pipe()
 	errScanner := bufio.NewScanner(errR)
@@ -88,9 +92,11 @@ func (c *DesignCommand) Run(args []string) int {
 		return 1
 	}
 
-	owner, err := gitconfig.GithubUser()
-	if err != nil {
-		owner, _ = gitconfig.Username()
+	if owner == "" {
+		owner, err = gitconfig.GithubUser()
+		if err != nil {
+			owner, _ = gitconfig.Username()
+		}
 	}
 
 	// If no commands are specified, set emply value so that
@@ -163,7 +169,12 @@ Options:
                               To check cli framework you can use, run 'gcli list'.
                               If you set invalid framework, it will be failed.
 
-  -output, -o                 Change output file name. By default, gcli use "NAME-design.toml"
+  -owner=name, -o             Command owner (author) name. This value is also used for
+                              import path name. By default, owner name is extracted from
+                              ~/.gitconfig variable.
+
+
+  -output, -O                 Change output file name. By default, gcli use "NAME-design.toml"
 `
 	return strings.TrimSpace(helpText)
 }
