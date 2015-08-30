@@ -4,7 +4,12 @@ This is road map of `gcli`, what I'm doing for next release and planing for futu
 
 ## 0.2.2
 
+- `plan`, `validate` & `apply` command
+
+## 0.2.3
+
 - `-gb` option
+- Validate flag option more (e.g., if short option is provided, it will failed)
 - Support LICENSE generation
 - Support [jessevdk/go-flags](https://github.com/jessevdk/go-flags)
 - `godoc`
