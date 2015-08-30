@@ -87,6 +87,37 @@ func runGcli(args []string) (string, error) {
 
 }
 
+func goTests(output string) error {
+	// Change directory to artifact directory root
+	if err := os.Chdir(output); err != nil {
+		return err
+	}
+
+	defer func() {
+		// Back to src directory
+		if err := os.Chdir(".."); err != nil {
+			// Should not reach here
+			panic(err)
+		}
+	}()
+
+	funcs := []func(output string) error{
+		goGet,
+		goBuild,
+		goTest,
+		goVet,
+	}
+
+	for _, gf := range funcs {
+		err := gf(output)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 // goGet runs go get on current directory. If failed, returns error.
 func goGet(output string) error {
 	var stdout, stderr bytes.Buffer
@@ -95,11 +126,11 @@ func goGet(output string) error {
 	cmd.Stdout = &stdout
 
 	if err := cmd.Start(); err != nil {
-		return fmt.Errorf("failed to start: %s\n\n %s", err, stderr.String())
+		return fmt.Errorf("failed to start `go get`: %s\n\n %s", err, stderr.String())
 	}
 
 	if err := cmd.Wait(); err != nil {
-		return fmt.Errorf("failed to execute: %s\n\n %s", err, stderr.String())
+		return fmt.Errorf("failed to execute `go get`: %s\n\n %s", err, stderr.String())
 	}
 
 	return nil
@@ -113,11 +144,29 @@ func goBuild(output string) error {
 	cmd.Stdout = &stdout
 
 	if err := cmd.Start(); err != nil {
-		return fmt.Errorf("failed to start: %s\n\n %s", err, stderr.String())
+		return fmt.Errorf("failed to start `go build`: %s\n\n %s", err, stderr.String())
 	}
 
 	if err := cmd.Wait(); err != nil {
-		return fmt.Errorf("failed to execute: %s\n\n %s", err, stderr.String())
+		return fmt.Errorf("failed to execute `go build`: %s\n\n %s", err, stderr.String())
+	}
+
+	return nil
+}
+
+// goTest runs go test on current directory. If failed, returns error.
+func goTest(output string) error {
+	var stdout, stderr bytes.Buffer
+	cmd := exec.Command("go", "test", "./...")
+	cmd.Stderr = &stderr
+	cmd.Stdout = &stdout
+
+	if err := cmd.Start(); err != nil {
+		return fmt.Errorf("failed to start `go test`: %s\n\n %s", err, stderr.String())
+	}
+
+	if err := cmd.Wait(); err != nil {
+		return fmt.Errorf("failed to execute `go test`: %s\n\n %s", err, stderr.String())
 	}
 
 	return nil
@@ -131,11 +180,11 @@ func goVet(output string) error {
 	cmd.Stdout = &stdout
 
 	if err := cmd.Start(); err != nil {
-		return fmt.Errorf("failed to start: %s\n\n %s", err, stderr.String())
+		return fmt.Errorf("failed to start `go vet`: %s\n\n %s", err, stderr.String())
 	}
 
 	if err := cmd.Wait(); err != nil {
-		return fmt.Errorf("failed to execute: %s\n\n %s", err, stderr.String())
+		return fmt.Errorf("failed to execute `go vet`: %s\n\n %s", err, stderr.String())
 	}
 
 	return nil

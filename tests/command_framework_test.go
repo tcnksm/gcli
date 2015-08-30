@@ -63,20 +63,12 @@ func TestNew_command_frameworks(t *testing.T) {
 			t.Fatalf("[%s] expect %q to contain %q", tt.framework, output, expect)
 		}
 
-		if err := os.Chdir(artifactBin); err != nil {
+		if err := goTests(artifactBin); err != nil {
 			t.Fatal(err)
 		}
 
-		if err := goGet(artifactBin); err != nil {
-			t.Fatalf("[%s] Failed to run go get %s: %s", tt.framework, artifactBin, err)
-		}
-
-		if err := goVet(artifactBin); err != nil {
-			t.Fatalf("[%s] Failed to run go vet %s: %s", tt.framework, artifactBin, err)
-		}
-
-		if err := goBuild(artifactBin); err != nil {
-			t.Fatalf("[%s] Failed to run go build %s: %s", tt.framework, artifactBin, err)
+		if err := os.Chdir(artifactBin); err != nil {
+			t.Fatal(err)
 		}
 
 		var stdout, stderr bytes.Buffer
@@ -88,7 +80,7 @@ func TestNew_command_frameworks(t *testing.T) {
 		_ = cmd.Run()
 
 		output = stdout.String() + stderr.String()
-		t.Logf("%s \n\n%s", tt.framework, output)
+		// t.Logf("%s \n\n%s", tt.framework, output)
 		if !strings.Contains(output, tt.expectOut) {
 			t.Errorf("[%s] expects %q to contain %q", tt.framework, output, tt.expectOut)
 		}
