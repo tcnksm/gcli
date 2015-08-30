@@ -5,7 +5,7 @@ const Name = "gcli"
 
 // Version is version string of this application.
 // Version is changed with semantic versioning.
-const Version string = "v0.2.0"
+const Version string = "v0.2.2"
 
 // GitCommit describes latest commit hash.
 // This value is extracted by git command when building.
