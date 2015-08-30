@@ -101,7 +101,7 @@ func (c *DesignCommand) Run(args []string) int {
 
 	// If no commands are specified, set emply value so that
 	// user can understand how to write
-	if len(commands) < 1 {
+	if len(commands) < 1 && len(flags) < 1 {
 		commands = []skeleton.Command{
 			{
 				Name: "",

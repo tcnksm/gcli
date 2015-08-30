@@ -72,7 +72,7 @@ func (e *Executable) Validate() (errs []error) {
 	if len(e.Flags) > 0 {
 		for _, f := range e.Flags {
 			if f.Name == "" {
-				errs = append(errs, fmt.Errorf("`Command.Name` cannot be blank"))
+				errs = append(errs, fmt.Errorf("`Flag.Name` cannot be blank"))
 			}
 		}
 	}
