@@ -97,7 +97,7 @@ $ gcli new -F flag -flag=i:Bool -flag=C:Int grep
 ====> Successfully generated grep
 ```
 
-For this flag pattern, `gcli` supports below packages, 
+`gcli` supports the following packages for the flag pattern:
 
 - [flag](https://golang.org/pkg/flag/)
 
@@ -136,7 +136,7 @@ $ gcli new -F mitchellh_cli -c add -c list -c delete todo
 ====> Successfully generated todo
 ```
 
-For this flag pattern, `gcli` supports below packages, 
+`gcli` supports the following packages for the command pattern:
 
 - [codegangsta_cli](https://github.com/codegangsta/cli)
 - [mitchellh_cli](https://github.com/mitchellh/cli)
