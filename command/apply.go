@@ -1,10 +1,7 @@
 package command
 
 import (
-	"bufio"
-	"flag"
 	"fmt"
-	"io"
 	"os"
 	"strings"
 
@@ -28,8 +25,7 @@ func (c *ApplyCommand) Run(args []string) int {
 		name         string
 	)
 
-	uflag := flag.NewFlagSet("apply", flag.ContinueOnError)
-	uflag.Usage = func() { c.UI.Error(c.Help()) }
+	uflag := c.Meta.NewFlagSet("apply", c.Help())
 
 	uflag.StringVar(&frameworkStr, "framework", "", "framework")
 	uflag.StringVar(&frameworkStr, "F", "", "framework (short)")
@@ -43,16 +39,6 @@ func (c *ApplyCommand) Run(args []string) int {
 	// These flags are supposed only to use in test
 	uflag.StringVar(&owner, "owner", "", "owner (Should only for test)")
 	uflag.StringVar(&name, "name", "", "name (Should only for test)")
-
-	errR, errW := io.Pipe()
-	errScanner := bufio.NewScanner(errR)
-	uflag.SetOutput(errW)
-
-	go func() {
-		for errScanner.Scan() {
-			c.UI.Error(errScanner.Text())
-		}
-	}()
 
 	if err := uflag.Parse(args); err != nil {
 		return 1

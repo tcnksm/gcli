@@ -17,9 +17,8 @@ type ListCommand struct {
 // Run lists all avairable frameworks.
 func (c *ListCommand) Run(args []string) int {
 
-	if len(args) > 0 {
-		msg := fmt.Sprintf("Invalid arguments: %s", strings.Join(args, " "))
-		c.UI.Error(msg)
+	uflag := c.Meta.NewFlagSet("list", c.Help())
+	if err := uflag.Parse(args); err != nil {
 		return 1
 	}
 

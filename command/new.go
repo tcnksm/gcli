@@ -1,10 +1,7 @@
 package command
 
 import (
-	"bufio"
-	"flag"
 	"fmt"
-	"io"
 	"os"
 	"strings"
 
@@ -29,8 +26,7 @@ func (c *NewCommand) Run(args []string) int {
 		verbose      bool
 	)
 
-	uflag := flag.NewFlagSet("new", flag.ContinueOnError)
-	uflag.Usage = func() { c.UI.Error(c.Help()) }
+	uflag := c.Meta.NewFlagSet("new", c.Help())
 
 	uflag.Var((*CommandFlag)(&commands), "command", "command")
 	uflag.Var((*CommandFlag)(&commands), "c", "command (short)")
@@ -49,16 +45,6 @@ func (c *NewCommand) Run(args []string) int {
 
 	uflag.BoolVar(&verbose, "verbose", false, "verbose")
 	uflag.BoolVar(&verbose, "V", false, "verbose (short)")
-
-	errR, errW := io.Pipe()
-	errScanner := bufio.NewScanner(errR)
-	uflag.SetOutput(errW)
-
-	go func() {
-		for errScanner.Scan() {
-			c.UI.Error(errScanner.Text())
-		}
-	}()
 
 	if err := uflag.Parse(args); err != nil {
 		return 1
