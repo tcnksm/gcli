@@ -1,10 +1,7 @@
 package command
 
 import (
-	"bufio"
-	"flag"
 	"fmt"
-	"io"
 	"os"
 	"strings"
 
@@ -20,26 +17,15 @@ type ValidateCommand struct {
 // Run validates template file
 func (c *ValidateCommand) Run(args []string) int {
 
-	uflag := flag.NewFlagSet("validate", flag.ContinueOnError)
-	uflag.Usage = func() { c.UI.Error(c.Help()) }
-
-	errR, errW := io.Pipe()
-	errScanner := bufio.NewScanner(errR)
-	uflag.SetOutput(errW)
-
-	go func() {
-		for errScanner.Scan() {
-			c.UI.Error(errScanner.Text())
-		}
-	}()
-
+	uflag := c.Meta.NewFlagSet("validate", c.Help())
 	if err := uflag.Parse(args); err != nil {
 		return 1
 	}
 
 	parsedArgs := uflag.Args()
 	if len(parsedArgs) != 1 {
-		c.UI.Error("Invalid argument: Usage glic validate [options] FILE")
+		c.UI.Error("Invalid argument")
+		c.UI.Error(c.Help())
 		return 1
 	}
 

@@ -1,10 +1,7 @@
 package command
 
 import (
-	"bufio"
-	"flag"
 	"fmt"
-	"io"
 	"os"
 	"strings"
 
@@ -33,8 +30,7 @@ func (c *DesignCommand) Run(args []string) int {
 		frameworkStr string
 	)
 
-	uflag := flag.NewFlagSet("design", flag.ContinueOnError)
-	uflag.Usage = func() { c.UI.Error(c.Help()) }
+	uflag := c.Meta.NewFlagSet("design", c.Help())
 
 	uflag.Var((*CommandFlag)(&commands), "command", "command")
 	uflag.Var((*CommandFlag)(&commands), "c", "command (short)")
@@ -50,16 +46,6 @@ func (c *DesignCommand) Run(args []string) int {
 
 	uflag.StringVar(&output, "output", "", "output")
 	uflag.StringVar(&output, "O", "", "output (short)")
-
-	errR, errW := io.Pipe()
-	errScanner := bufio.NewScanner(errR)
-	uflag.SetOutput(errW)
-
-	go func() {
-		for errScanner.Scan() {
-			c.UI.Error(errScanner.Text())
-		}
-	}()
 
 	if err := uflag.Parse(args); err != nil {
 		return 1
