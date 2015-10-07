@@ -40,7 +40,7 @@ func TestNew_flag_frameworks(t *testing.T) {
 			"new",
 			"-framework", tt.framework,
 			"-owner", owner,
-			"-flag=ignore:Bool:'Perform case insensitive matching'",
+			"-flag=ignore-case:Bool:'Perform case insensitive matching'",
 			"-flag=context:Int:'Print num lines of leading and trailing context'",
 			artifactBin,
 		}
