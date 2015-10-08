@@ -31,6 +31,7 @@ type Framework struct {
 var CommonTemplates = []Template{
 	{"resource/tmpl/common/CHANGELOG.md.tmpl", "CHANGELOG.md"},
 	{"resource/tmpl/common/README.md.tmpl", "README.md"},
+	{"resource/tmpl/common/gitignore.tmpl", ".gitignore"},
 }
 
 // Frameworks is collection of Framework.
