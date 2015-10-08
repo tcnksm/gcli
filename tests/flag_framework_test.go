@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/tcnksm/gcli/skeleton"
 )
 
 func TestNew_flag_frameworks(t *testing.T) {
@@ -50,6 +53,15 @@ func TestNew_flag_frameworks(t *testing.T) {
 		expect := "Successfully generated"
 		if !strings.Contains(output, expect) {
 			t.Fatalf("[%s] expect %q to contain %q", tt.framework, output, expect)
+		}
+
+		// Check common files are generated
+		for _, tmpl := range skeleton.CommonTemplates {
+			// NOTE: OutputPathTmpl of common template is same as final output name
+			// and not changed by templating
+			if _, err := os.Stat(filepath.Join(artifactBin, tmpl.OutputPathTmpl)); os.IsNotExist(err) {
+				t.Fatalf("file is not exist: %s", tmpl.OutputPathTmpl)
+			}
 		}
 
 		if err := goTests(artifactBin); err != nil {

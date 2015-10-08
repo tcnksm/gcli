@@ -87,6 +87,11 @@ func runGcli(args []string) (string, error) {
 
 }
 
+func checkFile(files []string) error {
+
+	return nil
+}
+
 func goTests(output string) error {
 	// Change directory to artifact directory root
 	if err := os.Chdir(output); err != nil {
