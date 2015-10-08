@@ -3,10 +3,13 @@ package main
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/tcnksm/gcli/skeleton"
 )
 
 func TestDesignFlow(t *testing.T) {
@@ -69,6 +72,15 @@ func TestDesignFlow(t *testing.T) {
 	expect := "Successfully generated"
 	if !strings.Contains(output, expect) {
 		t.Fatalf("Expect %q to contain %q", output, expect)
+	}
+
+	// Check common files are generated
+	for _, tmpl := range skeleton.CommonTemplates {
+		// NOTE: OutputPathTmpl of common template is same as final output name
+		// and not changed by templating
+		if _, err := os.Stat(filepath.Join(artifactBin, tmpl.OutputPathTmpl)); os.IsNotExist(err) {
+			t.Fatalf("file is not exist: %s", tmpl.OutputPathTmpl)
+		}
 	}
 
 	if err := goTests(artifactBin); err != nil {
