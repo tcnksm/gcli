@@ -22,7 +22,7 @@ install: generate
 	@echo "====> Install gcli in $(GOPATH)/bin ..."
 	@go install -ldflags "-X main.GitCommit=\"$(COMMIT)\""
 
-test: generate devdeps
+test: build devdeps
 	@echo "====> Run test"
 	@sh -c "$(CURDIR)/test.sh"
 
