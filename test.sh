@@ -4,14 +4,14 @@
 # it will exit with non-zero status
 
 TARGET=$(find . -name "*.go" | grep -v "bindata.go")
-echo -e "Run gofmt"
+echo -e "----> Run gofmt"
 FMT_RES=$(gofmt -l ${TARGET})
 if [ -n "${FMT_RES}" ]; then
     echo -e "gofmt failed: \n${FMT_RES}"
     exit 255
 fi
 
-echo -e "Run go vet"
+echo -e "----> Run go vet"
 go list -f '{{.Dir}}' ./... | xargs go tool vet
 if [ $? -ne 0 ]; then
     echo -e "go vet failed"
@@ -19,7 +19,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # TODO, better way to exclude some lint warning.
-echo -e "Run golint"
+echo -e "----> Run golint"
 LINT_RES=$(golint ./... | \
                   grep -v "bindata.go" | \
                   grep -v "type name will be used as command.CommandFlag by other packages" | \
@@ -33,5 +33,5 @@ if [ -n "${LINT_RES}" ]; then
      exit 255
 fi
 
-echo -e "Run go test"
+echo -e "----> Run go test"
 go test -v ./...
