@@ -1,0 +1,3 @@
+package skeleton
+
+//go:generate go-bindata -pkg=skeleton ./resource/...
