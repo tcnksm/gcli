@@ -77,8 +77,6 @@ func newCommandDocs(commands map[string]cli.CommandFactory) []CommandDoc {
 // and write them to writer, return error if any
 func tmpl(wr io.Writer, content string, data interface{}) error {
 
-	// funcs := funcMap()
-
 	tmpl, err := template.New("doc").Parse(content)
 	if err != nil {
 		return err
