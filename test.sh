@@ -3,7 +3,7 @@
 # If `gofmt` & `golint` has output (means something wrong),
 # it will exit with non-zero status
 
-TARGET=$(find . -name "*.go" | grep -v "bindata.go")
+TARGET=$(find . -name "*.go" | grep -v "bindata.go" | grep -v "doc.go")
 echo -e "----> Run gofmt"
 FMT_RES=$(gofmt -l ${TARGET})
 if [ -n "${FMT_RES}" ]; then
@@ -22,6 +22,7 @@ fi
 echo -e "----> Run golint"
 LINT_RES=$(golint ./... | \
                   grep -v "bindata.go" | \
+                  grep -v "doc.go" | \
                   grep -v "type name will be used as command.CommandFlag by other packages" | \
                   grep -v "Framework_go_cmd" | \
                   grep -v "Framework_codegangsta_cli" | \
