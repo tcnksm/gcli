@@ -56,9 +56,11 @@ func (c *ListCommand) Synopsis() string {
 // and the complete list of flags the command accepts.
 func (c *ListCommand) Help() string {
 	helpText := `
-Usage: gcli list
+Show all avairable cli frameworks.
 
-  Show all avairable cli frameworks. 
+Usage:
+
+  gcli list
 `
 	return strings.TrimSpace(helpText)
 }

@@ -178,12 +178,15 @@ func (c *ApplyCommand) Synopsis() string {
 // and the complete list of flags the command accepts.
 func (c *ApplyCommand) Help() string {
 	helpText := `
-Usage: gcli apply [option] FILE
+Apply design template file for generating cli project. You can generate
+design template file via 'gcli design' command. If framework name is not
+specified gcli use codegangsta/cli. You can set framework name via '-F'
+option. To check cli framework you can use, run 'gcli list'. 
 
-  Apply design template file for generating cli project. You can generate
-  design template file via 'gcli design' command. If framework name is not
-  specified gcli use codegangsta/cli. You can set framework name via '-F'
-  option. To check cli framework you can use, run 'gcli list'. 
+Usage:
+
+  gcli apply [option] FILE
+
 
 Options:
 
