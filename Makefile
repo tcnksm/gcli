@@ -37,3 +37,8 @@ test-docker:
 test-functional: build devdeps
 	@echo "====> Run functional test"
 	cd tests; go test -v ./...
+
+godoc: build
+	@echo "====> Generate doc.go"
+	@rm doc.go
+	@./bin/gcli -godoc
