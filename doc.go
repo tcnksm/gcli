@@ -142,7 +142,7 @@ Options:
 
 Examples:
 
-TO create todo command application skeleton which has 'add' and 'delete' command,
+To create todo command application skeleton which has 'add' and 'delete' command,
 
    $ gcli new -command=add:"Add new task" -commnad=delete:"delete task" todo
 
