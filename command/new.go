@@ -150,12 +150,14 @@ func (c *NewCommand) Synopsis() string {
 // and the complete list of flags the command accepts.
 func (c *NewCommand) Help() string {
 	helpText := `
-Usage: gcli new [option] NAME
+Generate new cli skeleton project. At least, you must provide executable
+name. You can select cli package and set commands via command line option.
+See more about that on Options section. By default, gcli use codegangsta/cli.
+To check cli framework you can use, run 'gcli list'. 
 
-  Generate new cli skeleton project. At least, you must provide executable
-  name. You can select cli package and set commands via command line option.
-  See more about that on Options section. By default, gcli use codegangsta/cli.
-  To check cli framework you can use, run 'gcli list'. 
+Usage:
+
+    gcli new [option] NAME
 
 Options:
 
@@ -190,8 +192,7 @@ Options:
 
 Examples:
 
-   This example shows creating todo command application skeleton
-   which has 'add' and 'delete' command by using mitchellh/cli package.
+To create todo command application skeleton which has 'add' and 'delete' command,
 
    $ gcli new -command=add:"Add new task" -commnad=delete:"delete task" todo
 `

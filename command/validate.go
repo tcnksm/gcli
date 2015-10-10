@@ -75,10 +75,13 @@ func (c *ValidateCommand) Synopsis() string {
 // and the complete list of flags the command accepts.
 func (c *ValidateCommand) Help() string {
 	helpText := `
-Usage: gcli validate FILE
+Validate design template file which has required filed. If not it returns
+error and non zero value. 
 
-  Validate design template file which has required filed. If not it returns
-  error and non zero value. 
+Usage:
+
+  gcli validate FILE
+
 `
 	return strings.TrimSpace(helpText)
 }

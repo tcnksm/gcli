@@ -126,11 +126,14 @@ func (c *DesignCommand) Synopsis() string {
 // and the complete list of flags the command accepts.
 func (c *DesignCommand) Help() string {
 	helpText := `
-Usage: gcli design [option] NAME
+Generate project design template (as toml file). You can pass that file to 'gcli apply'
+command and generate CLI tool based on template file. You can define what command
+and what flag you need on that file.
 
-  Generate project design template (as toml file). You can pass that file to 'gcli apply'
-  command and generate CLI tool based on template file. You can define what command
-  and what flag you need on that file.
+Usage:
+
+  gcli design [option] NAME
+
 
 Options:
 
