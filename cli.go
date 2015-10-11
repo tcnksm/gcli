@@ -34,7 +34,7 @@ func RunCustom(args []string, commands map[string]cli.CommandFactory) int {
 	for _, arg := range args {
 
 		// If the following options are provided,
-		// then execute glic version command
+		// then execute gcli version command
 		if arg == "-v" || arg == "-version" || arg == "--version" {
 			newArgs := make([]string, len(args)+1)
 			newArgs[0] = "version"
