@@ -89,7 +89,7 @@ func tmpl(wr io.Writer, content string, data interface{}) error {
 	return nil
 }
 
-var docTmpl = `Command gcli generates a skeleon (codes and its directory structure) you need to start building CLI tool by Golang.
+var docTmpl = `Command gcli generates a skeleton (codes and its directory structure) you need to start building CLI tool by Golang.
 https://github.com/tcnksm/gcli
 
 Usage:
