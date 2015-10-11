@@ -11,7 +11,15 @@ gcli
 [license]: https://github.com/tcnksm/gcli/blob/master/LICENSE
 [godocs]: http://godoc.org/github.com/tcnksm/gcli
 
-`gcli` generates the codes and its directory structure you need to start building CLI tool by Golang right out of the box. You can use your favorite [framework](#support-frameworks). 
+`gcli` generates a skeleton (codes and its directory structure) you need to start building CLI tool by Golang right out of the box. You can use your favorite [CLI framework](#support-frameworks).
+
+## Demo
+
+The following demo shows creating `todo` CLI application which has `add`, `list` and `delete` command with [mitchellh/cli](https://github.com/mitchellh/cli) (Which is used for [Hashicorp](https://hashicorp.com/) products),
+
+![gif](/doc/gif/gcli-new.gif)
+
+As you can see, the codes are `go build`-able from beginning. 
 
 ## Usage
 
@@ -33,7 +41,7 @@ See more usage,
 $ gcli help
 ```
 
-### Generate CLI project from design file
+### Design File
 
 You can generate CLI project from design template file (`.toml`). You can define command name, its description, commands there. 
 
@@ -61,10 +69,9 @@ To generate CLI project, use `apply` command,
 $ gcli apply <NAME>-desigon.toml
 ```
 
-
 ## Support frameworks
 
-`gcli` can generate two types of CLI, 
+`gcli` can generate two types of CLI pattern, 
 
 - [Flag pattern](#flag-pattern)
 - [Command pattern](#command-pattern)
@@ -103,7 +110,7 @@ $ gcli new -F flag -flag=i:Bool -flag=C:Int grep
 
 ### Command pattern
 
-Command pattern is the pattern which executable has command for change its behavior. For example, `todo` CLI application which has `add` (Add new task), `list` (List all tasks) and `delete`(Delete a task) command. 
+Command pattern is the pattern which executable has command for change its behavior. For example, todo CLI application which has add (Add new task), list (List all tasks) and delete(Delete a task) command.
 
 ```bash
 $ todo add 'Buy a milk' 
