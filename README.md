@@ -19,7 +19,7 @@ The following demo shows creating `todo` CLI application which has `add`, `list`
 
 ![gif](/doc/gif/gcli-new.gif)
 
-The next demo shows creating same `todo` CLI application with `design` & `apply` commands. This is the other way to start building new CLI application. First, it starts with creating design file by `design` command. In this file, you can define, CLI name, description of the CLI , framework you want to use, and commands & flags with its usages. After editing, it executes `apply` command to generating a project from that design file.
+The next demo shows creating same `todo` CLI application with `design` & `apply` commands. This is the other way to start building new CLI application. First, it starts with creating design file by `design` command. In this file, you can define, CLI name, description of the CLI , framework you want to use, and commands & flags with its usages. After editing, it executes `apply` command to generating a project from that design file (The complete video is available on [Vimeo](https://vimeo.com/142134929)). 
 
 ![gif](/doc/gif/gcli-design.gif)
 
@@ -49,7 +49,7 @@ $ gcli help
 
 You can generate CLI project from design template file (`.toml`). You can define command name, its description, commands there. 
 
-First, you can create default `toml` file via `design` command,
+First, you can create default `.toml` file via `design` command,
 
 ```bash
 $ gcli design <NAME>
