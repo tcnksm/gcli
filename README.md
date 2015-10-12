@@ -15,11 +15,13 @@ gcli
 
 ## Demo
 
-The following demo shows creating `todo` CLI application which has `add`, `list` and `delete` command with [mitchellh/cli](https://github.com/mitchellh/cli) (Which is used for [Hashicorp](https://hashicorp.com/) products),
+The following demo shows creating `todo` CLI application which has `add`, `list` and `delete` command with [mitchellh/cli](https://github.com/mitchellh/cli) (Which is used for [Hashicorp](https://hashicorp.com/) products) with *one command*. 
 
 ![gif](/doc/gif/gcli-new.gif)
 
-As you can see, the codes are `go build`-able from beginning. 
+The next demo shows creating same `todo` CLI application with `design` & `apply` commands. This is the other way to start building new CLI application. First, it starts with creating design file by `design` command. In this file, you can define, CLI name, description of the CLI , framework you want to use, and commands & flags with its usages. After editing, it executes `apply` command to generating a project from that design file.
+
+![gif](/doc/gif/gcli-design.gif)
 
 ## Usage
 
