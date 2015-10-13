@@ -49,7 +49,6 @@ func (f *FlagFlag) Set(v string) error {
 			// TODO, this should not here..? or extract this as other function
 			desc = strings.Trim(desc, "\"")
 			desc = strings.Trim(desc, "'")
-
 		}
 
 		flag := skeleton.Flag{

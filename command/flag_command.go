@@ -41,11 +41,16 @@ func (c *CommandFlag) Set(v string) error {
 			synopsis = strings.Trim(synopsis, "'")
 		}
 
-		*c = append(*c, skeleton.Command{
+		command := skeleton.Command{
 			Name:     name,
 			Synopsis: synopsis,
-		})
+		}
 
+		if err := command.Fix(); err != nil {
+			return err
+		}
+
+		*c = append(*c, command)
 	}
 
 	return nil
