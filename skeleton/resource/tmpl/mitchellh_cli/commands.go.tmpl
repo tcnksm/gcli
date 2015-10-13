@@ -8,7 +8,7 @@ import (
 func Commands(meta *command.Meta) map[string]cli.CommandFactory {
 	return map[string]cli.CommandFactory{
 		{{ range .Commands }}"{{ .Name }}": func() (cli.Command, error) {
-			return &command.{{ title .Name }}Command{
+			return &command.{{ title .FunctionName }}Command{
 				Meta: *meta,
 			}, nil
 		},

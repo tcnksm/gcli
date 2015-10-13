@@ -50,8 +50,10 @@ func TestNew_command_frameworks(t *testing.T) {
 			"-owner", owner,
 			"-flag=verbose:bool:'Run verbose mode'",
 			"-flag=username:string:'Username'",
+			"-flag=dry-run:string:'Dry-run mode'",
 			"-command=add:'Add new task'",
 			"-command=list:'List tasks'",
+			"-command=change-state:'Change task state'",
 			"-command=delete:'Delete specified task'",
 			artifactBin,
 		}

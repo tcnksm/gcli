@@ -25,32 +25,36 @@ func TestCommandFlag_Set(t *testing.T) {
 		{
 			arg:     `add:"Add new task"`,
 			success: true,
-			expect: []skeleton.Command{
-				{Name: "add", Synopsis: "Add new task"},
+			expect: []*skeleton.Command{
+				{
+					Name:         "add",
+					FunctionName: "add",
+					Synopsis:     "Add new task",
+				},
 			},
 		},
 		{
 			arg:     `add:"Add new task",delete:"Delete task"`,
 			success: true,
-			expect: []skeleton.Command{
-				{Name: "add", Synopsis: "Add new task"},
-				{Name: "delete", Synopsis: "Delete task"},
+			expect: []*skeleton.Command{
+				{Name: "add", FunctionName: "add", Synopsis: "Add new task"},
+				{Name: "delete", FunctionName: "delete", Synopsis: "Delete task"},
 			},
 		},
 		{
 			arg:     `add,delete,list`,
 			success: true,
-			expect: []skeleton.Command{
-				{Name: "add"},
-				{Name: "delete"},
-				{Name: "list"},
+			expect: []*skeleton.Command{
+				{Name: "add", FunctionName: "add"},
+				{Name: "delete", FunctionName: "delete"},
+				{Name: "list", FunctionName: "list"},
 			},
 		},
 		{
 			arg:     `include:"Include " character inside"`,
 			success: true,
-			expect: []skeleton.Command{
-				{Name: "include", Synopsis: "Include \" character inside"},
+			expect: []*skeleton.Command{
+				{Name: "include", FunctionName: "include", Synopsis: "Include \" character inside"},
 			},
 		},
 	}

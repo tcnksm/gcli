@@ -6,6 +6,6 @@ import (
 	"github.com/mitchellh/cli"
 )
 
-func Test{{ title .Name }}Command_implement(t *testing.T) {
-	var _ cli.Command = &{{ title .Name }}Command{}
+func Test{{ title .FunctionName }}Command_implement(t *testing.T) {
+	var _ cli.Command = &{{ title .FunctionName }}Command{}
 }

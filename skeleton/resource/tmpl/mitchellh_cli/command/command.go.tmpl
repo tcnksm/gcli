@@ -4,21 +4,21 @@ import (
     "strings"
 )
 
-type {{ title .Name }}Command struct {
+type {{ title .FunctionName }}Command struct {
 	Meta
 }
 
-func (c *{{ title .Name }}Command) Run(args []string) int {
+func (c *{{ title .FunctionName }}Command) Run(args []string) int {
     // Write your code here
     {{ if ne .DebugOutput "" }}print("{{ .DebugOutput }}"){{ end }}
 	return 0
 }
 
-func (c *{{ title .Name }}Command) Synopsis() string {
+func (c *{{ title .FunctionName }}Command) Synopsis() string {
 	return "{{ .Synopsis }}"
 }
 
-func (c *{{ title .Name }}Command) Help() string {
+func (c *{{ title .FunctionName }}Command) Help() string {
 	helpText := `
 {{ .Help }}
 `

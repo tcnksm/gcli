@@ -69,8 +69,13 @@ func (c *ApplyCommand) Run(args []string) int {
 		return 1
 	}
 
-	// validate executable
+	if err := executable.Fix(); err != nil {
+		c.UI.Error(fmt.Sprintf(
+			"Failed to fix input value: %s", err))
+		return 1
+	}
 
+	// validate executable
 	if errs := executable.Validate(); len(errs) > 0 {
 		c.UI.Error(fmt.Sprintf(
 			"%q is not valid template file. It has %d errors:", designFile, len(errs)))
@@ -103,21 +108,6 @@ func (c *ApplyCommand) Run(args []string) int {
 	if err != nil {
 		c.UI.Error(fmt.Sprintf("Failed to generate %q: %s", executable.Name, err.Error()))
 		return 1
-	}
-
-	// Run fix flag struct. complement empty variable.
-	if len(executable.Flags) > 0 {
-		fixedFlags := []skeleton.Flag{}
-		for _, f := range executable.Flags {
-			if err := f.Fix(); err != nil {
-				c.UI.Error(fmt.Sprintf(
-					"Failed to fix flag struct: %s", err.Error()))
-				return 1
-			}
-			fixedFlags = append(fixedFlags, f)
-		}
-
-		executable.Flags = fixedFlags
 	}
 
 	if len(name) != 0 {

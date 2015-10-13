@@ -15,12 +15,13 @@ func TestFix(t *testing.T) {
 				Description: "Run as DEBUG mode",
 			},
 			exp: &Flag{
-				Name:        "debug",
-				ShortName:   "d",
-				LongName:    "debug",
-				TypeString:  TypeStringBool,
-				Default:     false,
-				Description: "Run as DEBUG mode",
+				Name:         "debug",
+				ShortName:    "d",
+				LongName:     "debug",
+				VariableName: "debug",
+				TypeString:   TypeStringBool,
+				Default:      false,
+				Description:  "Run as DEBUG mode",
 			},
 			success: true,
 		},
@@ -32,12 +33,31 @@ func TestFix(t *testing.T) {
 				Description: "",
 			},
 			exp: &Flag{
-				Name:        "token",
-				ShortName:   "t",
-				LongName:    "token",
-				TypeString:  TypeStringString,
-				Default:     "",
+				Name:         "token",
+				ShortName:    "t",
+				LongName:     "token",
+				VariableName: "token",
+				TypeString:   TypeStringString,
+				Default:      "",
+				Description:  "",
+			},
+			success: true,
+		},
+
+		{
+			in: &Flag{
+				LongName:    "ignore-case",
+				TypeString:  "bool",
 				Description: "",
+			},
+			exp: &Flag{
+				Name:         "ignore-case",
+				VariableName: "ignoreCase",
+				ShortName:    "i",
+				LongName:     "ignore-case",
+				TypeString:   TypeStringBool,
+				Default:      false,
+				Description:  "",
 			},
 			success: true,
 		},
@@ -50,17 +70,37 @@ func TestFix(t *testing.T) {
 				Default:     "ABCD1124",
 			},
 			exp: &Flag{
-				Name:        "token",
-				ShortName:   "t",
-				LongName:    "token",
-				TypeString:  TypeStringString,
-				Default:     "ABCD1124",
-				Description: "",
+				Name:         "token",
+				ShortName:    "t",
+				LongName:     "token",
+				VariableName: "token",
+				TypeString:   TypeStringString,
+				Default:      "ABCD1124",
+				Description:  "",
 			},
 			success: true,
 		},
 	}
 
+	for i, tt := range tests {
+
+		err := tt.in.Fix()
+		if err != nil && !tt.success {
+			continue
+		}
+
+		if err == nil && !tt.success {
+			t.Fatalf("#%d expect Fix to fail", i)
+		}
+
+		if err != nil {
+			t.Fatalf("#%d expect Fix not to fail but %q", i, err.Error())
+		}
+
+		if *tt.in != *tt.exp {
+			t.Errorf("#%d expect %v to eq %v", i, tt.in, tt.exp)
+		}
+	}
 	for i, tt := range tests {
 
 		err := tt.in.Fix()

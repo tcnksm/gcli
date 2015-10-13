@@ -22,10 +22,10 @@ type Executable struct {
 	Owner string
 
 	// Commands are commands of the executable.
-	Commands []Command
+	Commands []*Command
 
 	// Flags are flags of the executable.
-	Flags []Flag
+	Flags []*Flag
 
 	// Version is initial version.
 	Version string
@@ -43,6 +43,23 @@ func NewExecutable() *Executable {
 		Version:     DefaultVersion,
 		Description: DefaultDescription,
 	}
+}
+
+// Fix fixes user inputs for using
+func (e *Executable) Fix() error {
+
+	for _, c := range e.Commands {
+		if err := c.Fix(); err != nil {
+			return err
+		}
+	}
+	for _, f := range e.Flags {
+		if err := f.Fix(); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // Validate validates Executalbe has required field or not.
@@ -101,7 +118,7 @@ func (e *Executable) Validate() (errs []error) {
 func (e *Executable) Overwrite(key string, v interface{}) error {
 	// Check
 	switch v.(type) {
-	case string, []Command, []Flag:
+	case string, []*Command, []*Flag:
 	default:
 		return fmt.Errorf("unexpected value: %#v", v)
 	}

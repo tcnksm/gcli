@@ -24,7 +24,7 @@ func TestRun_versionFlag(t *testing.T) {
 }
 
 {{ range .Flags }}
-func TestRun_{{ .LongName }}Flag(t *testing.T) {
+func TestRun_{{ .VariableName }}Flag(t *testing.T) {
 	outStream, errStream := new(bytes.Buffer), new(bytes.Buffer)
 	cli := &CLI{outStream: outStream, errStream: errStream}
 	args := strings.Split("./{{ $.Name }} -{{ .LongName }}", " ")

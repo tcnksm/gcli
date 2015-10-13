@@ -35,6 +35,7 @@ func TestDesignFlow(t *testing.T) {
 		"-command=add:'Add file contents to the index'",
 		"-command=commit:'Record changes to the repository'",
 		"-command=push:'Update remote refs along with associated objects'",
+		"-command=pull-request:'Open a pull request on GitHub'",
 		"-output", designFile,
 		artifactBin,
 	}

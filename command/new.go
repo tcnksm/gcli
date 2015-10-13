@@ -18,8 +18,8 @@ type NewCommand struct {
 func (c *NewCommand) Run(args []string) int {
 
 	var (
-		commands     []skeleton.Command
-		flags        []skeleton.Flag
+		commands     []*skeleton.Command
+		flags        []*skeleton.Flag
 		frameworkStr string
 		owner        string
 		skipTest     bool

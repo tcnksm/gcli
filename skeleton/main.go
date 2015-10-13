@@ -111,7 +111,7 @@ func (s *Skeleton) generateCommandFiles() <-chan struct{} {
 
 		for _, cmd := range s.Executable.Commands {
 			wg.Add(1)
-			go func(cmd Command) {
+			go func(cmd *Command) {
 				defer wg.Done()
 				for _, tmpl := range s.Framework.CommandTemplates {
 
