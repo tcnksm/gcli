@@ -1,3 +1,25 @@
+## 0.2.3 (2015-10-13)
+
+### Added
+
+- Generate `.gitignore` [#31](https://github.com/tcnksm/gcli/pull/31)
+- Generate godoc by `go generate` [#24](https://github.com/tcnksm/gcli/pull/24)
+- Add demo (`.gif`) [#35](https://github.com/tcnksm/gcli/pull/35), [#36](https://github.com/tcnksm/gcli/pull/36)
+
+### Deprecated
+
+- Nothing
+
+### Removed
+
+- Nothing
+
+### Fixed
+
+- Fix variable name when flag includes [#38](https://github.com/tcnksm/gcli/pull/38)
+- Use `go generate` for `go-bindata` [#33](https://github.com/tcnksm/gcli/pull/33)
+- Refactoring
+
 ## 0.2.2 (2015-08-31)
 
 ### Added
