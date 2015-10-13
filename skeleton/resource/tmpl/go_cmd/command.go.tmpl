@@ -1,7 +1,7 @@
 package main
 
-var cmd{{ title .Name }} = &Command{
-	Run:       run{{ title .Name }},
+var cmd{{ title .FunctionName }} = &Command{
+	Run:       run{{ title .FunctionName }},
 	UsageLine: "{{ .Name }} ",
 	Short:     "{{ .Synopsis }}",
 	Long: `
@@ -14,8 +14,8 @@ func init(){
 	// cmd{{ title .Name }}.Flag.BoolVar(&flagA, "a", false, "")
 }
 
-// run{{ title .Name }} executes {{ .Name }} command and return exit code. 
-func run{{ title .Name }}(args []string) int {
+// run{{ title .FunctionName }} executes {{ .Name }} command and return exit code. 
+func run{{ title .FunctionName }}(args []string) int {
     {{ if ne .DebugOutput "" }}print("{{ .DebugOutput }}"){{ end }}
 	return 0
 }

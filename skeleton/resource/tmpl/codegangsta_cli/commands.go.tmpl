@@ -22,7 +22,7 @@ var Commands = []cli.Command{
     {{ range .Commands }}{
 		Name:        "{{ .Name }}",
 		Usage:       "{{ .Synopsis }}",
-		Action:      command.Cmd{{ title .Name }},
+		Action:      command.Cmd{{ title .FunctionName }},
 		Flags:       []cli.Flag{},
 	},
     {{ end }}
