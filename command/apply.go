@@ -69,6 +69,12 @@ func (c *ApplyCommand) Run(args []string) int {
 		return 1
 	}
 
+	if err := executable.Fix(); err != nil {
+		c.UI.Error(fmt.Sprintf(
+			"Failed to fix input value: %s", err))
+		return 1
+	}
+
 	// validate executable
 	if errs := executable.Validate(); len(errs) > 0 {
 		c.UI.Error(fmt.Sprintf(

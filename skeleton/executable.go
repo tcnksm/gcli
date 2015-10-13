@@ -45,24 +45,22 @@ func NewExecutable() *Executable {
 	}
 }
 
-// // Fix fixes user inputs for using
-// func (e *Executable) Fix() error {
-// 	// Run fix flag struct. complement empty variable.
-// 	if len(executable.Flags) > 0 {
-// 		fixedFlags := []skeleton.Flag{}
-// 		for _, f := range executable.Flags {
-// 			if err := f.Fix(); err != nil {
-// 				c.UI.Error(fmt.Sprintf(
-// 					"Failed to fix flag struct: %s", err.Error()))
-// 				return 1
-// 			}
-// 			fixedFlags = append(fixedFlags, f)
-// 		}
+// Fix fixes user inputs for using
+func (e *Executable) Fix() error {
 
-// 		executable.Flags = fixedFlags
-// 	}
+	for _, c := range e.Commands {
+		if err := c.Fix(); err != nil {
+			return err
+		}
+	}
+	for _, f := range e.Flags {
+		if err := f.Fix(); err != nil {
+			return err
+		}
+	}
 
-// }
+	return nil
+}
 
 // Validate validates Executalbe has required field or not.
 // If not returns, errors as slice.
