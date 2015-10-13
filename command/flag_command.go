@@ -10,7 +10,7 @@ import (
 // CommandFlag implements the flag.Value interface and allows multiple
 // calls to the same variable to append a list. It parses string and set them
 // as skeleton.Command.
-type CommandFlag []skeleton.Command
+type CommandFlag []*skeleton.Command
 
 // String
 func (c *CommandFlag) String() string {
@@ -41,7 +41,7 @@ func (c *CommandFlag) Set(v string) error {
 			synopsis = strings.Trim(synopsis, "'")
 		}
 
-		command := skeleton.Command{
+		command := &skeleton.Command{
 			Name:     name,
 			Synopsis: synopsis,
 		}

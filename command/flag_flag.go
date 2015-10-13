@@ -15,7 +15,7 @@ const (
 // FlagFlag implements the flag.Value interface and allows multiple
 // calls to the same variable to append a list. It parses string and set them
 // as skeleton.Flag.
-type FlagFlag []skeleton.Flag
+type FlagFlag []*skeleton.Flag
 
 // String
 func (f *FlagFlag) String() string {
@@ -51,7 +51,7 @@ func (f *FlagFlag) Set(v string) error {
 			desc = strings.Trim(desc, "'")
 		}
 
-		flag := skeleton.Flag{
+		flag := &skeleton.Flag{
 			LongName:    name,
 			TypeString:  typeString,
 			Description: desc,

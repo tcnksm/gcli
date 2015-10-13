@@ -25,7 +25,7 @@ func TestFlagFlag_Set(t *testing.T) {
 		{
 			arg:     `debug:string:"Run as debug mode"`,
 			success: true,
-			expect: []skeleton.Flag{
+			expect: []*skeleton.Flag{
 				{
 					Name:         "debug",
 					LongName:     "debug",
@@ -40,7 +40,7 @@ func TestFlagFlag_Set(t *testing.T) {
 		{
 			arg:     `debug,help,test`,
 			success: true,
-			expect: []skeleton.Flag{
+			expect: []*skeleton.Flag{
 				{Name: "debug", LongName: "debug", VariableName: "debug", ShortName: "d", TypeString: skeleton.TypeStringString, Default: ""},
 				{Name: "help", LongName: "help", VariableName: "help", ShortName: "h", TypeString: skeleton.TypeStringString, Default: ""},
 				{Name: "test", LongName: "test", VariableName: "test", ShortName: "t", TypeString: skeleton.TypeStringString, Default: ""},

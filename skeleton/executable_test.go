@@ -30,18 +30,18 @@ func TestOverwrite(t *testing.T) {
 		{
 			initExecutable: &Executable{
 				Name: "todo",
-				Commands: []Command{
+				Commands: []*Command{
 					{Name: "add"},
 				},
 			},
 			inputKey: "Commands",
-			inputValue: []Command{
+			inputValue: []*Command{
 				{Name: "list"},
 			},
 			success: true,
 			expt: &Executable{
 				Name: "todo",
-				Commands: []Command{
+				Commands: []*Command{
 					{Name: "list"},
 				},
 			},
@@ -49,18 +49,18 @@ func TestOverwrite(t *testing.T) {
 		{
 			initExecutable: &Executable{
 				Name: "todo",
-				Flags: []Flag{
+				Flags: []*Flag{
 					{Name: "add"},
 				},
 			},
 			inputKey: "Flags",
-			inputValue: []Flag{
+			inputValue: []*Flag{
 				{Name: "list"},
 			},
 			success: true,
 			expt: &Executable{
 				Name: "todo",
-				Flags: []Flag{
+				Flags: []*Flag{
 					{Name: "list"},
 				},
 			},
@@ -81,6 +81,7 @@ func TestOverwrite(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+
 		if !reflect.DeepEqual(out, tt.expt) {
 			t.Errorf("#%d expects %#v to be eq %#v", i, out, tt.expt)
 		}

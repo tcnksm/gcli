@@ -25,8 +25,8 @@ func (c *DesignCommand) Run(args []string) int {
 	var (
 		output       string
 		owner        string
-		commands     []skeleton.Command
-		flags        []skeleton.Flag
+		commands     []*skeleton.Command
+		flags        []*skeleton.Flag
 		frameworkStr string
 	)
 
@@ -88,8 +88,8 @@ func (c *DesignCommand) Run(args []string) int {
 	// If no commands are specified, set emply value so that
 	// user can understand how to write
 	if len(commands) < 1 && len(flags) < 1 {
-		commands = []skeleton.Command{
-			{
+		commands = []*skeleton.Command{
+			&skeleton.Command{
 				Name: "",
 			},
 		}
