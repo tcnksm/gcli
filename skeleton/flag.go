@@ -26,6 +26,10 @@ type Flag struct {
 	// This is generated automatically from LongName
 	ShortName string
 
+	// VariableName is variable name which is usded for
+	// holding a flag value in generating source code
+	VariableName string
+
 	// TypeString is flag type. This must be provided by user
 	TypeString string
 
@@ -49,6 +53,8 @@ func (f *Flag) Fix() error {
 
 	// Name is same as LongName by default
 	f.Name = f.LongName
+
+	f.VariableName = camelCase(f.LongName)
 
 	// ShortName is first character of LongName
 	// TODO, when same first character is provided.
