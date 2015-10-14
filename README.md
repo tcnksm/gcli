@@ -11,7 +11,11 @@ gcli
 [license]: https://github.com/tcnksm/gcli/blob/master/LICENSE
 [godocs]: http://godoc.org/github.com/tcnksm/gcli
 
-`gcli` generates a skeleton (codes and its directory structure) you need to start building CLI tool by Golang right out of the box. You can use your favorite [CLI framework](#support-frameworks).
+`gcli` generates a skeleton (codes and its directory structure) you need to start building Command Line Interface (CLI) tool by Golang right out of the box. You can use your favorite [CLI framework](#support-frameworks).
+
+## Why ?
+
+Why you need `gcli`? Because you should focus on writing core function of CLI, not on interface. During developing CLI tool by Golang, you may find you're writing the chunk of [boilerplate code](https://en.wikipedia.org/wiki/Boilerplate_code) for interfaces. Stop writing the same codes every time. `gcli` generates them and save you a large amount of time by writing such code. This is like [Rails scaffold](http://guides.rubyonrails.org/command_line.html#rails-generate). Not only that, `gcli` know the best practices of golang CLI framework library which you want to use. Generated codes follows the most ideal way of using that framework, and you don't need to know about that. See the [frameworks](#support-frameworks) it supports now. 
 
 ## Demo
 
