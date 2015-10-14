@@ -11,11 +11,11 @@ gcli
 [license]: https://github.com/tcnksm/gcli/blob/master/LICENSE
 [godocs]: http://godoc.org/github.com/tcnksm/gcli
 
-`gcli` generates a skeleton (codes and its directory structure) you need to start building Command Line Interface (CLI) tool by Golang right out of the box. You can use your favorite [CLI framework](#support-frameworks).
+`gcli` generates a skeleton (codes and its directory structure) you need to start building Command Line Interface (CLI) tool by Golang right out of the box. You can use your favorite [CLI framework](#frameworks).
 
 ## Why ?
 
-Why you need `gcli`? Because you should focus on writing core function of CLI, not on interface. During developing CLI tool by Golang, you may find you're writing the chunk of [boilerplate code](https://en.wikipedia.org/wiki/Boilerplate_code) for interfaces. Stop writing the same codes every time. `gcli` generates them and save you a large amount of time by writing such code. This is like [Rails scaffold](http://guides.rubyonrails.org/command_line.html#rails-generate). Not only that, `gcli` know the best practices of golang CLI framework library which you want to use. Generated codes follows the most ideal way of using that framework, and you don't need to know about that. See the [frameworks](#support-frameworks) it supports now. 
+Why you need `gcli`? Because you should focus on writing core function of CLI, not on interface. During developing CLI tool by Golang, you may find you're writing the chunk of [boilerplate code](https://en.wikipedia.org/wiki/Boilerplate_code) for interfaces. Stop writing the same codes every time. `gcli` generates them and save you a large amount of time by writing such code. This is like [Rails scaffold](http://guides.rubyonrails.org/command_line.html#rails-generate). Not only that, `gcli` know the best practices of golang CLI framework library which you want to use. Generated codes follows the most ideal way of using that framework, and you don't need to know about that. See the [frameworks](#frameworks) it supports now. 
 
 ## Demo
 
@@ -31,53 +31,90 @@ As you can see, the generated codes are `go build`-able from beginning.
 
 ## Usage
 
-To start new command line tool, run the following command. It generates new cli skeleton project. At least, you must provide executable name. You can `go build`  && `go test` it from beginning.
+`gcli` is single command-line application. This application then takes subcommands. To see the all available commands, you can use `help` command. To get help for any specific subcommand, run it with the `-h` flag.
+
+`gcli` has 2 main subcommand to generate the project. The one is the `new` command, the other is the `design` & `apply` commands. The former is for generating the project by command line one-liner, the latter is for when you want to design it in your editor before generating (It generates design file and you can generate project based on it). The following section explain, how to use these commands.
+
+### `new` command
+
+The `new` command tells gcli to generate CLI project with command-line one-liner,
 
 ```bash
 $ gcli new [options] NAME
 ```
-
-To see available frameworks,
-
-```bash
-$ gcli list
-```
-
-See more usage,
+You must provides project name (`NAME`), the name will be the directory name it includes all codes and be the default binary name. In option, you can set subcommand or flag it has and its description. You can alos set your favorite [CLI framework](#frameworks) there. The followings are all available opntions,
 
 ```bash
-$ gcli help
+-command=name, -c           Command name which you want to add.
+                            This is valid only when cli pacakge support commands.
+                            This can be specified multiple times. Synopsis can be
+                            set after ":". Namely, you can specify command by
+                            -command=NAME:SYNOPSYS. Only NAME is required.
+                            You can set multiple variables at same time with ","
+                            separator.
+
+-flag=name, -f              Global flag option name which you want to add.
+                            This can be specified multiple times. By default, flag type
+                            is string and its description is empty. You can set them,
+                            with ":" separator. Namaly, you can specify flag by
+                            -flag=NAME:TYPE:DESCIRPTION. Order must be flow  this and
+                            TYPE must be string, bool or int. Only NAME is required.
+                            You can set multiple variables at same time with ","
+                            separator.
+
+-framework=name, -F         Cli framework name. By default, gcli use "codegangsta/cli"
+                            To check cli framework you can use, run 'gcli list'.
+                            If you set invalid framework, it will be failed.
+
+-owner=name, -o             Command owner (author) name. This value is also used for
+                            import path name. By default, owner name is extracted from
+                            ~/.gitconfig variable.
+
+-skip-test, -T              Skip generating *_test.go file. By default, gcli generates
+                            test file If you specify this flag, gcli will not generate
+                            test files.
 ```
 
-### Design File
-
-You can generate CLI project from design template file (`.toml`). You can define command name, its description, commands there. 
-
-First, you can create default `.toml` file via `design` command,
+For example, to `todo` CLI application which has `add`, `list` and `delete` command with [mitchellh/cli](https://github.com/mitchellh/cli),
 
 ```bash
-$ gcli design <NAME>
+$ gcli new -F mitchellh_cli -c add -c list -c delete todo
 ```
 
-Then, edit design file by your favorite `$EDITOR`. You can see sample template file [`sample.toml`](/sample.toml),
+### `design` & `apply` command
+
+The `design` command tells gcli to prepare design template file ([`.toml`](https://github.com/toml-lang/toml)). The design file defines all necessary information to generate CLI application. Some fields are filled with the ideal default value, and some have empty value. You can fill that empty filed with your favorite editor with thinking like what interface that should have or description of that and so on. You can see sample template file [`sample.toml`](/sample.toml). 
+
+After design, use `apply` command and tells gcli to generate CLI project based on the design file. The following describes this workflow. 
+
+First, generate design template file by `design` command, 
+
+```bash
+$ gcli design [options] NAME
+```
+You must provides project name (`NAME`). In option, you can set subcommand or flag it has and its description. You can alos set your favorite [CLI framework](#frameworks) there. You can edit these values in design file later. 
+
+Then, edit design file by your favorite `$EDITOR`.
 
 ```bash
 $ $EDITOR <NAME>-design.toml
 ```
 
-You can validate design by `validate` command to check it has required fields, 
+After that validate design by `validate` command to check required fields are filled, 
 
 ```bash
 $ gcli validate <NAME>-design.toml
 ```
 
-To generate CLI project, use `apply` command, 
+Finnaly, generate CLI project with that design file by `apply` command, 
 
 ```bash
 $ gcli apply <NAME>-desigon.toml
 ```
 
-## Support frameworks
+The video for this workflow is available on [Vimeo](https://vimeo.com/142134929). 
+
+## Frameworks
 
 `gcli` can generate two types of CLI pattern, 
 
