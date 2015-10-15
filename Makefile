@@ -1,6 +1,11 @@
 COMMIT = $$(git describe --always)
 DEBUG_FLAG = $(if $(DEBUG),-debug)
 
+updatedeps:
+	@echo "====> Install & Update depedencies..."
+	go get -v -u github.com/jteeuwen/go-bindata/...
+	go get -v -d -u -t ./...
+
 deps:
 	@echo "====> Install depedencies..."
 	go get -v github.com/jteeuwen/go-bindata/...
