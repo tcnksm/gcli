@@ -31,7 +31,13 @@ As you can see, the generated codes are `go build`-able from beginning.
 
 ## Usage
 
-`gcli` is single command-line application. This application then takes subcommands. To see the all available commands, you can use `help` command. To get help for any specific subcommand, run it with the `-h` flag.
+`gcli` is single command-line application. This application then takes subcommands. To check the all available commands,
+
+```bash
+$ gcli help
+```
+
+To get help for any specific subcommand, run it with the `-h` flag.
 
 `gcli` has 2 main subcommand to generate the project. The one is the `new` command, the other is the `design` & `apply` commands. The former is for generating the project by command line one-liner, the latter is for when you want to design it in your editor before generating (It generates design file and you can generate project based on it). The following section explain, how to use these commands.
 
