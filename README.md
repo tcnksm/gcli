@@ -19,15 +19,11 @@ Why you need `gcli`? Because you should focus on writing core function of CLI, n
 
 ## Demo
 
-The following demo shows creating `todo` CLI application which has `add`, `list` and `delete` command with [mitchellh/cli](https://github.com/mitchellh/cli) (Which is used for [Hashicorp](https://hashicorp.com/) products) with **one command**. 
+The following demo shows creating `todo` CLI application which has `add`, `list` and `delete` command with [mitchellh/cli](https://github.com/mitchellh/cli) (Which is used for [Hashicorp](https://hashicorp.com/) products) with **one command**. As you can see, the generated codes are `go build`-able from beginning. 
 
 ![gif](/doc/gif/gcli-new.gif)
 
-The next demo shows creating same `todo` CLI application with `design` & `apply` commands. This is the other way to start building new CLI application. First, it starts with creating design file by `design` command. In this file, you can define, CLI name, description of the CLI , framework you want to use, and commands & flags with its usages. After editing, it executes `apply` command to generating a project from that design file (The complete video is available on [Vimeo](https://vimeo.com/142134929)). 
-
-![gif](/doc/gif/gcli-design.gif)
-
-As you can see, the generated codes are `go build`-able from beginning. 
+And this [video](https://vimeo.com/142134929) shows creating same `todo` CLI application with `design` & `apply` commands. This is the other way to start building new CLI application. First, it starts with creating design file by `design` command. In this file, you can define, CLI name, description of the CLI , framework you want to use, and commands & flags with its usages. After editing, it executes `apply` command to generating a project from that design file. 
 
 ## Usage
 
@@ -122,83 +118,39 @@ The video for this workflow is available on [Vimeo](https://vimeo.com/142134929)
 
 ## Frameworks
 
-`gcli` can generate two types of CLI pattern, 
+There are many framework (package) for buidling command line application by golang. For example, one of the most famous frameworks is [codegangsta/cli](https://github.com/codegangsta/cli). The framework helps you not writing many codes. But still you need to write many boilerplate code for that framework. And there are different way to use that framework and learning the ideal way to use is waste of time. gcli writes out with following the best practice for that framework (learn from famous tool that is built with that framework). 
 
-- [Flag pattern](#flag-pattern)
-- [Command pattern](#command-pattern)
-
-### Flag pattern
-
-Flag pattern is the pattern which executable has only flag options like below (e.g., `grep`),
+`gcli` can generate 2 types of CLI pattern. The one is [*sub-command pattern*](#sub-command), the other is [*flag pattern*](#flag). The former is flexible and you can add many behavior in one command application. The later is for simple application. You can check the all available frameworks by `list` command,
 
 ```bash
-$ grep —i -C 4 "some string" /tmp   
-    │     │              │           
-    │     │               `--------- Arguments 
-    │     │                          
-    │      `------------------------ Option flags   
-    │                                
-     `------------------------------ Executable  
+$ gcli list
 ```
 
-To generate above CLI application with [flag](https://golang.org/pkg/flag/) fraemwork,
- 
+To change framework, you can use `-framework` or `-F` option with the framework name. This option can be used for `new`, `design` and `apply` command. By default, [codegangsta_cli](https://github.com/codegangsta/cli) will be used. 
+
+The following section will explain [*sub-command pattern*](#sub-command) and [*flag pattern*](#flag). 
+
+### Sub-Command
+
+*Command pattern* is the pattern that executable takes sub-command for change its behavior. `git` command is one example for this pattern. It takes `push`, `pull` subcommands. `gcli` is also this pattern. `gcli` supports the following frameworks for the command pattern.
+
+|Name|Sample projects|
+|:-:|:-:| 
+|[codegangsta_cli](https://github.com/codegangsta/cli) | [docker machine](https://github.com/docker/machine) | 
+|[mitchellh_cli](https://github.com/mitchellh/cli)| [consul](https://github.com/hashicorp/consul), [terraform](https://github.com/hashicorp/terraform)| 
+|[go_cmd](https://github.com/golang/go/blob/master/src/cmd/go/main.go#L30#L51)| [go](https://golang.org/cmd/go/)| 
+
+([go_cmd](https://github.com/golang/go/blob/master/src/cmd/go/main.go#L30#L51) is not framework. It only uses standard package. It generates same struct and functions that `go` command uses.)
+
+### Flag
+
+*Flag pattern* is the pattern that executable has flag options for changing its behavior. For example, `grep` command is this pattern. Now `gcli` only supports the official [flag](https://golang.org/pkg/flag/) package for this pattern.
+
+For example, to create command it has `-ignore-case` option and `context` option (your own `grep`),
+
 ```bash
-$ cd $GOPATH/src/github.com/YOUR_NAME
 $ gcli new -F flag -flag=i:Bool -flag=C:Int grep
-  Created grep/main.go
-  Created grep/CHANGELOG.md
-  Created grep/cli_test.go
-  Created grep/README.md
-  Created grep/version.go
-  Created grep/cli.go
-====> Successfully generated grep
 ```
-
-`gcli` supports the following packages for the flag pattern:
-
-- [flag](https://golang.org/pkg/flag/)
-
-### Command pattern
-
-Command pattern is the pattern which executable has command for change its behavior. For example, todo CLI application which has add (Add new task), list (List all tasks) and delete(Delete a task) command.
-
-```bash
-$ todo add 'Buy a milk' 
-   │    │      │           
-   │    │       `---------- Arguments 
-   │    │ 
-   │     `----------------- Command 
-   │                                  
-    `---------------------- Executable
-```
-
-To generate above CLI application with [mitchellh/cli](https://github.com/mitchellh/cli) framework,
-
-```bash
-$ cd $GOPATH/src/github.com/YOUR_NAME
-$ gcli new -F mitchellh_cli -c add -c list -c delete todo
-  Created todo/main.go
-  Created todo/command/meta.go
-  Created todo/cli.go
-  Created todo/CHANGELOG.md
-  Created todo/version.go
-  Created todo/commands.go
-  Created todo/command/add.go
-  Created todo/command/list.go
-  Created todo/command/delete.go
-  Created todo/README.md
-  Created todo/command/add_test.go
-  Created todo/command/list_test.go
-  Created todo/command/delete_test.go
-====> Successfully generated todo
-```
-
-`gcli` supports the following packages for the command pattern:
-
-- [codegangsta_cli](https://github.com/codegangsta/cli)
-- [mitchellh_cli](https://github.com/mitchellh/cli)
-- [go_cmd](https://github.com/golang/go/blob/master/src/cmd/go/main.go#L30#L51) (without 3rd party framework, same as `go` command)
 
 ## Installation
 
@@ -217,7 +169,6 @@ $ make install
 1. Commit your changes
 1. Rebase your local changes against the master branch
 1. Run test suite with the `make test` command and confirm that it passes
-1. Run `gofmt -s`
 1. Create a new Pull Request
 
 ## Author
