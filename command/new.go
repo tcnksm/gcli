@@ -3,10 +3,16 @@ package command
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/tcnksm/gcli/skeleton"
 	"github.com/tcnksm/go-gitconfig"
+)
+
+const (
+	// EnvGoPath is env name of GOPATH
+	EnvGoPath = "GOPATH"
 )
 
 // NewCommand is a Command that generates a new cli project
@@ -22,6 +28,7 @@ func (c *NewCommand) Run(args []string) int {
 		flags        []*skeleton.Flag
 		frameworkStr string
 		owner        string
+		current      bool
 		skipTest     bool
 		verbose      bool
 	)
@@ -39,6 +46,9 @@ func (c *NewCommand) Run(args []string) int {
 
 	uflag.StringVar(&owner, "owner", "", "owner")
 	uflag.StringVar(&owner, "o", "", "owner (short)")
+
+	uflag.BoolVar(&current, "current", false, "current")
+	uflag.BoolVar(&current, "C", false, "current")
 
 	uflag.BoolVar(&skipTest, "skip-test", false, "skip-test")
 	uflag.BoolVar(&skipTest, "T", false, "skip-test (short)")
@@ -59,25 +69,9 @@ func (c *NewCommand) Run(args []string) int {
 
 	name := parsedArgs[0]
 
-	// TODO, should be configurable
-	// or chagne direcotry to GOPATH/github.com/owner/output
-	// Some gcli template assume command is executed
-	// from GOPATH/github.com/owner
-	output := name
-	if _, err := os.Stat(output); !os.IsNotExist(err) {
-		msg := fmt.Sprintf("Cannot create directory %s: file exists", output)
-		c.UI.Error(msg)
-		return 1
-	}
-
-	framework, err := skeleton.FrameworkByName(frameworkStr)
-	if err != nil {
-		c.UI.Error(fmt.Sprintf("Failed to generate %q: %s", name, err.Error()))
-		return 1
-	}
-
-	// Use .gitconfig value.
+	// If owner is not provided, use .gitconfig value.
 	if owner == "" {
+		var err error
 		owner, err = gitconfig.GithubUser()
 		if err != nil {
 			owner, err = gitconfig.Username()
@@ -89,6 +83,44 @@ func (c *NewCommand) Run(args []string) int {
 				return 1
 			}
 		}
+	}
+
+	currentDir, err := os.Getwd()
+	if err != nil {
+		c.UI.Error(fmt.Sprintf(
+			"Failed to get current directroy: %s", err))
+		return ExitCodeFailed
+	}
+
+	gopath := os.Getenv(EnvGoPath)
+	if gopath == "" {
+		c.UI.Error(fmt.Sprintf(
+			"Failed to read GOPATH: it should not be empty"))
+		return ExitCodeFailed
+	}
+	idealDir := filepath.Join(gopath, "src", "github.com", owner)
+
+	output := name
+	if currentDir != idealDir && !current {
+		c.UI.Output("")
+		c.UI.Output(fmt.Sprintf("====> WARNING: You are not in the directory gcli expects."))
+		c.UI.Output(fmt.Sprintf("      The codes will be generated be in $GOPATH/src/github.com/%s.", owner))
+		c.UI.Output(fmt.Sprintf("      Not in the current directory. This is because the output"))
+		c.UI.Output(fmt.Sprintf("      codes use import path based on that path."))
+		c.UI.Output("")
+		output = filepath.Join(idealDir, name)
+	}
+
+	if _, err := os.Stat(output); !os.IsNotExist(err) {
+		msg := fmt.Sprintf("Cannot create directory %s: file exists", output)
+		c.UI.Error(msg)
+		return 1
+	}
+
+	framework, err := skeleton.FrameworkByName(frameworkStr)
+	if err != nil {
+		c.UI.Error(fmt.Sprintf("Failed to generate %q: %s", name, err.Error()))
+		return 1
 	}
 
 	// Define Executable

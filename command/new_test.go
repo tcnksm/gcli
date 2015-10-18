@@ -33,7 +33,7 @@ func TestNewCommand(t *testing.T) {
 	}
 	defer backFunc()
 
-	args := []string{"-F", "mitchellh_cli", "-owner", "deeeet", "todo"}
+	args := []string{"-F", "mitchellh_cli", "-current", "-owner", "gopher-gcli", "todo"}
 	if code := c.Run(args); code != 0 {
 		t.Fatalf("bad status code: %d\n\n%s", code, ui.ErrorWriter.String())
 	}
@@ -67,7 +67,7 @@ func TestNewCommand_directoryExist(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	args := []string{"todo"}
+	args := []string{"-current", "-owner", "gopher-gcli", "todo"}
 	if code := c.Run(args); code != 1 {
 		t.Fatalf("bad status code: %d", code)
 	}

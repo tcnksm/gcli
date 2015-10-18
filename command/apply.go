@@ -3,6 +3,7 @@ package command
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/BurntSushi/toml"
@@ -19,16 +20,20 @@ func (c *ApplyCommand) Run(args []string) int {
 
 	var (
 		frameworkStr string
-		skipTest     bool
-		verbose      bool
 		owner        string
 		name         string
+		current      bool
+		skipTest     bool
+		verbose      bool
 	)
 
 	uflag := c.Meta.NewFlagSet("apply", c.Help())
 
 	uflag.StringVar(&frameworkStr, "framework", "", "framework")
 	uflag.StringVar(&frameworkStr, "F", "", "framework (short)")
+
+	uflag.BoolVar(&current, "current", false, "current")
+	uflag.BoolVar(&current, "C", false, "current")
 
 	uflag.BoolVar(&skipTest, "skip-test", false, "skip-test")
 	uflag.BoolVar(&skipTest, "T", false, "skip-test (short)")
@@ -86,7 +91,32 @@ func (c *ApplyCommand) Run(args []string) int {
 		return ExitCodeFailed
 	}
 
+	currentDir, err := os.Getwd()
+	if err != nil {
+		c.UI.Error(fmt.Sprintf(
+			"Failed to get current directroy: %s", err))
+		return ExitCodeFailed
+	}
+
+	gopath := os.Getenv(EnvGoPath)
+	if gopath == "" {
+		c.UI.Error(fmt.Sprintf(
+			"Failed to read GOPATH: it should not be empty"))
+		return ExitCodeFailed
+	}
+	idealDir := filepath.Join(gopath, "src", "github.com", owner)
+
 	output := executable.Name
+	if currentDir != idealDir && !current {
+		c.UI.Output("")
+		c.UI.Output(fmt.Sprintf("====> WARNING: You are not in the directory gcli expects."))
+		c.UI.Output(fmt.Sprintf("      The codes will be generated be in $GOPATH/src/github.com/%s.", owner))
+		c.UI.Output(fmt.Sprintf("      Not in the current directory. This is because the output"))
+		c.UI.Output(fmt.Sprintf("      codes use import path based on that path."))
+		c.UI.Output("")
+		output = filepath.Join(idealDir, name)
+	}
+
 	if _, err := os.Stat(output); !os.IsNotExist(err) {
 		msg := fmt.Sprintf("Cannot create directory %s: file exists", output)
 		c.UI.Error(msg)
