@@ -132,7 +132,7 @@ The following section will explain [*sub-command pattern*](#sub-command) and [*f
 
 ### Sub-Command
 
-*Command pattern* is the pattern that executable takes sub-command for change its behavior. `git` command is one example for this pattern. It takes `push`, `pull` subcommands. `gcli` is also this pattern. `gcli` supports the following frameworks for the command pattern.
+*Sub-Command pattern* is the pattern that executable takes sub-command for change its behavior. `git` command is one example for this pattern. It takes `push`, `pull` subcommands. `gcli` is also this pattern. `gcli` supports the following frameworks for the command pattern.
 
 |Name|Sample projects|
 |:-:|:-:| 
