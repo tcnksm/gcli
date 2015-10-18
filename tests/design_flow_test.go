@@ -62,6 +62,7 @@ func TestDesignFlow(t *testing.T) {
 	// Apply to genearte cli project
 	applyArgs := []string{
 		"apply",
+		"-current",
 		designFile,
 	}
 
