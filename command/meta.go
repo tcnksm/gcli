@@ -6,6 +6,7 @@ import (
 	"io"
 
 	"github.com/mitchellh/cli"
+	"github.com/mitchellh/go-homedir"
 )
 
 // ExitCodes
@@ -15,6 +16,15 @@ const (
 )
 
 const (
+	// EnvGoPath is env name of GOPATH
+	EnvGoPath = "GOPATH"
+)
+
+const (
+	// DefaultLocalDir is the default path to store directory.
+	DefaultLocalDir       = "~/.gcli.d"
+	DefaultLocalStaticDir = "static"
+
 	// defaultFrameworkString is default cli framework name
 	defaultFrameworkString = "codegangsta_cli"
 )
@@ -22,6 +32,11 @@ const (
 // Meta contain the meta-option that nealy all subcommand inherited.
 type Meta struct {
 	UI cli.Ui
+}
+
+// LocalDir returns the local directory for storing user defined data.
+func (m *Meta) LocalDir() (string, error) {
+	return homedir.Expand(DefaultLocalDir)
 }
 
 // NewFlagSet generates commom flag.FlagSet

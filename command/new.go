@@ -10,11 +10,6 @@ import (
 	"github.com/tcnksm/go-gitconfig"
 )
 
-const (
-	// EnvGoPath is env name of GOPATH
-	EnvGoPath = "GOPATH"
-)
-
 // NewCommand is a Command that generates a new cli project
 type NewCommand struct {
 	Meta
@@ -123,6 +118,13 @@ func (c *NewCommand) Run(args []string) int {
 		return 1
 	}
 
+	localDir, err := c.LocalDir()
+	if err != nil {
+		c.UI.Error(err.Error())
+		return ExitCodeFailed
+	}
+	staticDir := filepath.Join(localDir, DefaultLocalStaticDir)
+
 	// Define Executable
 	executable := &skeleton.Executable{
 		Name:        name,
@@ -139,6 +141,7 @@ func (c *NewCommand) Run(args []string) int {
 	// Define Skeleton
 	skeleton := &skeleton.Skeleton{
 		Path:       output,
+		StaticDir:  staticDir,
 		Framework:  framework,
 		SkipTest:   skipTest,
 		Executable: executable,

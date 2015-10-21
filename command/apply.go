@@ -149,12 +149,20 @@ func (c *ApplyCommand) Run(args []string) int {
 		executable.Owner = owner
 	}
 
+	localDir, err := c.LocalDir()
+	if err != nil {
+		c.UI.Error(err.Error())
+		return ExitCodeFailed
+	}
+	staticDir := filepath.Join(localDir, DefaultLocalStaticDir)
+
 	// Channels to receive artifact path (result) and error
 	artifactCh, errCh := make(chan string), make(chan error)
 
 	// Define Skeleton
 	skeleton := &skeleton.Skeleton{
 		Path:       output,
+		StaticDir:  staticDir,
 		Framework:  framework,
 		SkipTest:   skipTest,
 		Executable: executable,
