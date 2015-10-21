@@ -106,6 +106,16 @@ func (s *Skeleton) copyStatic() <-chan struct{} {
 			defer src.Close()
 
 			dstFile := filepath.Join(s.Path, fi.Name())
+
+			// Create directory if necessary
+			dir, _ := filepath.Split(dstFile)
+			if dir != "" {
+				if err := mkdir(dir); err != nil {
+					s.ErrCh <- err
+					return
+				}
+			}
+
 			dst, err := os.Create(dstFile)
 			if err != nil {
 				s.ErrCh <- err
@@ -118,7 +128,8 @@ func (s *Skeleton) copyStatic() <-chan struct{} {
 				s.ErrCh <- err
 				return
 			}
-			s.Debugf("Copy from %s to %s", srcFile, dstFile)
+
+			s.ArtifactCh <- dstFile
 		}
 	}()
 	return doneCh

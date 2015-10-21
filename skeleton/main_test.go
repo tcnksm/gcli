@@ -32,13 +32,19 @@ func TestCopyStatic(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 
-	errCh := make(chan error)
+	artifactCh, errCh := make(chan string), make(chan error)
 	fakeSkeleton := &Skeleton{
-		Path:      outputDir,
-		StaticDir: staticDir,
-		ErrCh:     errCh,
-		LogWriter: os.Stderr,
+		Path:       outputDir,
+		StaticDir:  staticDir,
+		ErrCh:      errCh,
+		ArtifactCh: artifactCh,
+		LogWriter:  os.Stderr,
 	}
+
+	go func() {
+		for _ = range artifactCh {
+		}
+	}()
 
 	doneCh := fakeSkeleton.copyStatic()
 	select {
