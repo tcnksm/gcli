@@ -2,6 +2,7 @@ package skeleton
 
 import (
 	"bytes"
+	"os"
 	"regexp"
 )
 
@@ -19,4 +20,13 @@ func camelCase(s string) string {
 	}
 
 	return string(bytes.Join(matched, nil))
+}
+
+// mkdir makes the named directory.
+func mkdir(dir string) error {
+	if _, err := os.Stat(dir); err == nil {
+		return nil
+	}
+
+	return os.MkdirAll(dir, 0777)
 }
