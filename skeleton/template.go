@@ -76,15 +76,6 @@ func processPathTmpl(pathTmpl string, data interface{}) (string, error) {
 	return outputPathBuf.String(), nil
 }
 
-// mkdir makes the named directory.
-func mkdir(dir string) error {
-	if _, err := os.Stat(dir); err == nil {
-		return nil
-	}
-
-	return os.MkdirAll(dir, 0777)
-}
-
 // execute evaluates template content with data
 // and write them to writer.
 func execute(content string, wr io.Writer, data interface{}) error {

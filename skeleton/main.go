@@ -2,6 +2,8 @@ package skeleton
 
 import (
 	"io"
+	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -24,6 +26,10 @@ type Skeleton struct {
 	// ErrCh is channel for error output
 	ErrCh chan error
 
+	// StaticDir contains static contents which will
+	// be copied final output directory
+	StaticDir string
+
 	// Verbose enables logging output below INFO
 	Verbose bool
 
@@ -42,13 +48,19 @@ func (s *Skeleton) Generate() <-chan struct{} {
 	go func() {
 
 		// Start generating base files
-		doneBaseCh := s.generateBaseFiles()
+		doneBase := s.genBase()
 
 		// Start generating command files
-		doneCmdCh := s.generateCommandFiles()
+		doneTmpl := s.genTmpl()
 
-		<-doneBaseCh
-		<-doneCmdCh
+		// Read static files and copy it on output directory.
+		// Same name file which is generaed by gcli
+		// will be overwrite by this
+		doneStatic := s.copyStatic()
+
+		<-doneStatic
+		<-doneBase
+		<-doneTmpl
 
 		doneCh <- struct{}{}
 	}()
@@ -56,7 +68,74 @@ func (s *Skeleton) Generate() <-chan struct{} {
 	return doneCh
 }
 
-func (s *Skeleton) generateBaseFiles() <-chan struct{} {
+func (s *Skeleton) copyStatic() <-chan struct{} {
+	s.Debugf("Start reading static files")
+	doneCh := make(chan struct{})
+	go func() {
+		defer func() {
+			doneCh <- struct{}{}
+		}()
+
+		// Ignore when staticDir is not provided.
+		if s.StaticDir == "" {
+			return
+		}
+
+		// Ignore when staticDir is not exist.
+		if _, err := os.Stat(s.StaticDir); os.IsNotExist(err) {
+			return
+		}
+
+		fis, err := ioutil.ReadDir(s.StaticDir)
+		if err != nil {
+			s.ErrCh <- err
+			return
+		}
+
+		for _, fi := range fis {
+			if fi.IsDir() {
+				continue
+			}
+
+			srcFile := filepath.Join(s.StaticDir, fi.Name())
+			src, err := os.Open(srcFile)
+			if err != nil {
+				s.ErrCh <- err
+				return
+			}
+			defer src.Close()
+
+			dstFile := filepath.Join(s.Path, fi.Name())
+
+			// Create directory if necessary
+			dir, _ := filepath.Split(dstFile)
+			if dir != "" {
+				if err := mkdir(dir); err != nil {
+					s.ErrCh <- err
+					return
+				}
+			}
+
+			dst, err := os.Create(dstFile)
+			if err != nil {
+				s.ErrCh <- err
+				return
+			}
+			defer dst.Close()
+
+			if _, err := io.Copy(dst, src); err != nil {
+				s.Debugf(err.Error())
+				s.ErrCh <- err
+				return
+			}
+
+			s.ArtifactCh <- dstFile
+		}
+	}()
+	return doneCh
+}
+
+func (s *Skeleton) genBase() <-chan struct{} {
 
 	s.Debugf("Start generating base files")
 
@@ -99,7 +178,7 @@ func (s *Skeleton) generateBaseFiles() <-chan struct{} {
 	return doneCh
 }
 
-func (s *Skeleton) generateCommandFiles() <-chan struct{} {
+func (s *Skeleton) genTmpl() <-chan struct{} {
 
 	s.Debugf("Start generating command files")
 

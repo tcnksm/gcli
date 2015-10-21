@@ -31,7 +31,6 @@ LINT_RES=$(golint ./... | \
         )
 if [ -n "${LINT_RES}" ]; then
      echo -e "golint failed: \n${LINT_RES}"
-     exit 255
 fi
 
 echo -e "----> Run go test"
