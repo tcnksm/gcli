@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -87,7 +88,58 @@ func runGcli(args []string) (string, error) {
 
 }
 
-func checkFile(files []string) error {
+func createFiles(outDir string, files []string) error {
+	// Check directory is exsit or not
+	if _, err := os.Stat(outDir); os.IsNotExist(err) {
+		return fmt.Errorf("no such file or directory")
+	}
+
+	if fi, _ := os.Stat(outDir); !fi.IsDir() {
+		return fmt.Errorf("%q shoudl be directory", outDir)
+	}
+
+	for _, file := range files {
+		newFile := filepath.Join(outDir, file)
+		fi, err := os.Create(newFile)
+		if err != nil {
+			return err
+		}
+		defer fi.Close()
+	}
+
+	return nil
+}
+
+func checkFiles(outDir string, files []string) error {
+
+	// Check directory is exsit or not
+	if _, err := os.Stat(outDir); os.IsNotExist(err) {
+		return fmt.Errorf("no such file or directory")
+	}
+
+	if fi, _ := os.Stat(outDir); !fi.IsDir() {
+		return fmt.Errorf("%q shoudl be directory", outDir)
+	}
+
+	// Read dir files
+	outputs, err := ioutil.ReadDir(outDir)
+	if err != nil {
+		return err
+	}
+
+	for _, file := range files {
+		isExist := false
+		for _, fi := range outputs {
+			if file == fi.Name() {
+				isExist = true
+				break
+			}
+		}
+
+		if !isExist {
+			return fmt.Errorf("%q is not exsit", file)
+		}
+	}
 
 	return nil
 }
