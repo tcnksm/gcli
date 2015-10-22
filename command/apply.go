@@ -22,6 +22,7 @@ func (c *ApplyCommand) Run(args []string) int {
 		frameworkStr string
 		owner        string
 		name         string
+		staticDir    string
 		current      bool
 		skipTest     bool
 		verbose      bool
@@ -31,6 +32,8 @@ func (c *ApplyCommand) Run(args []string) int {
 
 	uflag.StringVar(&frameworkStr, "framework", "", "framework")
 	uflag.StringVar(&frameworkStr, "F", "", "framework (short)")
+
+	uflag.StringVar(&staticDir, "static-dir", "", "")
 
 	uflag.BoolVar(&current, "current", false, "current")
 	uflag.BoolVar(&current, "C", false, "current")
@@ -149,12 +152,14 @@ func (c *ApplyCommand) Run(args []string) int {
 		executable.Owner = owner
 	}
 
-	localDir, err := c.LocalDir()
-	if err != nil {
-		c.UI.Error(err.Error())
-		return ExitCodeFailed
+	if staticDir == "" {
+		localDir, err := c.LocalDir()
+		if err != nil {
+			c.UI.Error(err.Error())
+			return ExitCodeFailed
+		}
+		staticDir = filepath.Join(localDir, DefaultLocalStaticDir)
 	}
-	staticDir := filepath.Join(localDir, DefaultLocalStaticDir)
 
 	// Channels to receive artifact path (result) and error
 	artifactCh, errCh := make(chan string), make(chan error)

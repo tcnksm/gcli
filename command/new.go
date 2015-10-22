@@ -23,6 +23,7 @@ func (c *NewCommand) Run(args []string) int {
 		flags        []*skeleton.Flag
 		frameworkStr string
 		owner        string
+		staticDir    string
 		current      bool
 		skipTest     bool
 		verbose      bool
@@ -41,6 +42,8 @@ func (c *NewCommand) Run(args []string) int {
 
 	uflag.StringVar(&owner, "owner", "", "owner")
 	uflag.StringVar(&owner, "o", "", "owner (short)")
+
+	uflag.StringVar(&staticDir, "static-dir", "", "")
 
 	uflag.BoolVar(&current, "current", false, "current")
 	uflag.BoolVar(&current, "C", false, "current")
@@ -118,12 +121,14 @@ func (c *NewCommand) Run(args []string) int {
 		return 1
 	}
 
-	localDir, err := c.LocalDir()
-	if err != nil {
-		c.UI.Error(err.Error())
-		return ExitCodeFailed
+	if staticDir == "" {
+		localDir, err := c.LocalDir()
+		if err != nil {
+			c.UI.Error(err.Error())
+			return ExitCodeFailed
+		}
+		staticDir = filepath.Join(localDir, DefaultLocalStaticDir)
 	}
-	staticDir := filepath.Join(localDir, DefaultLocalStaticDir)
 
 	// Define Executable
 	executable := &skeleton.Executable{
