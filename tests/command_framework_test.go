@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -41,6 +42,13 @@ func TestNew_command_frameworks(t *testing.T) {
 	}
 	defer cleanFunc()
 
+	staticFiles := []string{"StaticA", "StaticB"}
+	staticDir, err := ioutil.TempDir("", "gcli-test")
+	if err != nil {
+		t.Fatal(err)
+	}
+	createFiles(staticDir, staticFiles)
+
 	for _, tt := range tests {
 
 		artifactBin := fmt.Sprintf("%s_todo", tt.framework)
@@ -48,6 +56,7 @@ func TestNew_command_frameworks(t *testing.T) {
 			"new",
 			"-framework", tt.framework,
 			"-owner", owner,
+			"-static-dir", staticDir,
 			"-flag=verbose:bool:'Run verbose mode'",
 			"-flag=username:string:'Username'",
 			"-flag=dry-run:string:'Dry-run mode'",
@@ -75,6 +84,10 @@ func TestNew_command_frameworks(t *testing.T) {
 			if _, err := os.Stat(filepath.Join(artifactBin, tmpl.OutputPathTmpl)); os.IsNotExist(err) {
 				t.Fatalf("file is not exist: %s", tmpl.OutputPathTmpl)
 			}
+		}
+
+		if err := checkFiles(artifactBin, staticFiles); err != nil {
+			t.Fatal(err)
 		}
 
 		if err := goTests(artifactBin); err != nil {

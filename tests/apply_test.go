@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -50,6 +51,13 @@ func TestApply(t *testing.T) {
 	}
 	defer cleanFunc()
 
+	staticFiles := []string{"StaticA", "StaticB"}
+	staticDir, err := ioutil.TempDir("", "gcli-test")
+	if err != nil {
+		t.Fatal(err)
+	}
+	createFiles(staticDir, staticFiles)
+
 	for _, tt := range tests {
 		artifactBin := fmt.Sprintf("%s_todo_design_file", tt.framework)
 		args := []string{
@@ -57,6 +65,7 @@ func TestApply(t *testing.T) {
 			"-framework", tt.framework,
 			"-owner", owner,
 			"-name", artifactBin,
+			"-static-dir", staticDir,
 			designFile,
 		}
 
@@ -68,6 +77,10 @@ func TestApply(t *testing.T) {
 		expect := "Successfully generated"
 		if !strings.Contains(output, expect) {
 			t.Fatalf("[%s] expect %q to contain %q", tt.framework, output, expect)
+		}
+
+		if err := checkFiles(artifactBin, staticFiles); err != nil {
+			t.Fatal(err)
 		}
 
 		if err := goTests(artifactBin); err != nil {
