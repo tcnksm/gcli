@@ -8,84 +8,115 @@ import (
 	"strings"
 	"testing"
 	"time"
-
-	"github.com/tcnksm/gcli/skeleton"
 )
 
-func TestDesignFlow(t *testing.T) {
-	// Test generating design file, validate it and generate
-	// cli project from it (Testing all work flow).
-	// let's create git interface.
+var designTests = []struct {
+	framework string
+}{
+	{framework: "codegangsta_cli"},
+	{framework: "mitchellh_cli"},
+	{framework: "go_cmd"},
+}
 
-	artifactBin := "mygit"
+func TestDesign(t *testing.T) {
+	t.Parallel()
 
+	vcsHost := "github.com"
 	owner := "awesome_user_" + strconv.Itoa(int(time.Now().Unix()))
-	cleanFunc, err := chdirSrcPath(owner)
+
+	gopath, cleanFunc, err := tmpGopath()
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("err: %s", err)
 	}
 	defer cleanFunc()
 
+	baseDir := filepath.Join(gopath, "src", vcsHost, owner)
+	if err := os.MkdirAll(baseDir, 0777); err != nil {
+		t.Fatalf("err: %s", err)
+	}
+
 	// Create design File
-	designFile := fmt.Sprintf("%s-design-test.toml", artifactBin)
-	designArgs := []string{
-		"design",
-		"-owner", owner,
-		"-framework", "mitchellh_cli",
-		"-command=add:'Add file contents to the index'",
-		"-command=commit:'Record changes to the repository'",
-		"-command=push:'Update remote refs along with associated objects'",
-		"-command=pull-request:'Open a pull request on GitHub'",
-		"-output", designFile,
-		artifactBin,
-	}
+	for _, tt := range designTests {
+		name := fmt.Sprintf("%s-git", tt.framework)
+		designFile := fmt.Sprintf("%s-design-test.toml", name)
+		designArgs := []string{
+			"design",
+			"-owner", owner,
+			"-framework", tt.framework,
+			"-command=add:'Add file contents to the index'",
+			"-command=commit:'Record changes to the repository'",
+			"-command=push:'Update remote refs along with associated objects'",
+			"-command=pull-request:'Open a pull request on GitHub'",
+			"-output", designFile,
+			name,
+		}
 
-	if _, err := runGcli(designArgs); err != nil {
-		t.Fatal(err)
-	}
+		output, err := runGcli(baseDir, gopath, designArgs)
+		if err != nil {
+			t.Fatalf("[%s] expects %s to be nil", tt.framework, err)
+		}
 
-	// Check design file is exist or not
-	if _, err := os.Stat(designFile); os.IsNotExist(err) {
-		t.Fatal(err)
-	}
+		expect := "====> Successfully generated"
+		if !strings.Contains(output, expect) {
+			t.Fatalf("[%s] expects output to contain %q", tt.framework, expect)
+		}
 
-	// Validate design File
-	validateArgs := []string{
-		"validate",
-		designFile,
-	}
-
-	if _, err := runGcli(validateArgs); err != nil {
-		t.Fatal(err)
-	}
-
-	// Apply to genearte cli project
-	applyArgs := []string{
-		"apply",
-		"-current",
-		designFile,
-	}
-
-	output, err := runGcli(applyArgs)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	expect := "Successfully generated"
-	if !strings.Contains(output, expect) {
-		t.Fatalf("Expect %q to contain %q", output, expect)
-	}
-
-	// Check common files are generated
-	for _, tmpl := range skeleton.CommonTemplates {
-		// NOTE: OutputPathTmpl of common template is same as final output name
-		// and not changed by templating
-		if _, err := os.Stat(filepath.Join(artifactBin, tmpl.OutputPathTmpl)); os.IsNotExist(err) {
-			t.Fatalf("file is not exist: %s", tmpl.OutputPathTmpl)
+		// Check design file is exist or not
+		if _, err := os.Stat(filepath.Join(baseDir, designFile)); os.IsNotExist(err) {
+			t.Fatalf("[%s] expects %q to be exist", tt.framework, designFile)
 		}
 	}
+}
 
-	if err := goTests(artifactBin); err != nil {
-		t.Fatalf("Failed to run go tests in %s: %s", artifactBin, err)
+func TestDesign_gotests(t *testing.T) {
+	t.Parallel()
+
+	vcsHost := "github.com"
+	owner := "awesome_user_" + strconv.Itoa(int(time.Now().Unix()))
+
+	gopath, cleanFunc, err := tmpGopath()
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
+	defer cleanFunc()
+
+	baseDir := filepath.Join(gopath, "src", vcsHost, owner)
+	if err := os.MkdirAll(baseDir, 0777); err != nil {
+		t.Fatalf("err: %s", err)
+	}
+
+	// Create design File
+	for _, tt := range designTests {
+		name := fmt.Sprintf("%s-git", tt.framework)
+		designFile := fmt.Sprintf("%s-design-test.toml", name)
+		designArgs := []string{
+			"design",
+			"-owner", owner,
+			"-framework", tt.framework,
+			"-command=add:'Add file contents to the index'",
+			"-command=commit:'Record changes to the repository'",
+			"-command=push:'Update remote refs along with associated objects'",
+			"-command=pull-request:'Open a pull request on GitHub'",
+			"-output", designFile,
+			name,
+		}
+
+		if _, err := runGcli(baseDir, gopath, designArgs); err != nil {
+			t.Fatalf("[%s] expects %s to be nil", tt.framework, err)
+		}
+
+		applyArgs := []string{
+			"apply",
+			"-name", name,
+			filepath.Join(baseDir, designFile),
+		}
+
+		if _, err := runGcli(baseDir, gopath, applyArgs); err != nil {
+			t.Fatalf("[%s] expects %s to be nil", tt.framework, err)
+		}
+
+		if err := goTests(filepath.Join(baseDir, name), gopath); err != nil {
+			t.Fatalf("[%s] expects generated project to pass all go tests: \n\n %s", tt.framework, err)
+		}
 	}
 }

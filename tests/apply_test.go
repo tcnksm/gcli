@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -11,101 +10,103 @@ import (
 	"time"
 )
 
+var testDesignFile = "./fixtures/command-design.toml"
+
+var applyTests = []struct {
+	framework string
+}{
+	{framework: "codegangsta_cli"},
+	{framework: "mitchellh_cli"},
+	{framework: "go_cmd"},
+}
+
 func TestApply(t *testing.T) {
+	t.Parallel()
 
-	designFile, err := filepath.Abs("./fixtures/command-design.toml")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	// expect output when no flag/command provided
-	expectOut := "Manage TODO tasks from command line (from design file)"
-
-	// expect output when execute `add` command
-	expectAddOutput := "Add new task"
-
-	tests := []struct {
-		framework string
-		// is it include full description message
-		// which is provided from outside
-		fullDescription bool
-	}{
-		{
-			framework:       "codegangsta_cli",
-			fullDescription: true,
-		},
-		{
-			framework:       "mitchellh_cli",
-			fullDescription: false,
-		},
-		{
-			framework:       "go_cmd",
-			fullDescription: true,
-		},
-	}
-
+	vcsHost := "github.com"
 	owner := "awesome_user_" + strconv.Itoa(int(time.Now().Unix()))
-	cleanFunc, err := chdirSrcPath(owner)
+
+	gopath, cleanFunc, err := tmpGopath()
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("err: %s", err)
 	}
 	defer cleanFunc()
 
-	staticFiles := []string{"StaticA", "StaticB"}
-	staticDir, err := ioutil.TempDir("", "gcli-test")
-	if err != nil {
-		t.Fatal(err)
+	baseDir := filepath.Join(gopath, "src", vcsHost, owner)
+	if err := os.MkdirAll(baseDir, 0777); err != nil {
+		t.Fatalf("err: %s", err)
 	}
-	createFiles(staticDir, staticFiles)
 
-	for _, tt := range tests {
-		artifactBin := fmt.Sprintf("%s_todo_design_file", tt.framework)
+	designFile, err := filepath.Abs(testDesignFile)
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
+
+	for _, tt := range applyTests {
+		name := fmt.Sprintf("%s_todo_design_file", tt.framework)
 		args := []string{
 			"apply",
 			"-framework", tt.framework,
 			"-owner", owner,
-			"-name", artifactBin,
-			"-static-dir", staticDir,
+			"-name", name,
 			designFile,
 		}
 
-		output, err := runGcli(args)
+		output, err := runGcli(baseDir, gopath, args)
 		if err != nil {
-			t.Fatal(err)
+			t.Fatalf("[%s] expects %s to be nil", tt.framework, err)
+		}
+
+		expectWarn := "WARNING: You are not in the directory gcli expects."
+		if strings.Contains(output, expectWarn) {
+			t.Fatalf("[%s] expects output not to contain %q", tt.framework, expectWarn)
 		}
 
 		expect := "Successfully generated"
 		if !strings.Contains(output, expect) {
-			t.Fatalf("[%s] expect %q to contain %q", tt.framework, output, expect)
+			t.Fatalf("[%s] expects output to contain %q", tt.framework, expect)
+		}
+	}
+}
+
+func TestApply_gotests(t *testing.T) {
+	t.Parallel()
+
+	vcsHost := "github.com"
+	owner := "awesome_user_" + strconv.Itoa(int(time.Now().Unix()))
+
+	gopath, cleanFunc, err := tmpGopath()
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
+	defer cleanFunc()
+
+	baseDir := filepath.Join(gopath, "src", vcsHost, owner)
+	if err := os.MkdirAll(baseDir, 0777); err != nil {
+		t.Fatalf("err: %s", err)
+	}
+
+	designFile, err := filepath.Abs(testDesignFile)
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
+
+	for _, tt := range applyTests {
+		name := fmt.Sprintf("%s_todo_design_file", tt.framework)
+		args := []string{
+			"apply",
+			"-framework", tt.framework,
+			"-owner", owner,
+			"-name", name,
+			designFile,
 		}
 
-		if err := checkFiles(artifactBin, staticFiles); err != nil {
-			t.Fatal(err)
+		if _, err := runGcli(baseDir, gopath, args); err != nil {
+			t.Fatalf("[%s] expects %s to be nil", tt.framework, err)
 		}
 
-		if err := goTests(artifactBin); err != nil {
-			t.Fatal(err)
-		}
-
-		if err := os.Chdir(artifactBin); err != nil {
-			t.Fatal(err)
-		}
-
-		binOutput := executeBin(artifactBin, []string{})
-		if tt.fullDescription && !strings.Contains(binOutput, expectOut) {
-			t.Errorf("[%s] expects %q to contain %q", tt.framework, binOutput, expectOut)
-		}
-
-		// Need to fix after https://github.com/BurntSushi/toml/pull/90 is fixed
-		// addOutput := executeBin(artifactBin, []string{"add"})
-		// if !strings.Contains(addOutput, expectAddOutput) {
-		// 	t.Errorf("[%s] expects %q to contain %q", tt.framework, addOutput, expectAddOutput)
-		// }
-		_ = expectAddOutput
-
-		// Back to src directory
-		if err := os.Chdir(".."); err != nil {
-			t.Fatal(err)
+		if err := goTests(filepath.Join(baseDir, name), gopath); err != nil {
+			t.Fatalf("[%s] expects generated project to pass all go tests: \n\n %s", tt.framework, err)
 		}
 	}
 }

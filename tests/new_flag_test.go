@@ -1,94 +1,118 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
 	"time"
-
-	"github.com/tcnksm/gcli/skeleton"
 )
 
-func TestNew_flag_frameworks(t *testing.T) {
+var flagTests = []struct {
+	framework  string
+	args       []string
+	expectHelp string
+}{
+	{
+		framework:  "flag",
+		args:       []string{"-h"},
+		expectHelp: "Usage of ",
+	},
+}
 
-	tests := []struct {
-		framework string
-		expectOut string
-	}{
-		{
-			framework: "flag",
-			expectOut: "Usage of ",
-		},
-	}
+func TestNew_flag(t *testing.T) {
+	t.Parallel()
 
+	vcsHost := "github.com"
 	owner := "awesome_user_" + strconv.Itoa(int(time.Now().Unix()))
-	cleanFunc, err := chdirSrcPath(owner)
+
+	gopath, cleanFunc, err := tmpGopath()
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("err: %s", err)
 	}
 	defer cleanFunc()
 
-	for _, tt := range tests {
+	baseDir := filepath.Join(gopath, "src", vcsHost, owner)
+	if err := os.MkdirAll(baseDir, 0777); err != nil {
+		t.Fatalf("err: %s", err)
+	}
 
-		artifactBin := fmt.Sprintf("%s_grep", tt.framework)
+	for _, tt := range flagTests {
+
+		name := fmt.Sprintf("%s_grep", tt.framework)
 		args := []string{
 			"new",
 			"-framework", tt.framework,
 			"-owner", owner,
 			"-flag=ignore-case:Bool:'Perform case insensitive matching'",
 			"-flag=context:Int:'Print num lines of leading and trailing context'",
-			artifactBin,
+			name,
 		}
 
-		output, err := runGcli(args)
+		output, err := runGcli(baseDir, gopath, args)
 		if err != nil {
-			t.Fatal(err)
+			t.Fatalf("[%s] expects %s to be nil", tt.framework, err)
+		}
+
+		expectWarn := "WARNING: You are not in the directory gcli expects."
+		if strings.Contains(output, expectWarn) {
+			t.Fatalf("[%s] expects output not to contain %q", tt.framework, expectWarn)
 		}
 
 		expect := "Successfully generated"
 		if !strings.Contains(output, expect) {
-			t.Fatalf("[%s] expect %q to contain %q", tt.framework, output, expect)
+			t.Fatalf("[%s] expects output to contain %q", tt.framework, expect)
+		}
+	}
+}
+
+// TestNew_flag_goflag tests that the generated project
+// is go-buildable and it passes the go-test and go-vet.
+func TestNew_flag_gotests(t *testing.T) {
+	t.Parallel()
+
+	vcsHost := "github.com"
+	owner := "awesome_user_" + strconv.Itoa(int(time.Now().Unix()))
+
+	gopath, cleanFunc, err := tmpGopath()
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
+	defer cleanFunc()
+
+	baseDir := filepath.Join(gopath, "src", vcsHost, owner)
+	if err := os.MkdirAll(baseDir, 0777); err != nil {
+		t.Fatalf("err: %s", err)
+	}
+
+	for _, tt := range flagTests {
+
+		name := fmt.Sprintf("%s_grep", tt.framework)
+		args := []string{
+			"new",
+			"-framework", tt.framework,
+			"-owner", owner,
+			"-flag=ignore-case:Bool:'Perform case insensitive matching'",
+			"-flag=context:Int:'Print num lines of leading and trailing context'",
+			name,
 		}
 
-		// Check common files are generated
-		for _, tmpl := range skeleton.CommonTemplates {
-			// NOTE: OutputPathTmpl of common template is same as final output name
-			// and not changed by templating
-			if _, err := os.Stat(filepath.Join(artifactBin, tmpl.OutputPathTmpl)); os.IsNotExist(err) {
-				t.Fatalf("file is not exist: %s", tmpl.OutputPathTmpl)
-			}
+		if _, err := runGcli(baseDir, gopath, args); err != nil {
+			t.Fatalf("err: %s", err)
 		}
 
-		if err := goTests(artifactBin); err != nil {
-			t.Fatal(err)
+		if err := goTests(filepath.Join(baseDir, name), gopath); err != nil {
+			t.Fatalf("[%s] expects generated project to pass all go tests: \n\n %s", tt.framework, err)
 		}
 
-		if err := os.Chdir(artifactBin); err != nil {
-			t.Fatal(err)
-		}
-
-		var stdout, stderr bytes.Buffer
-		cmd := exec.Command("./"+artifactBin, "-help")
-		cmd.Stderr = &stderr
-		cmd.Stdout = &stdout
-
-		// cmd.Wait() returns error
-		_ = cmd.Run()
-
-		output = stdout.String() + stderr.String()
-		// t.Logf("%s \n\n%s", tt.framework, output)
-		if !strings.Contains(output, tt.expectOut) {
-			t.Errorf("[%s] expects %q to contain %q", tt.framework, output, tt.expectOut)
-		}
-
-		// Back to src directory
-		if err := os.Chdir(".."); err != nil {
-			t.Fatal(err)
+		// Also run executable and check its output.
+		// This test should be seaprated from this test.
+		// But it has costs to run go-get multiple times.
+		output := runExecutable(filepath.Join(baseDir, name, name), tt.args)
+		if !strings.Contains(output, tt.expectHelp) {
+			t.Errorf("[%s] expects %q to contain %q", tt.framework, output, tt.expectHelp)
 		}
 	}
 }
