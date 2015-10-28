@@ -10,17 +10,19 @@ import (
 	"time"
 )
 
-var testDesignFile = "./fixtures/command-design.toml"
-
-var applyTests = []struct {
-	framework string
+var flagTests = []struct {
+	framework  string
+	args       []string
+	expectHelp string
 }{
-	{framework: "codegangsta_cli"},
-	{framework: "mitchellh_cli"},
-	{framework: "go_cmd"},
+	{
+		framework:  "flag",
+		args:       []string{"-h"},
+		expectHelp: "Usage of ",
+	},
 }
 
-func TestApply(t *testing.T) {
+func TestNew_flag(t *testing.T) {
 	t.Parallel()
 
 	vcsHost := "github.com"
@@ -37,19 +39,16 @@ func TestApply(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 
-	designFile, err := filepath.Abs(testDesignFile)
-	if err != nil {
-		t.Fatalf("err: %s", err)
-	}
+	for _, tt := range flagTests {
 
-	for _, tt := range applyTests {
-		name := fmt.Sprintf("%s_todo_design_file", tt.framework)
+		name := fmt.Sprintf("%s_grep", tt.framework)
 		args := []string{
-			"apply",
+			"new",
 			"-framework", tt.framework,
 			"-owner", owner,
-			"-name", name,
-			designFile,
+			"-flag=ignore-case:Bool:'Perform case insensitive matching'",
+			"-flag=context:Int:'Print num lines of leading and trailing context'",
+			name,
 		}
 
 		output, err := runGcli(baseDir, gopath, args)
@@ -69,7 +68,9 @@ func TestApply(t *testing.T) {
 	}
 }
 
-func TestApply_gotests(t *testing.T) {
+// TestNew_flag_goflag tests that the generated project
+// is go-buildable and it passes the go-test and go-vet.
+func TestNew_flag_gotests(t *testing.T) {
 	t.Parallel()
 
 	vcsHost := "github.com"
@@ -86,27 +87,32 @@ func TestApply_gotests(t *testing.T) {
 		t.Fatalf("err: %s", err)
 	}
 
-	designFile, err := filepath.Abs(testDesignFile)
-	if err != nil {
-		t.Fatalf("err: %s", err)
-	}
+	for _, tt := range flagTests {
 
-	for _, tt := range applyTests {
-		name := fmt.Sprintf("%s_todo_design_file", tt.framework)
+		name := fmt.Sprintf("%s_grep", tt.framework)
 		args := []string{
-			"apply",
+			"new",
 			"-framework", tt.framework,
 			"-owner", owner,
-			"-name", name,
-			designFile,
+			"-flag=ignore-case:Bool:'Perform case insensitive matching'",
+			"-flag=context:Int:'Print num lines of leading and trailing context'",
+			name,
 		}
 
 		if _, err := runGcli(baseDir, gopath, args); err != nil {
-			t.Fatalf("[%s] expects %s to be nil", tt.framework, err)
+			t.Fatalf("err: %s", err)
 		}
 
 		if err := goTests(filepath.Join(baseDir, name), gopath); err != nil {
 			t.Fatalf("[%s] expects generated project to pass all go tests: \n\n %s", tt.framework, err)
+		}
+
+		// Also run executable and check its output.
+		// This test should be seaprated from this test.
+		// But it has costs to run go-get multiple times.
+		output := runExecutable(filepath.Join(baseDir, name, name), tt.args)
+		if !strings.Contains(output, tt.expectHelp) {
+			t.Errorf("[%s] expects %q to contain %q", tt.framework, output, tt.expectHelp)
 		}
 	}
 }

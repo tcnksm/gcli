@@ -7,11 +7,16 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sync"
 )
 
 const EnvGcliPath = "GCLI_PATH"
 
-// gcli is executable path
+// runGcliMux is mutex for running gcli because GOPATH
+// is modified while test
+var runGcliMux sync.Mutex
+
+// gcli is executable path of gcli
 var gcli string
 
 func init() {
@@ -28,64 +33,36 @@ func init() {
 	}
 }
 
-// chdirSrcPath changes dirctory to $GOPATH/src/github.com/owner/
-// It returns cleanup script to delete directory
-func chdirSrcPath(owner string) (func(), error) {
-	gopath := os.Getenv("GOPATH")
-	if gopath == "" {
-		return nil, fmt.Errorf("can't found GOPATH env var")
+// tmpGopath create temporary GOPATH.
+// it returns its path and cleanFunction to remove directory.
+// return error if any.
+func tmpGopath() (string, func(), error) {
+	gopath, err := ioutil.TempDir("./", "test-tmp-gopath-")
+	if err != nil {
+		return "", nil, err
 	}
 
-	srcPath := filepath.Join(gopath, "src", "github.com", owner)
-	if _, err := os.Stat(srcPath); os.IsExist(err) {
-		// TODO
-		panic(err)
+	absGopath, err := filepath.Abs(gopath)
+	if err != nil {
+		return "", nil, err
 	}
 
-	if err := os.MkdirAll(srcPath, 0777); err != nil {
-		return nil, err
-	}
-
-	if err := os.Chdir(srcPath); err != nil {
-		return nil, err
-	}
-
-	return func() {
-		if err := os.RemoveAll(srcPath); err != nil {
+	return absGopath, func() {
+		if err := os.RemoveAll(absGopath); err != nil {
 			panic(err)
 		}
 	}, nil
 }
 
-// executeBin execute command and return output
-func executeBin(bin string, args []string) string {
-	var stdout, stderr bytes.Buffer
-	cmd := exec.Command("./"+bin, args...)
-	cmd.Stderr = &stderr
-	cmd.Stdout = &stdout
+// setEnv set enviromental variables and return restore function.
+func setEnv(key, val string) func() {
 
-	// cmd.Wait() returns error
-	_ = cmd.Run()
-	return stdout.String() + stderr.String()
-}
+	preVal := os.Getenv(key)
+	os.Setenv(key, val)
 
-// runGcli runs gcli and return its stdout. If failed, returns error.
-func runGcli(args []string) (string, error) {
-	var stdout, stderr bytes.Buffer
-	cmd := exec.Command(gcli, args...)
-	cmd.Stderr = &stderr
-	cmd.Stdout = &stdout
-
-	if err := cmd.Start(); err != nil {
-		return "", fmt.Errorf("failed to start: %s\n\n %s", err, stderr.String())
+	return func() {
+		os.Setenv(key, preVal)
 	}
-
-	if err := cmd.Wait(); err != nil {
-		return "", fmt.Errorf("failed to execute: %s\n\n %s", err, stderr.String())
-	}
-
-	return stdout.String(), nil
-
 }
 
 func createFiles(outDir string, files []string) error {
@@ -144,105 +121,42 @@ func checkFiles(outDir string, files []string) error {
 	return nil
 }
 
-func goTests(output string) error {
-	// Change directory to artifact directory root
-	if err := os.Chdir(output); err != nil {
-		return err
-	}
+func runGcli(runDir, gopath string, args []string) (string, error) {
+	// Only one process can run gcli because it required
+	// modifying GOPATH and changing directory.
+	runGcliMux.Lock()
+	defer runGcliMux.Unlock()
 
-	defer func() {
-		// Back to src directory
-		if err := os.Chdir(".."); err != nil {
-			// Should not reach here
-			panic(err)
-		}
-	}()
+	// Modiry GOPATH while running gcli
+	resetFunc := setEnv("GOPATH", gopath)
+	defer resetFunc()
 
-	funcs := []func(output string) error{
-		goGet,
-		goBuild,
-		goTest,
-		goVet,
-	}
-
-	for _, gf := range funcs {
-		err := gf(output)
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-// goGet runs go get on current directory. If failed, returns error.
-func goGet(output string) error {
 	var stdout, stderr bytes.Buffer
-	cmd := exec.Command("go", "get", "-v", "-d", "-t", "./...")
+	cmd := exec.Command(gcli, args...)
+	cmd.Dir = runDir
 	cmd.Stderr = &stderr
 	cmd.Stdout = &stdout
 
 	if err := cmd.Start(); err != nil {
-		return fmt.Errorf("failed to start `go get`: %s\n\n %s", err, stderr.String())
+		return "", fmt.Errorf("failed to start: %s\n\n %s", err, stderr.String())
 	}
 
 	if err := cmd.Wait(); err != nil {
-		return fmt.Errorf("failed to execute `go get`: %s\n\n %s", err, stderr.String())
+		return "", fmt.Errorf("failed to execute: %s\n\n %s", err, stderr.String())
 	}
 
-	return nil
+	return stdout.String(), nil
+
 }
 
-// goBuild runs go build on current directory. If failed, returns error.
-func goBuild(output string) error {
+func runExecutable(bin string, args []string) string {
 	var stdout, stderr bytes.Buffer
-	cmd := exec.Command("go", "build", "-o", output)
+	cmd := exec.Command(bin, args...)
 	cmd.Stderr = &stderr
 	cmd.Stdout = &stdout
 
-	if err := cmd.Start(); err != nil {
-		return fmt.Errorf("failed to start `go build`: %s\n\n %s", err, stderr.String())
-	}
+	// cmd.Wait() returns error
+	_ = cmd.Run()
 
-	if err := cmd.Wait(); err != nil {
-		return fmt.Errorf("failed to execute `go build`: %s\n\n %s", err, stderr.String())
-	}
-
-	return nil
-}
-
-// goTest runs go test on current directory. If failed, returns error.
-func goTest(output string) error {
-	var stdout, stderr bytes.Buffer
-	cmd := exec.Command("go", "test", "./...")
-	cmd.Stderr = &stderr
-	cmd.Stdout = &stdout
-
-	if err := cmd.Start(); err != nil {
-		return fmt.Errorf("failed to start `go test`: %s\n\n %s", err, stderr.String())
-	}
-
-	if err := cmd.Wait(); err != nil {
-		return fmt.Errorf("failed to execute `go test`: %s\n\n %s", err, stderr.String())
-	}
-
-	return nil
-}
-
-// goVet runs go vet on current directory. If failed, returns error.
-func goVet(output string) error {
-	var stdout, stderr bytes.Buffer
-	cmd := exec.Command("go", "vet", "./...")
-	cmd.Stderr = &stderr
-	cmd.Stdout = &stdout
-
-	if err := cmd.Start(); err != nil {
-		return fmt.Errorf("failed to start `go vet`: %s\n\n %s", err, stderr.String())
-	}
-
-	if err := cmd.Wait(); err != nil {
-		return fmt.Errorf("failed to execute `go vet`: %s\n\n %s", err, stderr.String())
-	}
-
-	return nil
+	return stdout.String() + stderr.String()
 }
