@@ -23,6 +23,7 @@ func (c *ApplyCommand) Run(args []string) int {
 		owner        string
 		name         string
 		staticDir    string
+		vcsHost      string
 		current      bool
 		skipTest     bool
 		verbose      bool
@@ -34,6 +35,8 @@ func (c *ApplyCommand) Run(args []string) int {
 	uflag.StringVar(&frameworkStr, "F", "", "framework (short)")
 
 	uflag.StringVar(&staticDir, "static-dir", "", "")
+
+	uflag.StringVar(&vcsHost, "vcs", DefaultVCSHost, "")
 
 	uflag.BoolVar(&current, "current", false, "current")
 	uflag.BoolVar(&current, "C", false, "current")
@@ -107,13 +110,13 @@ func (c *ApplyCommand) Run(args []string) int {
 			"Failed to read GOPATH: it should not be empty"))
 		return ExitCodeFailed
 	}
-	idealDir := filepath.Join(gopath, "src", "github.com", owner)
+	idealDir := filepath.Join(gopath, "src", vcsHost, owner)
 
 	output := executable.Name
 	if currentDir != idealDir && !current {
 		c.UI.Output("")
 		c.UI.Output(fmt.Sprintf("====> WARNING: You are not in the directory gcli expects."))
-		c.UI.Output(fmt.Sprintf("      The codes will be generated be in $GOPATH/src/github.com/%s.", owner))
+		c.UI.Output(fmt.Sprintf("      The codes will be generated be in $GOPATH/src/%s/%s.", vcsHost, owner))
 		c.UI.Output(fmt.Sprintf("      Not in the current directory. This is because the output"))
 		c.UI.Output(fmt.Sprintf("      codes use import path based on that path."))
 		c.UI.Output("")
@@ -136,7 +139,9 @@ func (c *ApplyCommand) Run(args []string) int {
 		}
 	}
 
-	fmt.Println(frameworkStr)
+	// Set VCSHost
+	executable.VCSHost = vcsHost
+
 	framework, err := skeleton.FrameworkByName(frameworkStr)
 	if err != nil {
 		c.UI.Error(fmt.Sprintf("Failed to generate %q: %s", executable.Name, err.Error()))
@@ -226,6 +231,8 @@ Options:
    -framework=name, -F        Cli framework name. By default, gcli use "codegangsta/cli"
                               To check cli framework you can use, run 'gcli list'.
                               If you set invalid framework, it will be failed.
+
+   -vcs=name                  Version Control Host name. By default, gcli use 'github.com'.
 
    -skip-test, -T             Skip generating *_test.go file. By default, gcli generates
                               test file If you specify this flag, gcli will not generate

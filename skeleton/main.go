@@ -14,11 +14,11 @@ type Skeleton struct {
 	// Path is where skeleton is generated.
 	Path string
 
-	// If WithTest is true, also generate test code.
-	SkipTest bool
-
 	Framework  *Framework
 	Executable *Executable
+
+	// If WithTest is true, also generate test code.
+	SkipTest bool
 
 	// ArtifactCh is channel for info output
 	ArtifactCh chan string

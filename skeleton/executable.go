@@ -21,6 +21,9 @@ type Executable struct {
 	// Owner is owner of the executable.
 	Owner string
 
+	// VSCHost is the host name of version control system.
+	VCSHost string `toml:",omitempty"`
+
 	// Commands are commands of the executable.
 	Commands []*Command
 
