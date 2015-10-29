@@ -244,3 +244,51 @@ func TestNew_command_checkOutputs(t *testing.T) {
 		}
 	}
 }
+
+func TestNew_command_vcs(t *testing.T) {
+	t.Parallel()
+
+	vcsHost := "bitbucket.org"
+	owner := "awesome_user_" + strconv.Itoa(int(time.Now().Unix()))
+
+	gopath, cleanFunc, err := tmpGopath()
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
+	defer cleanFunc()
+
+	baseDir := filepath.Join(gopath, "src", vcsHost, owner)
+	if err := os.MkdirAll(baseDir, 0777); err != nil {
+		t.Fatalf("err: %s", err)
+	}
+
+	for _, tt := range commandTests {
+
+		name := fmt.Sprintf("%s_todo", tt.framework)
+		args := []string{
+			"new",
+			"-framework", tt.framework,
+			"-owner", owner,
+			"-vcs", vcsHost,
+			"-command=add:'Add new task'",
+			"-command=list:'List tasks'",
+			"-command=change-state:'Change task state'",
+			"-command=delete:'Delete specified task'",
+			name,
+		}
+
+		output, err := runGcli(baseDir, gopath, args)
+		if err != nil {
+			t.Fatalf("err: %s", err)
+		}
+
+		expectWarn := "WARNING: You are not in the directory gcli expects."
+		if strings.Contains(output, expectWarn) {
+			t.Fatalf("expects output not to contain %q", expectWarn)
+		}
+
+		if err := goTests(filepath.Join(baseDir, name), gopath); err != nil {
+			t.Fatalf("[%s] expects generated project to pass all go tests: \n\n %s", tt.framework, err)
+		}
+	}
+}
