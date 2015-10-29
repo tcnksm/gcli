@@ -21,6 +21,9 @@ const (
 )
 
 const (
+	// DefaultVCSHost is the default VCS host name.
+	DefaultVCSHost = "github.com"
+
 	// DefaultLocalDir is the default path to store directory.
 	DefaultLocalDir       = "~/.gcli.d"
 	DefaultLocalStaticDir = "static"

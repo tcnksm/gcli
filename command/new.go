@@ -24,6 +24,7 @@ func (c *NewCommand) Run(args []string) int {
 		frameworkStr string
 		owner        string
 		staticDir    string
+		vcsHost      string
 		current      bool
 		skipTest     bool
 		verbose      bool
@@ -44,6 +45,8 @@ func (c *NewCommand) Run(args []string) int {
 	uflag.StringVar(&owner, "o", "", "owner (short)")
 
 	uflag.StringVar(&staticDir, "static-dir", "", "")
+
+	uflag.StringVar(&vcsHost, "vcs", DefaultVCSHost, "")
 
 	uflag.BoolVar(&current, "current", false, "current")
 	uflag.BoolVar(&current, "C", false, "current")
@@ -96,13 +99,13 @@ func (c *NewCommand) Run(args []string) int {
 			"Failed to read GOPATH: it should not be empty"))
 		return ExitCodeFailed
 	}
-	idealDir := filepath.Join(gopath, "src", "github.com", owner)
+	idealDir := filepath.Join(gopath, "src", vcsHost, owner)
 
 	output := name
 	if currentDir != idealDir && !current {
 		c.UI.Output("")
 		c.UI.Output(fmt.Sprintf("====> WARNING: You are not in the directory gcli expects."))
-		c.UI.Output(fmt.Sprintf("      The codes will be generated be in $GOPATH/src/github.com/%s.", owner))
+		c.UI.Output(fmt.Sprintf("      The codes will be generated be in $GOPATH/src/%s/%s.", vcsHost, owner))
 		c.UI.Output(fmt.Sprintf("      Not in the current directory. This is because the output"))
 		c.UI.Output(fmt.Sprintf("      codes use import path based on that path."))
 		c.UI.Output("")
@@ -134,6 +137,7 @@ func (c *NewCommand) Run(args []string) int {
 	executable := &skeleton.Executable{
 		Name:        name,
 		Owner:       owner,
+		VCSHost:     vcsHost,
 		Commands:    commands,
 		Flags:       flags,
 		Version:     skeleton.DefaultVersion,
@@ -225,6 +229,8 @@ Options:
    -owner=name, -o            Command owner (author) name. This value is also used for
                               import path name. By default, owner name is extracted from
                               ~/.gitconfig variable.
+
+   -vcs=name                  Version Control Host name. By default, gcli use 'github.com'.
 
    -skip-test, -T             Skip generating *_test.go file. By default, gcli generates
                               test file If you specify this flag, gcli will not generate
