@@ -97,6 +97,31 @@ func (c *ApplyCommand) Run(args []string) int {
 		return ExitCodeFailed
 	}
 
+	// Check option input first and if it's specified use it
+	if len(frameworkStr) == 0 {
+		if len(executable.FrameworkStr) != 0 {
+			// If FrameworStr is specified from design file use it
+			frameworkStr = executable.FrameworkStr
+		} else {
+			frameworkStr = defaultFrameworkString
+		}
+	}
+
+	// Overwrite VCSHost
+	executable.VCSHost = vcsHost
+
+	// Overwrite output and executable name
+	output := executable.Name
+	if len(name) != 0 {
+		executable.Name = name
+		output = name
+	}
+
+	// Overwrite owner name
+	if len(owner) != 0 {
+		executable.Owner = owner
+	}
+
 	currentDir, err := os.Getwd()
 	if err != nil {
 		c.UI.Error(fmt.Sprintf(
@@ -110,51 +135,23 @@ func (c *ApplyCommand) Run(args []string) int {
 			"Failed to read GOPATH: it should not be empty"))
 		return ExitCodeFailed
 	}
-	idealDir := filepath.Join(gopath, "src", vcsHost, owner)
+	idealDir := filepath.Join(gopath, "src", executable.VCSHost, executable.Owner)
 
-	output := executable.Name
 	if currentDir != idealDir && !current {
 		c.UI.Output("")
 		c.UI.Output(fmt.Sprintf("====> WARNING: You are not in the directory gcli expects."))
-		c.UI.Output(fmt.Sprintf("      The codes will be generated be in $GOPATH/src/%s/%s.", vcsHost, owner))
+		c.UI.Output(fmt.Sprintf("      The codes will be generated be in $GOPATH/src/%s/%s.",
+			executable.VCSHost, executable.Owner))
 		c.UI.Output(fmt.Sprintf("      Not in the current directory. This is because the output"))
 		c.UI.Output(fmt.Sprintf("      codes use import path based on that path."))
 		c.UI.Output("")
-		output = filepath.Join(idealDir, name)
+		output = filepath.Join(idealDir, executable.Name)
 	}
 
 	if _, err := os.Stat(output); !os.IsNotExist(err) {
 		msg := fmt.Sprintf("Cannot create directory %s: file exists", output)
 		c.UI.Error(msg)
 		return 1
-	}
-
-	// Check option input first and if it's specified use it
-	if len(frameworkStr) == 0 {
-		if len(executable.FrameworkStr) != 0 {
-			// If FrameworStr is specified from design file use it
-			frameworkStr = executable.FrameworkStr
-		} else {
-			frameworkStr = defaultFrameworkString
-		}
-	}
-
-	// Set VCSHost
-	executable.VCSHost = vcsHost
-
-	framework, err := skeleton.FrameworkByName(frameworkStr)
-	if err != nil {
-		c.UI.Error(fmt.Sprintf("Failed to generate %q: %s", executable.Name, err.Error()))
-		return 1
-	}
-
-	if len(name) != 0 {
-		executable.Name = name
-		output = name
-	}
-
-	if len(owner) != 0 {
-		executable.Owner = owner
 	}
 
 	if staticDir == "" {
@@ -164,6 +161,12 @@ func (c *ApplyCommand) Run(args []string) int {
 			return ExitCodeFailed
 		}
 		staticDir = filepath.Join(localDir, DefaultLocalStaticDir)
+	}
+
+	framework, err := skeleton.FrameworkByName(frameworkStr)
+	if err != nil {
+		c.UI.Error(fmt.Sprintf("Failed to generate %q: %s", executable.Name, err.Error()))
+		return 1
 	}
 
 	// Channels to receive artifact path (result) and error
