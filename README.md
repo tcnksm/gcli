@@ -44,7 +44,7 @@ The `new` command tells gcli to generate CLI project with command-line one-liner
 ```bash
 $ gcli new [options] NAME
 ```
-You must provides project name (`NAME`), the name will be the directory name it includes all codes and be the default binary name. In option, you can set subcommand or flag it has and its description. You can alos set your favorite [CLI framework](#frameworks) there. The followings are all available opntions,
+You must provides project name (`NAME`), the name will be the directory name it includes all codes and be the default binary name. In option, you can set subcommand or flag it has and its description. You can also set your favorite [CLI framework](#frameworks) there. The followings are all available opntions,
 
 ```bash
 -command=name, -c           Command name which you want to add.
@@ -94,7 +94,7 @@ First, generate design template file by `design` command,
 ```bash
 $ gcli design [options] NAME
 ```
-You must provides project name (`NAME`). In option, you can set subcommand or flag it has and its description. You can alos set your favorite [CLI framework](#frameworks) there. You can edit these values in design file later. 
+You must provides project name (`NAME`). In option, you can set subcommand or flag it has and its description. You can also set your favorite [CLI framework](#frameworks) there. You can edit these values in design file later. 
 
 Then, edit design file by your favorite `$EDITOR`.
 
