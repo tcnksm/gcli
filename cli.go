@@ -36,10 +36,7 @@ func RunCustom(args []string, commands map[string]cli.CommandFactory) int {
 		// If the following options are provided,
 		// then execute gcli version command
 		if arg == "-v" || arg == "-version" || arg == "--version" {
-			newArgs := make([]string, len(args)+1)
-			newArgs[0] = "version"
-			copy(newArgs[1:], args)
-			args = newArgs
+			args[1] = "version"
 			break
 		}
 
