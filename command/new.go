@@ -93,12 +93,38 @@ func (c *NewCommand) Run(args []string) int {
 		return ExitCodeFailed
 	}
 
-	gopath := os.Getenv(EnvGoPath)
-	if gopath == "" {
+	gopaths := filepath.SplitList(os.Getenv(EnvGoPath))
+	gopath := ""
+	if len(gopaths) == 0 {
 		c.UI.Error(fmt.Sprintf(
 			"Failed to read GOPATH: it should not be empty"))
 		return ExitCodeFailed
+	} else {
+		for _, path := range gopaths {
+			absPath, err := filepath.Abs(path)
+			if err != nil {
+				c.UI.Error(fmt.Sprintf(
+					"Cannot parse GOPATH"))
+				continue
+			}
+			if strings.HasPrefix(currentDir, absPath) {
+				gopath = absPath
+				break
+			}
+		}
 	}
+	if gopath == "" {
+		c.UI.Output("")
+		c.UI.Output(fmt.Sprintf("===> WARNING: You are not in the directories defined in $GOPATH."))
+		c.UI.Output(fmt.Sprintf("     Uses first location in $GOPATH."))
+		c.UI.Output("")
+		gopath, err = filepath.Abs(gopaths[0])
+		if err != nil {
+			c.UI.Error(fmt.Sprintf("Cannot parse GOPATH"))
+			return ExitCodeFailed
+		}
+	}
+	
 	idealDir := filepath.Join(gopath, "src", vcsHost, owner)
 
 	output := name
