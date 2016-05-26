@@ -1,0 +1,9 @@
+package command
+
+import "github.com/urfave/cli"
+
+func Cmd{{ title .FunctionName }}(c *cli.Context) error {
+	// Write your code here
+    {{ if ne .DebugOutput "" }}print("{{ .DebugOutput }}"){{ end }}
+		return nil
+}

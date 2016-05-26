@@ -76,6 +76,24 @@ The goal is to enable developers to write fast and distributable command line ap
 	},
 
 	{
+		Name:     "urfave_cli",
+		AltNames: []string{"urfave"},
+		URL:      "https://github.com/urfave/cli",
+		Description: `This is the library formally known as codegangsta/cli. urfave/cli is simple, fast, and fun package for building command line apps in Go.
+The goal is to enable developers to write fast and distributable command line applications in an expressive way.
+`,
+		BaseTemplates: []Template{
+			{"resource/tmpl/urfave_cli/main.go.tmpl", "main.go"},
+			{"resource/tmpl/urfave_cli/version.go.tmpl", "version.go"},
+			{"resource/tmpl/urfave_cli/commands.go.tmpl", "commands.go"},
+		},
+		CommandTemplates: []Template{
+			{"resource/tmpl/urfave_cli/command/command.go.tmpl", "command/{{ .Name }}.go"},
+			{"resource/tmpl/urfave_cli/command/command_test.go.tmpl", "command/{{ .Name }}_test.go"},
+		},
+	},
+
+	{
 		Name: "go_cmd",
 		URL:  "https://github.com/golang/go/tree/master/src/cmd/go",
 		Description: `
