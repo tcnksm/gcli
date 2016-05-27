@@ -1,0 +1,34 @@
+package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/urfave/cli"
+	"{{ .VCSHost }}/{{ .Owner }}/{{ .Name }}/command"
+)
+
+var GlobalFlags = []cli.Flag{
+    {{ range .Flags }}cli.{{ title .TypeString }}Flag{
+	    EnvVar: "ENV_{{ toUpper .Name }}",
+	    Name:   "{{ .LongName }}",
+	    {{ if eq .TypeString "string" }}Value: "{{ .Default }}", {{ end }}
+	    Usage:  "{{ .Description }}",
+    },
+    {{ end }}
+}
+
+var Commands = []cli.Command{
+    {{ range .Commands }}{
+		Name:        "{{ .Name }}",
+		Usage:       "{{ .Synopsis }}",
+		Action:      command.Cmd{{ title .FunctionName }},
+		Flags:       []cli.Flag{},
+	},
+    {{ end }}
+}
+
+func CommandNotFound(c *cli.Context, command string) {
+	fmt.Fprintf(os.Stderr, "%s: '%s' is not a %s command. See '%s --help'.", c.App.Name, command, c.App.Name, c.App.Name)
+	os.Exit(2)
+}
