@@ -19,7 +19,7 @@ var commandTests = []struct {
 	expectHelp string
 }{
 	{
-		framework:  "codegangsta_cli",
+		framework:  "urfave_cli",
 		args:       []string{},
 		expectHelp: "[global options] command [command options] [arguments...]",
 	},

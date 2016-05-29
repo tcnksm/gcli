@@ -221,7 +221,7 @@ func (c *ApplyCommand) Help() string {
 	helpText := `
 Apply design template file for generating cli project. You can generate
 design template file via 'gcli design' command. If framework name is not
-specified gcli use codegangsta/cli. You can set framework name via '-F'
+specified gcli use urfave/cli. You can set framework name via '-F'
 option. To check cli framework you can use, run 'gcli list'. 
 
 Usage:
@@ -231,7 +231,7 @@ Usage:
 
 Options:
 
-   -framework=name, -F        Cli framework name. By default, gcli use "codegangsta/cli"
+   -framework=name, -F        Cli framework name. By default, gcli use "urfave/cli"
                               To check cli framework you can use, run 'gcli list'.
                               If you set invalid framework, it will be failed.
 

@@ -2,7 +2,7 @@ Name = "todo"
 Owner = "tcnksm"
 Version = "0.1.0"
 Description = ""
-Framework = "codegangsta_cli"
+Framework = "urfave_cli"
 
 [[Commands]]
   Name = "Add"

@@ -25,7 +25,7 @@ LINT_RES=$(golint ./... | \
                   grep -v "doc.go" | \
                   grep -v "type name will be used as command.CommandFlag by other packages" | \
                   grep -v "Framework_go_cmd" | \
-                  grep -v "Framework_codegangsta_cli" | \
+                  grep -v "Framework_urfave_cli" | \
                   grep -v "Framework_mitchellh_cli" | \
                   grep -v "Framework_flag" \
         )
