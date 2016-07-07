@@ -144,7 +144,7 @@ Examples:
 
 To create todo command application skeleton which has 'add' and 'delete' command,
 
-   $ gcli new -command=add:"Add new task" -commnad=delete:"delete task" todo
+   $ gcli new -command=add:"Add new task" -command=delete:"delete task" todo
 
 
 
