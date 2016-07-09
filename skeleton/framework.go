@@ -58,24 +58,6 @@ cli is the library that powers the CLI for Packer, Serf, and Consul.
 	},
 
 	{
-		Name:     "codegangsta_cli",
-		AltNames: []string{"codegangsta"},
-		URL:      "https://github.com/codegangsta/cli",
-		Description: `codegangsta/cli is simple, fast, and fun package for building command line apps in Go.
-The goal is to enable developers to write fast and distributable command line applications in an expressive way.
-`,
-		BaseTemplates: []Template{
-			{"resource/tmpl/codegangsta_cli/main.go.tmpl", "main.go"},
-			{"resource/tmpl/codegangsta_cli/version.go.tmpl", "version.go"},
-			{"resource/tmpl/codegangsta_cli/commands.go.tmpl", "commands.go"},
-		},
-		CommandTemplates: []Template{
-			{"resource/tmpl/codegangsta_cli/command/command.go.tmpl", "command/{{ .Name }}.go"},
-			{"resource/tmpl/codegangsta_cli/command/command_test.go.tmpl", "command/{{ .Name }}_test.go"},
-		},
-	},
-
-	{
 		Name:     "urfave_cli",
 		AltNames: []string{"urfave"},
 		URL:      "https://github.com/urfave/cli",

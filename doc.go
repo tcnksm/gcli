@@ -25,7 +25,7 @@ Apply design template file for generating cli project
 
 Apply design template file for generating cli project. You can generate
 design template file via 'gcli design' command. If framework name is not
-specified gcli use codegangsta/cli. You can set framework name via '-F'
+specified gcli use urfave/cli. You can set framework name via '-F'
 option. To check cli framework you can use, run 'gcli list'. 
 
 Usage:
@@ -35,7 +35,7 @@ Usage:
 
 Options:
 
-   -framework=name, -F        Cli framework name. By default, gcli use "codegangsta/cli"
+   -framework=name, -F        Cli framework name. By default, gcli use "urfave/cli"
                               To check cli framework you can use, run 'gcli list'.
                               If you set invalid framework, it will be failed.
 
@@ -75,7 +75,7 @@ Options:
                               You can set multiple variables at same time with ","
                               separator.
 
-  -framework=name, -F         Cli framework name. By default, gcli use "codegangsta/cli"
+  -framework=name, -F         Cli framework name. By default, gcli use "urfave/cli"
                               To check cli framework you can use, run 'gcli list'.
                               If you set invalid framework, it will be failed.
 
@@ -102,7 +102,7 @@ Generate new cli project
 
 Generate new cli skeleton project. At least, you must provide executable
 name. You can select cli package and set commands via command line option.
-See more about that on Options section. By default, gcli use codegangsta/cli.
+See more about that on Options section. By default, gcli use urfave/cli.
 To check cli framework you can use, run 'gcli list'. 
 
 Usage:
@@ -128,7 +128,7 @@ Options:
                               You can set multiple variables at same time with ","
                               separator.
 
-   -framework=name, -F        Cli framework name. By default, gcli use "codegangsta/cli"
+   -framework=name, -F        Cli framework name. By default, gcli use "urfave/cli"
                               To check cli framework you can use, run 'gcli list'.
                               If you set invalid framework, it will be failed.
 

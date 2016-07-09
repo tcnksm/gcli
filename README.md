@@ -64,7 +64,7 @@ You must provides project name (`NAME`), the name will be the directory name it 
                             You can set multiple variables at same time with ","
                             separator.
 
--framework=name, -F         Cli framework name. By default, gcli use "codegangsta/cli"
+-framework=name, -F         Cli framework name. By default, gcli use "urfave/cli"
                             To check cli framework you can use, run 'gcli list'.
                             If you set invalid framework, it will be failed.
 
@@ -118,7 +118,7 @@ The video for this workflow is available on [Vimeo](https://vimeo.com/142134929)
 
 ## Frameworks
 
-There are many framework (package) for buidling command line application by golang. For example, one of the most famous frameworks is [codegangsta/cli](https://github.com/codegangsta/cli). The framework helps you not writing many codes. But still you need to write many boilerplate code for that framework. And there are different way to use that framework and learning the ideal way to use is waste of time. gcli writes out with following the best practice for that framework (learn from famous tool that is built with that framework). 
+There are many framework (package) for buidling command line application by golang. For example, one of the most famous frameworks is [urfave/cli](https://github.com/urfave/cli). The framework helps you not writing many codes. But still you need to write many boilerplate code for that framework. And there are different way to use that framework and learning the ideal way to use is waste of time. gcli writes out with following the best practice for that framework (learn from famous tool that is built with that framework). 
 
 `gcli` can generate 2 types of CLI pattern. The one is [*sub-command pattern*](#sub-command), the other is [*flag pattern*](#flag). The former is flexible and you can add many behavior in one command application. The later is for simple application. You can check the all available frameworks by `list` command,
 
@@ -126,7 +126,7 @@ There are many framework (package) for buidling command line application by gola
 $ gcli list
 ```
 
-To change framework, you can use `-framework` or `-F` option with the framework name. This option can be used for `new`, `design` and `apply` command. By default, [codegangsta_cli](https://github.com/codegangsta/cli) will be used. 
+To change framework, you can use `-framework` or `-F` option with the framework name. This option can be used for `new`, `design` and `apply` command. By default, [urfave_cli](https://github.com/urfave/cli) will be used. 
 
 The following section will explain [*sub-command pattern*](#sub-command) and [*flag pattern*](#flag). 
 
@@ -136,7 +136,7 @@ The following section will explain [*sub-command pattern*](#sub-command) and [*f
 
 |Name|Sample projects|
 |:-:|:-:| 
-|[codegangsta_cli](https://github.com/codegangsta/cli) | [docker machine](https://github.com/docker/machine) | 
+|[urfave_cli](https://github.com/urfave/cli) | [docker machine](https://github.com/docker/machine) | 
 |[mitchellh_cli](https://github.com/mitchellh/cli)| [consul](https://github.com/hashicorp/consul), [terraform](https://github.com/hashicorp/terraform)| 
 |[go_cmd](https://github.com/golang/go/blob/master/src/cmd/go/main.go#L30#L51)| [go](https://golang.org/cmd/go/)| 
 

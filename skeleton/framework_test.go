@@ -8,7 +8,7 @@ func TestFramework(t *testing.T) {
 		success bool
 		expt    string
 	}{
-		{"codegangsta", true, "codegangsta_cli"},
+		{"urfave", true, "urfave_cli"},
 		{"not_exist_cli", false, ""},
 	}
 

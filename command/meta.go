@@ -29,7 +29,7 @@ const (
 	DefaultLocalStaticDir = "static"
 
 	// defaultFrameworkString is default cli framework name
-	defaultFrameworkString = "codegangsta_cli"
+	defaultFrameworkString = "urfave_cli"
 )
 
 // Meta contain the meta-option that nealy all subcommand inherited.

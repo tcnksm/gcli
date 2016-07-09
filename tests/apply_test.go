@@ -15,7 +15,7 @@ var testDesignFile = "./fixtures/command-design.toml"
 var applyTests = []struct {
 	framework string
 }{
-	{framework: "codegangsta_cli"},
+	{framework: "urfave_cli"},
 	{framework: "mitchellh_cli"},
 	{framework: "go_cmd"},
 }

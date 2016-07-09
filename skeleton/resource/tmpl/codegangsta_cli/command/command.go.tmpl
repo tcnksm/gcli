@@ -1,8 +1,0 @@
-package command
-
-import "github.com/codegangsta/cli"
-
-func Cmd{{ title .FunctionName }}(c *cli.Context) {
-	// Write your code here
-    {{ if ne .DebugOutput "" }}print("{{ .DebugOutput }}"){{ end }}
-}
