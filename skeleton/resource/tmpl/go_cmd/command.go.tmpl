@@ -10,12 +10,12 @@ var cmd{{ title .FunctionName }} = &Command{
 }
 
 func init(){
-    // Set your flag here like below.
+	// Set your flag here like below.
 	// cmd{{ title .Name }}.Flag.BoolVar(&flagA, "a", false, "")
 }
 
 // run{{ title .FunctionName }} executes {{ .Name }} command and return exit code. 
 func run{{ title .FunctionName }}(args []string) int {
-    {{ if ne .DebugOutput "" }}print("{{ .DebugOutput }}"){{ end }}
+	{{ if ne .DebugOutput "" }}print("{{ .DebugOutput }}"){{ end }}
 	return 0
 }

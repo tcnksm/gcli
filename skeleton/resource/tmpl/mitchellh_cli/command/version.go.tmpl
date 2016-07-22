@@ -1,20 +1,20 @@
 package command
 
 import (
-    "bytes"
-    "fmt"
+	"bytes"
+	"fmt"
 )
 
 type VersionCommand struct {
 	Meta
 
-    Name     string
-    Version  string
-    Revision string
+	Name     string
+	Version  string
+	Revision string
 }
 
 func (c *VersionCommand) Run(args []string) int {
-    var versionString bytes.Buffer
+	var versionString bytes.Buffer
 
 	fmt.Fprintf(&versionString, "%s version %s", c.Name, c.Version)
 	if c.Revision != "" {
@@ -30,5 +30,5 @@ func (c *VersionCommand) Synopsis() string {
 }
 
 func (c *VersionCommand) Help() string {
-    return ""
+	return ""
 }
