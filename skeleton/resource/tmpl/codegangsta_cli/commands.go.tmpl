@@ -9,23 +9,23 @@ import (
 )
 
 var GlobalFlags = []cli.Flag{
-    {{ range .Flags }}cli.{{ title .TypeString }}Flag{
-	    EnvVar: "ENV_{{ toUpper .Name }}",
-	    Name:   "{{ .LongName }}",
-	    {{ if eq .TypeString "string" }}Value: "{{ .Default }}", {{ end }}
-	    Usage:  "{{ .Description }}",
-    },
-    {{ end }}
+	{{ range .Flags }}cli.{{ title .TypeString }}Flag{
+		EnvVar: "ENV_{{ toUpper .Name }}",
+		Name:   "{{ .LongName }}",
+		{{ if eq .TypeString "string" }}Value: "{{ .Default }}", {{ end }}
+		Usage:  "{{ .Description }}",
+	},
+	{{ end }}
 }
 
 var Commands = []cli.Command{
-    {{ range .Commands }}{
+	{{ range .Commands }}{
 		Name:        "{{ .Name }}",
 		Usage:       "{{ .Synopsis }}",
 		Action:      command.Cmd{{ title .FunctionName }},
 		Flags:       []cli.Flag{},
 	},
-    {{ end }}
+	{{ end }}
 }
 
 func CommandNotFound(c *cli.Context, command string) {

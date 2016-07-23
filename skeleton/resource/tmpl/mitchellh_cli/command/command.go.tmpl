@@ -1,7 +1,7 @@
 package command
 
 import (
-    "strings"
+	"strings"
 )
 
 type {{ title .FunctionName }}Command struct {
@@ -9,8 +9,8 @@ type {{ title .FunctionName }}Command struct {
 }
 
 func (c *{{ title .FunctionName }}Command) Run(args []string) int {
-    // Write your code here
-    {{ if ne .DebugOutput "" }}print("{{ .DebugOutput }}"){{ end }}
+	// Write your code here
+	{{ if ne .DebugOutput "" }}print("{{ .DebugOutput }}"){{ end }}
 	return 0
 }
 

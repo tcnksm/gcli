@@ -21,21 +21,21 @@ type CLI struct {
 
 // Run invokes the CLI with the given arguments.
 func (cli *CLI) Run(args []string) int {
-    var (
+	var (
 		{{ range .Flags }}{{ .VariableName }} {{ .TypeString }}
-        {{ end }}
-        version bool
-    )
-    
+		{{ end }}
+		version bool
+	)
+
 	// Define option flag parse
 	flags := flag.NewFlagSet(Name, flag.ContinueOnError)
-    flags.SetOutput(cli.errStream)
+	flags.SetOutput(cli.errStream)
 
-    {{ range .Flags }}{{ if eq .TypeString "string" }}flags.{{ title .TypeString}}Var(&{{ .VariableName }}, "{{ .LongName }}", "{{ .Default }}", "{{ .Description }}")
-    flags.{{ title .TypeString}}Var(&{{ .VariableName }}, "{{ .ShortName }}", "{{ .Default }}", "{{ .Description }}(Short)")
-    {{ else }}flags.{{ title .TypeString}}Var(&{{ .VariableName }}, "{{ .LongName }}", {{ .Default }}, "{{ .Description }}")
-    flags.{{ title .TypeString}}Var(&{{ .VariableName }}, "{{ .ShortName }}", {{ .Default }}, "{{ .Description }}(Short)"){{ end }}
-    {{ end }}
+	{{ range .Flags }}{{ if eq .TypeString "string" }}flags.{{ title .TypeString}}Var(&{{ .VariableName }}, "{{ .LongName }}", "{{ .Default }}", "{{ .Description }}")
+	flags.{{ title .TypeString}}Var(&{{ .VariableName }}, "{{ .ShortName }}", "{{ .Default }}", "{{ .Description }}(Short)")
+	{{ else }}flags.{{ title .TypeString}}Var(&{{ .VariableName }}, "{{ .LongName }}", {{ .Default }}, "{{ .Description }}")
+	flags.{{ title .TypeString}}Var(&{{ .VariableName }}, "{{ .ShortName }}", {{ .Default }}, "{{ .Description }}(Short)"){{ end }}
+	{{ end }}
 	flags.BoolVar(&version, "version", false, "Print version information and quit.")
 
 	// Parse commandline flag

@@ -30,6 +30,6 @@ func TestRun_{{ .VariableName }}Flag(t *testing.T) {
 	args := strings.Split("./{{ $.Name }} -{{ .LongName }}", " ")
 
 	status := cli.Run(args)
-    _ = status
+	_ = status
 }
 {{ end }}

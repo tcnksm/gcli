@@ -13,12 +13,12 @@ func Commands(meta *command.Meta) map[string]cli.CommandFactory {
 			}, nil
 		},
 		{{ end }}
-        "version": func() (cli.Command, error) {
+		"version": func() (cli.Command, error) {
 			return &command.VersionCommand{
 				Meta:     *meta,
 				Version:  Version,
-                Revision: GitCommit,
-                Name: Name,
+				Revision: GitCommit,
+				Name: Name,
 			}, nil
 		},
 	}
