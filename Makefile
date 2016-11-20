@@ -13,7 +13,6 @@ deps:
 
 devdeps:
 	@echo "====> Install depedencies for development..."
-	go get -v golang.org/x/tools/cmd/vet	
 	go get -v github.com/golang/lint/golint
 
 generate: deps
