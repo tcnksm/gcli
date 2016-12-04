@@ -78,7 +78,7 @@ func (c *NewCommand) Run(args []string) int {
 			owner, err = gitconfig.Username()
 			if err != nil {
 				msg := "Cannot find owner name\n" +
-					"By default, owener name is retrieved from `~/.gitcofig` file.\n" +
+					"By default, owener name is retrieved from `~/.gitconfig` file.\n" +
 					"Please set one via -owner option or `~/.gitconfig` file."
 				c.UI.Error(msg)
 				return 1
