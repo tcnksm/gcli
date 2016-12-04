@@ -15,7 +15,7 @@ gcli
 
 ## Why ?
 
-Why you need `gcli`? Because you should focus on writing core function of CLI, not on interface. During developing CLI tool by Golang, you may find you're writing the chunk of [boilerplate code](https://en.wikipedia.org/wiki/Boilerplate_code) for interfaces. Stop writing the same codes every time. `gcli` generates them and save you a large amount of time by writing such code. This is like [Rails scaffold](http://guides.rubyonrails.org/command_line.html#rails-generate). Not only that, `gcli` know the best practices of golang CLI framework library which you want to use. Generated codes follows the most ideal way of using that framework, and you don't need to know about that. See the [frameworks](#frameworks) it supports now. 
+Why you need `gcli`? Because you should focus on writing core function of CLI, not on interface. During developing CLI tool by Golang, you may find you're writing the chunk of [boilerplate code](https://en.wikipedia.org/wiki/Boilerplate_code) for interfaces. Stop writing the same codes every time. `gcli` generates them and save you a large amount of time by writing such code. This is like [Rails scaffold](http://guides.rubyonrails.org/command_line.html#rails-generate). Not only that, `gcli` knows the best practices of golang CLI framework library which you want to use. Generated codes follow the most ideal way of using that framework, and you don't need to know about that. See the [frameworks](#frameworks) it supports now. 
 
 ## Demo
 
@@ -27,7 +27,7 @@ And this [video](https://vimeo.com/142134929) shows creating same `todo` CLI app
 
 ## Usage
 
-`gcli` is single command-line application. This application then takes subcommands. To check the all available commands,
+`gcli` is a single command-line application. This application then takes subcommands. To check all available commands,
 
 ```bash
 $ gcli help
@@ -35,7 +35,7 @@ $ gcli help
 
 To get help for any specific subcommand, run it with the `-h` flag.
 
-`gcli` has 2 main subcommand to generate the project. The one is the `new` command, the other is the `design` & `apply` commands. The former is for generating the project by command line one-liner, the latter is for when you want to design it in your editor before generating (It generates design file and you can generate project based on it). The following section explain, how to use these commands.
+`gcli` has 2 main subcommands to generate a project. One is the `new` command, the other is the `design` & `apply` commands. The former is for generating the project by command line one-liner, the latter is for when you want to design it in your editor before generating (It generates design file and you can generate project based on it). The following section explains how to use these commands.
 
 ### `new` command
 
@@ -45,7 +45,7 @@ The `new` command tells gcli to generate CLI project with command-line one-liner
 $ gcli new [options] NAME
 ```
 
-You must provides project name (`NAME`), the name will be the directory name it includes all codes and be the default binary name. By default, `gcli` creates a project under `$GOPATH/github.com/<username>` (If you don't provide username via option, it uses `github.user` or `user.name` in `.gitconfig` file). In option, you can set subcommand or flag it has and its description. You can also set your favorite [CLI framework](#frameworks) there. The followings are all available opntions,
+You must provide a project name (`NAME`), which will be the name of the directory that includes all the codes, and also the default name of the binary. By default, `gcli` creates the project under `$GOPATH/github.com/<username>` (If you don't provide username via option, it uses `github.user` or `user.name` in `.gitconfig` file). In option, you can set subcommand or flag it has and its description. You can also set your favorite [CLI framework](#frameworks) there. The followings are all available opntions,
 
 ```bash
 -command=name, -c           Command name which you want to add.
@@ -78,26 +78,26 @@ You must provides project name (`NAME`), the name will be the directory name it 
                             test files.
 ```
 
-For example, to `todo` CLI application which has `add`, `list` and `delete` command with [mitchellh/cli](https://github.com/mitchellh/cli),
+For example, to prepare a `todo` CLI application which has `add`, `list` and `delete` command with [mitchellh/cli](https://github.com/mitchellh/cli),
 
 ```bash
 $ gcli new -F mitchellh_cli -c add -c list -c delete todo
 ```
 
-### `design` & `apply` command
+### `design` & `apply` commands
 
-The `design` command tells gcli to prepare design template file ([`.toml`](https://github.com/toml-lang/toml)). The design file defines all necessary information to generate CLI application. Some fields are filled with the ideal default value, and some have empty value. You can fill that empty filed with your favorite editor with thinking like what interface that should have or description of that and so on. You can see sample template file [`sample.toml`](/sample.toml). 
+The `design` command tells gcli to prepare a design template file ([`.toml`](https://github.com/toml-lang/toml)). The design file defines all necessary information to generate a CLI application. Some fields are filled with the ideal default value, and some have empty value. You can fill that empty filed with your favorite editor with thinking like what interface that should have or description of that and so on. You can see sample template file [`sample.toml`](/sample.toml). 
 
-After design, use `apply` command and tells gcli to generate CLI project based on the design file. The following describes this workflow. 
+After design, use `apply` command and tell gcli to generate a CLI project based on the design file. The following describes this workflow. 
 
-First, generate design template file by `design` command, 
+First, generate a design template file by `design` command, 
 
 ```bash
 $ gcli design [options] NAME
 ```
-You must provides project name (`NAME`). In option, you can set subcommand or flag it has and its description. You can also set your favorite [CLI framework](#frameworks) there. You can edit these values in design file later. 
+You must provide a project name (`NAME`). In option, you can set subcommand or flag it has and its description. You can also set your favorite [CLI framework](#frameworks) there. You can edit these values in the design file later. 
 
-Then, edit design file by your favorite `$EDITOR`.
+Then, edit the design file by your favorite `$EDITOR`.
 
 ```bash
 $ $EDITOR <NAME>-design.toml
@@ -119,9 +119,9 @@ The video for this workflow is available on [Vimeo](https://vimeo.com/142134929)
 
 ## Frameworks
 
-There are many framework (package) for buidling command line application by golang. For example, one of the most famous frameworks is [codegangsta/cli](https://github.com/codegangsta/cli). The framework helps you not writing many codes. But still you need to write many boilerplate code for that framework. And there are different way to use that framework and learning the ideal way to use is waste of time. gcli writes out with following the best practice for that framework (learn from famous tool that is built with that framework). 
+There are many framework (package) for buidling command line application by golang. For example, one of the most famous frameworks is [codegangsta/cli](https://github.com/codegangsta/cli). The framework helps you not writing many codes. But still you need to write many boilerplate code for that framework. And there are different ways to use that framework and learning the ideal way to use is waste of time. gcli writes out with following the best practice for that framework (learn from famous tool that is built with that framework). 
 
-`gcli` can generate 2 types of CLI pattern. The one is [*sub-command pattern*](#sub-command), the other is [*flag pattern*](#flag). The former is flexible and you can add many behavior in one command application. The later is for simple application. You can check the all available frameworks by `list` command,
+`gcli` can generate 2 types of CLI pattern. The one is [*sub-command pattern*](#sub-command), the other is [*flag pattern*](#flag). The former is flexible and you can add many behavior in one command application. The later is for simple application. You can check all the available frameworks by `list` command,
 
 ```bash
 $ gcli list
@@ -129,11 +129,11 @@ $ gcli list
 
 To change framework, you can use `-framework` or `-F` option with the framework name. This option can be used for `new`, `design` and `apply` command. By default, [codegangsta_cli](https://github.com/codegangsta/cli) will be used. 
 
-The following section will explain [*sub-command pattern*](#sub-command) and [*flag pattern*](#flag). 
+The following section will explains [*sub-command pattern*](#sub-command) and [*flag pattern*](#flag). 
 
 ### Sub-Command
 
-*Sub-Command pattern* is the pattern that executable takes sub-command for change its behavior. `git` command is one example for this pattern. It takes `push`, `pull` subcommands. `gcli` is also this pattern. `gcli` supports the following frameworks for the command pattern.
+*Sub-Command pattern* is the pattern that executable takes sub-command to change its behavior. `git` command is one example for this pattern. It takes `push`, `pull` subcommands. `gcli` also uses this pattern. `gcli` supports the following frameworks for the command pattern.
 
 |Name|Sample projects|
 |:-:|:-:| 
@@ -147,7 +147,7 @@ The following section will explain [*sub-command pattern*](#sub-command) and [*f
 
 *Flag pattern* is the pattern that executable has flag options for changing its behavior. For example, `grep` command is this pattern. Now `gcli` only supports the official [flag](https://golang.org/pkg/flag/) package for this pattern.
 
-For example, to create command it has `-ignore-case` option and `context` option (your own `grep`),
+For example, to create a command that has `-ignore-case` option and `context` option (your own `grep`),
 
 ```bash
 $ gcli new -F flag -flag=i:Bool -flag=C:Int grep
