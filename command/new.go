@@ -124,7 +124,7 @@ func (c *NewCommand) Run(args []string) int {
 			return ExitCodeFailed
 		}
 	}
-	
+
 	idealDir := filepath.Join(gopath, "src", vcsHost, owner)
 
 	output := name
