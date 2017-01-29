@@ -33,10 +33,6 @@ test: build devdeps
 test-race: generate devdeps
 	go test -race ./...
 
-# Run test inside docker container
-test-docker:
-	@sh -c "$(CURDIR)/test-docker.sh"
-
 # Run functional test 
 test-functional: build devdeps
 	@echo "====> Run functional test"
