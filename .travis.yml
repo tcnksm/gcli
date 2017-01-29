@@ -15,4 +15,5 @@ install:
   - echo "skipping travis' default"
 
 script:
+  - make bootstrap
   - make test  
