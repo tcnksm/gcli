@@ -1,0 +1,126 @@
+{
+    "memo": "c1962f8629403e52bf443f9855f53727bd8b32f9cf1b46592b63d86e34099905",
+    "projects": [
+        {
+            "name": "github.com/BurntSushi/toml",
+            "branch": "master",
+            "revision": "99064174e013895bbd9b025c31100bd1d9b590ca",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/armon/go-radix",
+            "branch": "master",
+            "revision": "4239b77079c7b5d1243b7b4736304ce8ddb6f0f2",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/bgentry/speakeasy",
+            "branch": "master",
+            "revision": "675b82c74c0ed12283ee81ba8a534c8982c07b85",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/google/go-github",
+            "branch": "master",
+            "revision": "c9c37fd6ce0247943d1aa34fc3813c62c5cb0225",
+            "packages": [
+                "github"
+            ]
+        },
+        {
+            "name": "github.com/google/go-querystring",
+            "branch": "master",
+            "revision": "53e6ce116135b80d037921a7fdd5138cf32d7a8a",
+            "packages": [
+                "query"
+            ]
+        },
+        {
+            "name": "github.com/hashicorp/go-version",
+            "branch": "master",
+            "revision": "e96d3840402619007766590ecea8dd7af1292276",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/mattn/go-isatty",
+            "branch": "master",
+            "revision": "30a891c33c7cde7b02a981314b4228ec99380cca",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/mattn/go-runewidth",
+            "branch": "master",
+            "revision": "737072b4e32b7a5018b4a7125da8d12de90e8045",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/mitchellh/cli",
+            "branch": "master",
+            "revision": "fa17b36f6c61f1ddbbb08c9f6fde94b3c065a09d",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/mitchellh/go-homedir",
+            "branch": "master",
+            "revision": "b8bc1bf767474819792c23f32d8286a45736f1c6",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/olekukonko/tablewriter",
+            "branch": "master",
+            "revision": "febf2d34b54a69ce7530036c7503b1c9fbfdf0bb",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/tcnksm/go-gitconfig",
+            "branch": "master",
+            "revision": "6411ba19847f20afe47f603328d97aaeca6def6f",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "github.com/tcnksm/go-latest",
+            "branch": "master",
+            "revision": "79c2c6c7fa60f1bd7e1f204606aae7b9082f7304",
+            "packages": [
+                "."
+            ]
+        },
+        {
+            "name": "golang.org/x/net",
+            "branch": "master",
+            "revision": "f2499483f923065a842d38eb4c7f1927e6fc6e6d",
+            "packages": [
+                "html",
+                "html/atom"
+            ]
+        },
+        {
+            "name": "golang.org/x/sys",
+            "branch": "master",
+            "revision": "d75a52659825e75fff6158388dddc6a5b04f9ba5",
+            "packages": [
+                "unix"
+            ]
+        }
+    ]
+}

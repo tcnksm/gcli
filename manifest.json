@@ -1,0 +1,22 @@
+{
+    "dependencies": {
+        "github.com/BurntSushi/toml": {
+            "branch": "master"
+        },
+        "github.com/mitchellh/cli": {
+            "branch": "master"
+        },
+        "github.com/mitchellh/go-homedir": {
+            "branch": "master"
+        },
+        "github.com/olekukonko/tablewriter": {
+            "branch": "master"
+        },
+        "github.com/tcnksm/go-gitconfig": {
+            "branch": "master"
+        },
+        "github.com/tcnksm/go-latest": {
+            "branch": "master"
+        }
+    }
+}
