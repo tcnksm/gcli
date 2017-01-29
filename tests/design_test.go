@@ -69,8 +69,6 @@ func TestDesign(t *testing.T) {
 }
 
 func TestDesign_gotests(t *testing.T) {
-	t.Parallel()
-
 	vcsHost := "github.com"
 	owner := "awesome_user_" + strconv.Itoa(int(time.Now().Unix()))
 

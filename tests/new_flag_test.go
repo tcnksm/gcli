@@ -71,8 +71,6 @@ func TestNew_flag(t *testing.T) {
 // TestNew_flag_goflag tests that the generated project
 // is go-buildable and it passes the go-test and go-vet.
 func TestNew_flag_gotests(t *testing.T) {
-	t.Parallel()
-
 	vcsHost := "github.com"
 	owner := "awesome_user_" + strconv.Itoa(int(time.Now().Unix()))
 
