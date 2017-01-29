@@ -25,7 +25,9 @@ const (
 	DefaultVCSHost = "github.com"
 
 	// DefaultLocalDir is the default path to store directory.
-	DefaultLocalDir       = "~/.gcli.d"
+	DefaultLocalDir = "~/.gcli.d"
+
+	// DefaultLocalStaticDir is the default path for static file.
 	DefaultLocalStaticDir = "static"
 
 	// defaultFrameworkString is default cli framework name

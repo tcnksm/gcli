@@ -99,20 +99,21 @@ func (c *NewCommand) Run(args []string) int {
 		c.UI.Error(fmt.Sprintf(
 			"Failed to read GOPATH: it should not be empty"))
 		return ExitCodeFailed
-	} else {
-		for _, path := range gopaths {
-			absPath, err := filepath.Abs(path)
-			if err != nil {
-				c.UI.Error(fmt.Sprintf(
-					"Cannot parse GOPATH"))
-				continue
-			}
-			if strings.HasPrefix(currentDir, absPath) {
-				gopath = absPath
-				break
-			}
+	}
+
+	for _, path := range gopaths {
+		absPath, err := filepath.Abs(path)
+		if err != nil {
+			c.UI.Error(fmt.Sprintf(
+				"Cannot parse GOPATH"))
+			continue
+		}
+		if strings.HasPrefix(currentDir, absPath) {
+			gopath = absPath
+			break
 		}
 	}
+
 	if gopath == "" {
 		c.UI.Output("")
 		c.UI.Output(fmt.Sprintf("===> WARNING: You are not in the directories defined in $GOPATH."))
@@ -124,7 +125,7 @@ func (c *NewCommand) Run(args []string) int {
 			return ExitCodeFailed
 		}
 	}
-	
+
 	idealDir := filepath.Join(gopath, "src", vcsHost, owner)
 
 	output := name
