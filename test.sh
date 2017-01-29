@@ -3,7 +3,7 @@
 # If `gofmt` & `golint` has output (means something wrong),
 # it will exit with non-zero status
 
-TARGET=$(find . -name "*.go" | grep -v "bindata.go" | grep -v "doc.go")
+TARGET=$(find . -name "*.go" | grep -v "bindata.go" | grep -v "doc.go" | grep vendor)
 echo -e "----> Run gofmt"
 FMT_RES=$(gofmt -l ${TARGET})
 if [ -n "${FMT_RES}" ]; then
@@ -12,7 +12,7 @@ if [ -n "${FMT_RES}" ]; then
 fi
 
 echo -e "----> Run go vet"
-go list -f '{{.Dir}}' ./... | xargs go tool vet
+go vet $(go list ./... | grep -v /vendor/)
 if [ $? -ne 0 ]; then
     echo -e "go vet failed"
     exit 255
@@ -20,18 +20,7 @@ fi
 
 # TODO, better way to exclude some lint warning.
 echo -e "----> Run golint"
-LINT_RES=$(golint ./... | \
-                  grep -v "bindata.go" | \
-                  grep -v "doc.go" | \
-                  grep -v "type name will be used as command.CommandFlag by other packages" | \
-                  grep -v "Framework_go_cmd" | \
-                  grep -v "Framework_codegangsta_cli" | \
-                  grep -v "Framework_mitchellh_cli" | \
-                  grep -v "Framework_flag" \
-        )
-if [ -n "${LINT_RES}" ]; then
-     echo -e "golint failed: \n${LINT_RES}"
-fi
+go list ./... | grep -v /vendor/ | xargs -L1 golint | grep -v bindata.go | grep -v doc.go | grep -v "type name will be used as command.CommandFlag by other packages"
 
 echo -e "----> Run go test"
-go test -v ./...
+go test -v $(go list ./... | grep -v /vendor/)

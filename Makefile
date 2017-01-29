@@ -8,7 +8,6 @@ updatedeps:
 
 deps:
 	@echo "====> Install depedencies..."
-	go get -v github.com/jteeuwen/go-bindata/...
 	go get -v -d -t ./...
 
 devdeps:
@@ -16,6 +15,7 @@ devdeps:
 	go get -v github.com/golang/lint/golint
 
 generate: 
+	@go get -v github.com/jteeuwen/go-bindata/...
 	@go generate ./...
 
 build: generate
