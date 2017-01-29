@@ -15,7 +15,7 @@ devdeps:
 	@echo "====> Install depedencies for development..."
 	go get -v github.com/golang/lint/golint
 
-generate: deps
+generate: 
 	@go generate ./...
 
 build: generate
