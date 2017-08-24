@@ -158,6 +158,7 @@ $ gcli new -F flag -flag=i:Bool -flag=C:Int grep
 To install, use `go get` and `make install`. We tag versions so feel free to checkout that tag and compile.
 
 ```bash
+$ go get -u github.com/jteeuwen/go-bindata/...
 $ go get -d github.com/tcnksm/gcli
 $ cd $GOPATH/src/github.com/tcnksm/gcli
 $ make install 
