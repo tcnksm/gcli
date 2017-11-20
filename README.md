@@ -160,7 +160,7 @@ To install, use `go get` and `make install`. We tag versions so feel free to che
 ```bash
 $ go get -d github.com/tcnksm/gcli
 $ cd $GOPATH/src/github.com/tcnksm/gcli
-$ make install 
+$ make && make install 
 ```
 
 ## Contribution
